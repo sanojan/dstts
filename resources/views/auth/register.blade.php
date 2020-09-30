@@ -36,13 +36,27 @@
                 <form id="sign_up" method="POST" action="{{ route('register') }}">
                     @csrf
                     <div class="msg">Register a new membership</div>
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                            <input type="text" class="form-control" name="namesurname" placeholder="Name Surname" required autofocus>
+                            <input type="text" class="form-control" name="fullname" placeholder="Fullname" required autofocus>
                         </div>
+                    </div> 
+                    </div>
+                    <div class="col-sm-6">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="namewinitial" placeholder="Name with initial" required autofocus>
+                        </div>
+                    </div>
+                    </div>
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon">
