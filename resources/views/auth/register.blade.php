@@ -46,7 +46,7 @@
                                     <i class="material-icons">person</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control" name="fullname" placeholder="Fullname" required autofocus>
+                                    <input type="text" class="form-control" name="name_w_init" placeholder="Name with Initial" required autofocus>
                                 </div>
                             </div> 
                         </div>
@@ -56,7 +56,7 @@
                                     <i class="material-icons">people</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="gender" name="gender">
+                                <select class="form-control" id="gender" name="gender" required>
                                     <option value="">Gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -83,7 +83,7 @@
                                     <i class="material-icons">card_membership</i>
                                 </span>
                                 <div class="form-line">
-                                <input type="text" class="form-control" placeholder="NIC NO" name="nic">
+                                <input type="text" class="form-control" placeholder="NIC NO" name="nic" required>
                                 </div>
                             </div>
                         </div>
@@ -100,10 +100,10 @@
                         <div class="col-sm-4">
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">phone_iphone</i>
+                                    <i class="material-icons">phone_iphone</i>`
                                 </span>
                                 <div class="form-line">
-                                <input type="text" class="form-control" placeholder="Mobile No" name="mobno">
+                                <input type="text" class="form-control" placeholder="Mobile No" name="mobile_no">
                                 </div>
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                                     <i class="material-icons">work</i>
                                 </span>
                                 <div class="form-line">
-                                <input type="text" class="form-control" placeholder="Designation" name="designation">
+                                <input type="text" class="form-control" placeholder="Designation" name="designation" required>
                                 </div>
                             </div>
                         </div>
@@ -126,8 +126,9 @@
                                     <i class="material-icons">business_center</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="sname" name="sname">
-                                    <option value="">Service</option>
+                                <select class="form-control" id="service" name="service" required>
+                                    <option value="">Select your Service </option>
+                                    <option value="service2">Service 2</option>
                                 </select>
                                 </div>
                             </div>
@@ -138,8 +139,9 @@
                                     <i class="material-icons">people_outline</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="exampleFormControlSelect1" name="sclass">
-                                    <option value="">Class</option>
+                                <select class="form-control" id="exampleFormControlSelect1" name="class" required>
+                                    <option value="">Select your class</option>
+                                    <option value="class2">Class1</option>
                                 </select>
                                 </div>
                             </div>
@@ -153,8 +155,9 @@
                                     <i class="material-icons">location_city</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="wplace_type" name="wplace_type">
+                                <select class="form-control" id="workplace_type" name="workplace_type" required>
                                     <option value="">Work Place Type</option>
+                                    <option value="work1">work1</option>
                                 </select>
                                 </div>
                             </div>
@@ -165,8 +168,9 @@
                                     <i class="material-icons">location_city</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="wplace_name" name="wplace_name">
+                                <select class="form-control" id="workplace" name="workplace" required>
                                     <option value="">Work Place Name</option>
+                                    <option value="work2">place1</option>
                                 </select>
                                 </div>
                             </div>
@@ -178,7 +182,8 @@
                                 </span>
                                 <div class="form-line">
                                 <select class="form-control" id="branch" name="branch">
-                                    <option value="">Branch</option>
+                                    <option value="">Select Branch</option>
+                                    <option value="branch1">Test branch</option>
                                 </select>
                                 </div>
                             </div>
@@ -204,8 +209,9 @@
                                         <i class="material-icons">supervisor_account</i>
                                     </span>
                                     <div class="form-line">
-                                    <select class="form-control" id="user_type" name="user_type">
+                                    <select class="form-control" id="user_type" name="user_type" required>
                                         <option value="">User Type</option>
+                                        <option value="standard">Standard</option>
                                     </select>
                                     </div>
                             </div>
@@ -216,7 +222,7 @@
                                     <i class="material-icons">lock</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="password" class="form-control" name="confirm" minlength="6" placeholder="Confirm Password" required>
+                                    <input type="password" class="form-control" name="password" minlength="6" placeholder="Confirm Password" required>
                                 </div>
                             </div>
                         </div>

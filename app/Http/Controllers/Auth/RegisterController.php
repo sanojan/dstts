@@ -50,9 +50,16 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name_w_initial' => ['required', 'string', 'max:100'],
+            'gender' => ['required'],
+            'dob' => ['date'],
+            'email' => ['string', 'email', 'max:255', 'unique:users'],
+            'mobno' => ['string', 'max:10', 'unique:users'],
+            'designation' => ['string', 'max:30'],
+            'service' => ['required'],
+            'class' => ['required'],
+            'workplace' => ['required'],
+            'password' => ['required', 'string', 'min:8'],
         ]);
     }
 
@@ -65,8 +72,19 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'name_w_init' => $data['name_w_init'],
+            'gender' => $data['gender'],
+            'dob' => $data['dob'],
+            'nic' => $data['nic'],
             'email' => $data['email'],
+            'mobile_no' => $data['mobile_no'],
+            'designation' => $data['designation'],
+            'service' => $data['service'],
+            'class' => $data['class'],
+            'workplace' => $data['workplace'],
+            'branch' => $data['branch'],
+            'subject' => $data['subject'],
+            'user_type' => $data['user_type'],
             'password' => Hash::make($data['password']),
         ]);
     }
