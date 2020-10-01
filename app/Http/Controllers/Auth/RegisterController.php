@@ -8,6 +8,8 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class RegisterController extends Controller
 {
@@ -50,19 +52,30 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name_w_initial' => ['required', 'string', 'max:100'],
+            'name' => ['required', 'regex:/^[a-zA-Z .]*$/', 'max:100'],
             'gender' => ['required'],
-            'dob' => ['date'],
+            'dob' => ['required', 'date', 'before:-18 years', 'after:-60 years'],
+            'nic' => ['required', 'unique:users'],
             'email' => ['string', 'email', 'max:255', 'unique:users'],
-            'mobno' => ['string', 'max:10', 'unique:users'],
-            'designation' => ['string', 'max:30'],
+            'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
+            'designation' => ['required'],
+            'branch' => ['required'],
             'service' => ['required'],
             'class' => ['required'],
-            'workplace' => ['required'],
-            'password' => ['required', 'string', 'min:8'],
+            'workplace_type' => ['required'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'terms' => ['required'],
+        ],
+    
+        ['gender.required' => 'Please select your gender',
+        'dob.before' => 'You must be 18 Years or older',
+        'dob.after' => 'You must be less than 60 years old',
+        'terms.required' => 'You must agree to terms of usage',
         ]);
-    }
 
+        
+    }
+    
     /**
      * Create a new user instance after a valid registration.
      *
@@ -71,20 +84,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        
+
         return User::create([
-            'name_w_init' => $data['name_w_init'],
+            'name' => $data['name'],
             'gender' => $data['gender'],
             'dob' => $data['dob'],
             'nic' => $data['nic'],
             'email' => $data['email'],
             'mobile_no' => $data['mobile_no'],
             'designation' => $data['designation'],
+            'branch' => $data['branch'],
             'service' => $data['service'],
             'class' => $data['class'],
             'workplace' => $data['workplace'],
-            'branch' => $data['branch'],
-            'subject' => $data['subject'],
-            'user_type' => $data['user_type'],
             'password' => Hash::make($data['password']),
         ]);
     }

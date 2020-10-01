@@ -40,200 +40,292 @@
                     @csrf
                     <div class="msg">Register a new membership</div>
                     <div class="row clearfix">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">person</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control" name="name_w_init" placeholder="Name with Initial" required autofocus>
+                                <input id="name" type="text" class="form-control " name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="Name with Initial">
+                                
                                 </div>
+                                @error('name')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
                             </div> 
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">people</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="gender" name="gender" required>
-                                    <option value="">Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                <select class="form-control" id="gender" name="gender">
+                                    <option value="" @if(old('gender' )== '') selected disabled @endif>Select your Gender</option>
+                                    <option value="Male" @if(old('gender')=='Male') selected @endif>Male</option>
+                                    <option value="Female" @if(old('gender')=='Female') selected @endif>Female</option>
                                 </select>
                                 </div>
+                                @error('gender')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        
+
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">event</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="date" class="form-control" name="dob" placeholder="Date of birth" required>
+                                <input placeholder="Date of Birth" class="form-control" type="text" onfocus="(this.type='date')" id="dob" name="dob" value="{{ old('dob') }}">
                                 </div>
+                                @error('dob')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
                             </div> 
                         </div>
-
-                    </div>
-                    <div class="row clearfix">
-                        <div class="col-sm-4">
+                        
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">card_membership</i>
                                 </span>
                                 <div class="form-line">
-                                <input type="text" class="form-control" placeholder="NIC NO" name="nic" required>
+                                <input type="text" class="form-control" placeholder="NIC NO" name="nic" value="{{ old('nic') }}">
                                 </div>
+                                @error('nic')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">email</i>
                                 </span>
                                 <div class="form-line">
-                                <input type="text" class="form-control" placeholder="E-Mail Address" name="email">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="Email">
                                 </div>
+                                @error('email')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
+                                
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">phone_iphone</i>`
                                 </span>
                                 <div class="form-line">
-                                <input type="text" class="form-control" placeholder="Mobile No" name="mobile_no">
+                                <input type="text" class="form-control" placeholder="Mobile No" name="mobile_no" value="{{ old('mobile_no') }}">
                                 </div>
+                                @error('mobile_no')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
                             </div>
                         </div>
                     </div>
 
                     <div class="row clearfix">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">work</i>
                                 </span>
                                 <div class="form-line">
-                                <input type="text" class="form-control" placeholder="Designation" name="designation" required>
+                                    <select class="form-control" id="designation" name="designation" >
+                                        <option value="" @if(old('designation')=='') selected disabled @endif>Select your designation</option>
+                                        <option value="Des1" @if(old('designation')=='Des1') selected @endif>Des1</option>
+                                        <option value="Des2" @if(old('designation')=='Des2') selected @endif>Des2</option>
+                                    </select>
                                 </div>
+                                @error('designation')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">business_center</i>
-                                </span>
-                                <div class="form-line">
-                                <select class="form-control" id="service" name="service" required>
-                                    <option value="">Select your Service </option>
-                                    <option value="service2">Service 2</option>
-                                </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">people_outline</i>
-                                </span>
-                                <div class="form-line">
-                                <select class="form-control" id="exampleFormControlSelect1" name="class" required>
-                                    <option value="">Select your class</option>
-                                    <option value="class2">Class1</option>
-                                </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row clearfix">
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">location_city</i>
-                                </span>
-                                <div class="form-line">
-                                <select class="form-control" id="workplace_type" name="workplace_type" required>
-                                    <option value="">Work Place Type</option>
-                                    <option value="work1">work1</option>
-                                </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">location_city</i>
-                                </span>
-                                <div class="form-line">
-                                <select class="form-control" id="workplace" name="workplace" required>
-                                    <option value="">Work Place Name</option>
-                                    <option value="work2">place1</option>
-                                </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">share</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="branch" name="branch">
-                                    <option value="">Select Branch</option>
-                                    <option value="branch1">Test branch</option>
-                                </select>
+                                    <select class="form-control" id="branch" name="branch" >
+                                        <option value="" @if(old('branch')=='') selected disabled @endif>Select your branch</option>
+                                        <option value="branch1" @if(old('branch')=='branch1') selected @endif>branch1</option>
+                                        <option value="branch2" @if(old('branch')=='branch2') selected @endif>branch2</option>
+                                    </select>
                                 </div>
+                                @error('branch')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row clearfix">
+
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">business_center</i>
+                                </span>
+                                <div class="form-line">
+                                <select class="form-control" id="service" name="service" >
+                                        <option value="" @if(old('service')=='') selected disabled @endif>Select your service</option>
+                                        <option value="service1" @if(old('service')=='service1') selected @endif>service1</option>
+                                        <option value="service2" @if(old('service')=='service2') selected @endif>service2</option>
+                                    </select>
+                                </div>
+                                @error('service')   
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">people_outline</i>
+                                </span>
+                                <div class="form-line">
+                                <select class="form-control" id="class" name="class" >
+                                        <option value="" @if(old('class')=='') selected disabled @endif>Select your class</option>
+                                        <option value="1" @if(old('class')=='1') selected @endif>class1</option>
+                                        <option value="2" @if(old('class')=='2') selected @endif>class2</option>
+                                        <option value="3" @if(old('class')=='3') selected @endif>class3</option>
+                                    </select>
+                                </div>
+                                @error('class')   
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">location_city</i>
+                                </span>
+                                <div class="form-line">
+                                <select class="form-control" id="workplace_type" name="workplace_type" >
+                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Select your workplace</option>
+                                        <option value="workplace1" @if(old('workplace_type')=='workplace1') selected @endif>workplace1</option>
+                                        <option value="workplace2" @if(old('workplace_type')=='workplace2') selected @endif>workplace2</option>
+                                        <option value="workplace3" @if(old('workplace_type')=='workplace3') selected @endif>workplace3</option>
+                                    </select>
+                                </div>
+                                @error('workplace_type')   
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">location_city</i>
+                                </span>
+                                <div class="form-line">
+                                <select class="form-control" id="workplace" name="workplace" >
+                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Select your workplace</option>
+                                        <option value="workplace1" @if(old('workplace')=='workplace1') selected @endif>workplace1</option>
+                                        <option value="workplace2" @if(old('workplace')=='workplace2') selected @endif>workplace2</option>
+                                        <option value="workplace3" @if(old('workplace')=='workplace3') selected @endif>workplace3</option>
+                                    </select>
+                                </div>
+                                @error('workplace')   
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
+                            </div>
+                        </div>
+                        
                         
                     </div>
 
                     <div class="row clearfix">
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">insert_drive_file</i>
-                                </span>
-                                <div class="form-line">
-                                <input type="text" class="form-control" placeholder="Subject" name="subject">
-                                </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">supervisor_account</i>
-                                    </span>
-                                    <div class="form-line">
-                                    <select class="form-control" id="user_type" name="user_type" required>
-                                        <option value="">User Type</option>
-                                        <option value="standard">Standard</option>
-                                    </select>
-                                    </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
+                        
+                        
+                        <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">lock</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="password" class="form-control" name="password" minlength="6" placeholder="Confirm Password" required>
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="Password">
                                 </div>
+                                @error('password')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">lock</i>
+                                </span>
+                                <div class="form-line">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password">
+                                </div>
+                                @error('password_confirmation')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                @enderror
+                                
                             </div>
                         </div>
                     </div>
 
-
                     
-                    <div class="form-group">
-                        <input type="checkbox" name="terms" id="terms" class="filled-in chk-col-pink">
-                        <label for="terms">I read and agree to the <a href="javascript:void(0);">terms of usage</a>.</label>
-                    </div>
+                        
+                            <div class="form-group">
+                                <input type="checkbox" name="terms" id="terms" class="filled-in chk-col-pink">
+                                <label for="terms">I read and agree to the <a href="javascript:void(0);">terms of usage</a>.</label>
+                            
+                            @error('terms')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                            @enderror
+                            </div>
                 
                     <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">SIGN UP</button>
                     
