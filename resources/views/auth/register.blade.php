@@ -239,7 +239,7 @@
                                 </span>
                                 <div class="form-line">
                                 <select class="form-control" id="workplace_type" name="workplace_type" >
-                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Select your workplace</option>
+                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Select your workplace type</option>
                                         <option value="workplace1" @if(old('workplace_type')=='workplace1') selected @endif>workplace1</option>
                                         <option value="workplace2" @if(old('workplace_type')=='workplace2') selected @endif>workplace2</option>
                                         <option value="workplace3" @if(old('workplace_type')=='workplace3') selected @endif>workplace3</option>
