@@ -13,16 +13,16 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
     <!-- Bootstrap Core Css -->
-    <link href="../../plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="{{asset('plugins/bootstrap/css/bootstrap.css')}}" rel="stylesheet">
 
     <!-- Waves Effect Css -->
-    <link href="../../plugins/node-waves/waves.css" rel="stylesheet" />
+    <link href="{{asset('plugins/node-waves/waves.css')}}" rel="stylesheet" />
 
     <!-- Animation Css -->
-    <link href="../../plugins/animate-css/animate.css" rel="stylesheet" />
+    <link href="{{asset('plugins/animate-css/animate.css')}}" rel="stylesheet" />
 
     <!-- Custom Css -->
-    <link href="../../css/style.css" rel="stylesheet">
+    <link href="{{asset('css/style.css')}}" rel="stylesheet">
 </head>
 
 <body class="login-page">
@@ -34,27 +34,43 @@
         <div class="card">
             <div class="body">
                 <form id="sign_in" method="POST" action="{{ route('login') }}">
+                @csrf
                     <div class="msg">Sign in to start your session</div>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                            <input type="text" class="form-control" name="nic" placeholder="NIC" required autofocus>
+                        <input id="nic" type="nic" class="form-control @error('nic') is-invalid @enderror" name="nic" value="{{ old('nic') }}" required autocomplete="nic" autofocus placeholder="NIC">
                         </div>
+                        @error('nic')
+                            <label class="error" role="alert">
+                            <strong>{{ $message }}</strong>
+                            </label>
+                        @enderror
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="material-icons">lock</i>
                         </span>
                         <div class="form-line">
-                            <input type="password" class="form-control" name="password" placeholder="Password" required>
+                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
                         </div>
+                        @error('password')
+                            <label class="error" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </label>
+                        @enderror
                     </div>
                     <div class="row">
                         <div class="col-xs-8 p-t-5">
-                            <input type="checkbox" name="rememberme" id="rememberme" class="filled-in chk-col-pink">
-                            <label for="rememberme">Remember Me</label>
+                        <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+
+                                    <label class="form-check-label" for="remember">
+                                        {{ __('Remember Me') }}
+                                    </label>
+                                </div>
                         </div>
                         <div class="col-xs-4">
                             <button class="btn btn-block bg-pink waves-effect" type="submit">SIGN IN</button>
@@ -74,20 +90,20 @@
     </div>
 
     <!-- Jquery Core Js -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 
     <!-- Bootstrap Core Js -->
-    <script src="../../plugins/bootstrap/js/bootstrap.js"></script>
+    <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
 
     <!-- Waves Effect Plugin Js -->
-    <script src="../../plugins/node-waves/waves.js"></script>
+    <script src="{{asset('plugins/node-waves/waves.js')}}"></script>
 
     <!-- Validation Plugin Js -->
-    <script src="../../plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="{{asset('plugins/jquery-validation/jquery.validate.js')}}"></script>
 
     <!-- Custom Js -->
-    <script src="../../js/admin.js"></script>
-    <script src="../../js/pages/examples/sign-in.js"></script>
+    <script src="{{asset('js/admin.js')}}"></script>
+    <script src="{{asset('js/pages/examples/sign-in.js')}}"></script>
 </body>
 
 </html>
