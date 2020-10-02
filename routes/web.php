@@ -25,6 +25,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::view('/letters', 'letters.create')->name('letters');
-
 Route::resource('users', 'UsersController');

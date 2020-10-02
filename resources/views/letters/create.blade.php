@@ -108,7 +108,7 @@
                     </li>
                     <li >
                         <a href="index.html">
-                            <i class="material-icons">group</i>
+                            <i class="material-icons">help</i>
                             <span>Help</span>
                         </a>
                     </li>
@@ -120,7 +120,7 @@
                     </li>
                     <li >
                         <a href="index.html">
-                            <i class="material-icons">group</i>
+                            <i class="material-icons">contact_phone</i>
                             <span>Contact Us</span>
                         </a>
                     </li>
