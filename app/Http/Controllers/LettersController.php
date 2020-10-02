@@ -23,7 +23,7 @@ class LettersController extends Controller
      */
     public function create()
     {
-        //
+        return view('letters.create');
     }
 
     /**
