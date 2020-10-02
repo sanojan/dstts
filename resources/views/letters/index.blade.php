@@ -20,10 +20,10 @@
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('letters.index')}}">View Letter</a>
                                     </li>
-                                    <li class="active">
+                                    <li >
                                         <a href="{{route('letters.create')}}">Add Letter</a>
                                     </li>
                         </ul>
@@ -124,7 +124,7 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>CREATE LETTER</h2>
+                <h2>VIEW LETTER</h2>
             </div>
         </div>
 </section>
