@@ -56,7 +56,7 @@ class RegisterController extends Controller
             'gender' => ['required'],
             'dob' => ['required', 'date', 'before:-18 years', 'after:-60 years'],
             'nic' => ['required', 'unique:users', 'max:12', 'min:10'],
-            'email' => ['string', 'email', 'max:255', 'unique:users'],
+            'email' => ['string', 'email', 'max:255', 'unique:users', 'nullable'],
             'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
             'designation' => ['required'],
             'branch' => ['required'],

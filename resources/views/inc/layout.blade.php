@@ -24,7 +24,13 @@
 
     <!-- Morris Chart Css-->
     <link href="{{asset('plugins/morrisjs/morris.css')}}" rel="stylesheet" />
-
+    
+    <!-- Toastr Css -->
+    @toastr_css
+    
+    <!-- Datatables Css -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css"/>
+    
     <!-- Custom Css -->
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
 
@@ -33,11 +39,13 @@
 </head>
 
 <body class="ls-closed theme-light-blue">
+
+
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
             <div class="preloader">
-                <div class="spinner-layer pl-red">
+                <div class="spinner-layer pl-light-blue">
                     <div class="circle-clipper left">
                         <div class="circle"></div>
                     </div>
@@ -296,7 +304,7 @@
                                                      <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
-                                                    </li>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -306,10 +314,15 @@
     
     @yield('sidebar')
     
+    
     @yield('content')
-
+    
 <!-- Jquery Core Js -->
-<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('plugins/jquery/jquery-2.x-git.min.js')}}" ></script>
+
+
+<!-- Toastr Plugin Js -->
+@toastr_js
 
 <!-- Bootstrap Core Js -->
 <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
@@ -325,6 +338,9 @@
 
 <!-- Jquery CountTo Plugin Js -->
 <script src="{{asset('plugins/jquery-countto/jquery.countTo.js')}}"></script>
+
+<!-- Moment Plugin Js -->
+
 
 <!-- Morris Plugin Js -->
 <script src="{{asset('plugins/raphael/raphael.min.js')}}"></script>
@@ -349,6 +365,60 @@
 
 <!-- Demo Js -->
 <script src="{{asset('js/demo.js')}}"></script>
+
+<!-- Input Mask Plugin Js -->
+<script src="{{asset('plugins/jquery-inputmask/jquery.inputmask.bundle.js')}}"></script>
+
+<script src="{{asset('plugins/jquery-inputmask/inputmask_code.js')}}"></script>
+
+<!-- Data Tables Js -->
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.js"></script>
+
+<script>
+  @if(Session::has('message'))
+    var type = "{{ Session::get('alert-type', 'info') }}";
+    switch(type){
+        case 'info':
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.progressBar = true;
+            toastr.options.showDuration = 400;
+            toastr.info("{{ Session::get('message') }}");
+            break;
+        
+        case 'warning':
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.progressBar = true;
+            toastr.options.showDuration = 400;
+            toastr.warning("{{ Session::get('message') }}");
+            break;
+
+        case 'success':
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.progressBar = true;
+            //toastr.options.iconClasses = 'toast-success';
+            toastr.options.showDuration = 400;
+            toastr.success("{{ Session::get('message') }}");
+            break;
+
+        case 'error':
+            toastr.options.positionClass = 'toast-top-right';
+            toastr.options.progressBar = true;
+            toastr.options.showDuration = 400;
+            toastr.error("{{ Session::get('message') }}");
+            break;
+    }
+  @endif
+</script>
+
+<script type="text/javascript">
+    $(document).ready( function () {
+        $('#table_id').DataTable();
+        
+    } );
+</script>
+
+
+
 </body>
 
 </html>

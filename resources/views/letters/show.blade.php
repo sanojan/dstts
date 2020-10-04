@@ -1,8 +1,6 @@
 @extends('inc.layout')
 
 @section('sidebar')
- 
-            
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
@@ -124,43 +122,74 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>VIEW LETTERS</h2>
+                <h2>LETTER DETAILS</h2>
             </div>
             <div class="card">
-                <div class="body">
-                    
-                    <table id="table_id" class="display compact">
-                        <thead>
-                            <tr>
-                                <th>Letter No.</th>
-                                <th>Letter Title</th>
-                                <th>Letter Date</th>
-                                <th>Letter From</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if(count($letters) > 0)
-                                @foreach($letters as $letter)
-                                <tr>
-                                    <td>{{$letter->letter_no}}</td>
-                                    <td>{{$letter->letter_title}}</td>
-                                    <td>{{$letter->letter_date}}</td>
-                                    <td>{{$letter->letter_from}}</td>
-                                    <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('letters.show', $letter->id) }}">
-                                            <i class="material-icons">pageview</i>
-                                                <span>VIEW</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            @else
-                                <tr></tr>
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        <div class="body table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:200px"></th>
+                                        <th style="width:20px"></th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Letter Number:</td>
+                                        <td>{{$letter->letter_no}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Letter Date:</td>
+                                        <td>{{$letter->letter_date}}</td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Sender:</td>
+                                        <td>{{$letter->letter_from}}</td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Title:</td>
+                                        <td>{{$letter->letter_title}}</td>
+                                        
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Content:</td>
+                                        <td>{{$letter->letter_content}}</td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Scanned Copy:</td>
+                                        <td><button type="button" class="btn btn-default btn-xs waves-effect">
+                                                <i class="material-icons">file_download</i>
+                                            </button> 
+                                        </td>
+                                        
+                                    </tr>
+                                </tbody>    
+                            </table>
+                            <div>
+                                <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect">
+                                    <i class="material-icons">mode_edit</i>
+                                    <span>EDIT DETAILS</span>
+                                </button>
+                                <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect" >
+                                    <i class="material-icons">add_to_photos</i>
+                                    <span>CREATE TASK</span>
+                                </button>
+                                <button type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" >
+                                    <i class="material-icons">access_time</i>
+                                    <span>VIEW TASK HISTORY</span>
+                                </button>
+                                <button type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" >
+                                    <i class="material-icons">delete</i>
+                                    <span>DELETE LETTER</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
         </div>
 </section>
 @endsection
