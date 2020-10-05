@@ -148,7 +148,7 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                    <input id="letter_date" type="text" class="form-control"  name="letter_date" >
+                                    <input id="letter_date" type="date" class="form-control"  name="letter_date" >
                                     <label class="form-label">Letter Date</label> 
                                     </div>
                                     @error('letter_date')

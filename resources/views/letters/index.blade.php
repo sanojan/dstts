@@ -155,7 +155,7 @@
                                 </tr>
                                 @endforeach
                             @else
-                                <tr></tr>
+                                <tr>No records found</tr>
                             @endif
                         </tbody>
                     </table>
