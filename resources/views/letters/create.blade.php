@@ -148,7 +148,7 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                    <input id="letter_date" type="date" class="form-control"  name="letter_date" >
+                                    <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="letter_date" name="letter_date" value="{{ old('letter_date') }}">
                                     <label class="form-label">Letter Date</label> 
                                     </div>
                                     @error('letter_date')
@@ -177,7 +177,7 @@
                             <div class="col-md-12">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="letter_title" class="form-control" name="letter_title" value="{{ old('letter_title') }}">
+                                        <input type="text" id="letter_title" class="form-control" name="letter_title" value="{{ old('letter_title') }}" />
                                         <label class="form-label">Letter Title</label>
                                     </div>
                                     @error('letter_title')
@@ -193,7 +193,7 @@
                             <div class="col-md-12">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <textarea rows="3" class="form-control no-resize" name="letter_content" value="{{ old('letter_content') }}"></textarea>
+                                        <textarea rows="3" class="form-control no-resize" name="letter_content">{{ old('letter_content') }}</textarea>
                                         <label class="form-label">Letter Content</label>
                                     </div>
                                     @error('letter_content')

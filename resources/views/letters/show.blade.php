@@ -171,6 +171,10 @@
                                 </tbody>    
                             </table>
                             <div>
+                                <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('letters.index')}}">
+                                    <i class="material-icons">keyboard_backspace</i>
+                                    <span>BACK</span>
+                                </a>
                                 <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect">
                                     <i class="material-icons">mode_edit</i>
                                     <span>EDIT DETAILS</span>
@@ -187,6 +191,7 @@
                                     <i class="material-icons">delete</i>
                                     <span>DELETE LETTER</span>
                                 </button>
+                                
                             </div>
                         </div>
                     </div>

@@ -85,7 +85,7 @@
                                     <i class="material-icons">event</i>
                                 </span>
                                 <div class="form-line">
-                                <input placeholder="Date of Birth" class="form-control" type="text" onfocus="(this.type='date')" id="dob" name="dob" value="{{ old('dob') }}">
+                                <input placeholder="Date of Birth" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="dob" name="dob" value="{{ old('dob') }}">
                                 </div>
                                 @error('dob')
                                     <label class="error" role="alert">
