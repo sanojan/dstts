@@ -28,31 +28,16 @@
                     </li>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">library_books</i>
-                            <span>Assignments</span>
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="pages/widgets/cards/basic.html">View Assignment(s)</a>
-                                    </li>
-                                    <li>
-                                        <a href="pages/widgets/cards/colored.html">Create Assignment</a>
-                                    </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>Tasks</span>
                         </a>
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="pages/widgets/cards/basic.html">View Task(s)</a>
+                                        <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
-                                    <li>
-                                        <a href="pages/widgets/cards/colored.html">Assign Task</a>
+                                    <li >
+                                        <a href="{{route('tasks.create')}}">Assign Task</a>
                                     </li>
                         </ul>
                     </li>

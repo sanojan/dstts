@@ -31,6 +31,9 @@
     <!-- Datatables Css -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css"/>
     
+    <!-- Dropdown with search-->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    
     <!-- Custom Css -->
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
 
@@ -374,6 +377,9 @@
 <!-- Data Tables Js -->
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.js"></script>
 
+<!-- Dropdown with search-->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
 <script>
   @if(Session::has('message'))
     var type = "{{ Session::get('alert-type', 'info') }}";
@@ -409,12 +415,21 @@
     }
   @endif
 </script>
-
 <script type="text/javascript">
     $(document).ready( function () {
         $('#table_id').DataTable();
         
     } );
+</script>
+<script type="text/javascript">
+   $('.letter_no_dropdown').select2({
+  placeholder: 'Select the Letter NO',
+  width: 'resolve'
+});
+$('.assign_to_dropdown').select2({
+  placeholder: 'Select Officer to Assign',
+  width: 'resolve'
+});
 </script>
 
 

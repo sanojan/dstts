@@ -1,13 +1,11 @@
 @extends('inc.layout')
 
 @section('sidebar')
- 
-            
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li class="active">
+                    <li >
                         <a href="{{route('home')}}">
                             <i class="material-icons">dashboard</i>
                             <span>Dashboard</span>
@@ -20,7 +18,7 @@
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li>
+                                    <li >
                                         <a href="{{route('letters.index')}}">View Letter</a>
                                     </li>
                                     <li >
@@ -28,15 +26,14 @@
                                     </li>
                         </ul>
                     </li>
-                    
-                    <li>
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>Tasks</span>
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
                                     <li >
@@ -110,8 +107,84 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>Home</h2>
+                <h2>TASK DETAILS</h2>
             </div>
+            <div class="card">
+                        <div class="body table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:200px"></th>
+                                        <th style="width:20px"></th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Letter Number:</td>
+                                        <td>{{$task->letter->letter_no}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Letter Title:</td>
+                                        <td>{{$task->letter->letter_title}}</td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Assigned To:</td>
+                                        @foreach($users as $user)
+                                        @if($user->id==$task->assigned_to)
+                                        <td>{{$user->name}}&nbsp;</td>
+                                        @endif
+                                    @endforeach
+                                        
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Assigned On:</td>
+                                        <th>{{$task->created_at}}</th>
+                                        
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Remarks:</td>
+                                        <td>{{$task->remarks}}&nbsp;</td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Deadline:</td>
+                                        <td>{{$task->deadline}}&nbsp;</td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Current Status:</td>
+                                        <td>&nbsp;</td>
+                                        
+                                    </tr>
+                                    
+                                </tbody>    
+                            </table>
+                            <div>
+                                <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index')}}">
+                                    <i class="material-icons">keyboard_backspace</i>
+                                    <span>BACK</span>
+                                </a>
+                                <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect">
+                                    <i class="material-icons">check</i>
+                                    <span>ACCEPT TASK</span>
+                                </button>
+                               
+                                <button type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" >
+                                    <i class="material-icons">access_time</i>
+                                    <span>VIEW TASK HISTORY</span>
+                                </button>
+                                </button> <button type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" >
+                                    <i class="material-icons">close</i>
+                                    <span>REJECT TASK</span>
+                                </button>
+                                
+                            </div>
+                        </div>
+                    </div>
         </div>
 </section>
 @endsection

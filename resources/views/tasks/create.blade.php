@@ -13,7 +13,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>Letters</span>
@@ -23,23 +23,21 @@
                                     <li>
                                         <a href="{{route('letters.index')}}">View Letter</a>
                                     </li>
-                                    <li class="active">
+                                    <li >
                                         <a href="{{route('letters.create')}}">Add Letter</a>
                                     </li>
                         </ul>
                     </li>
-                    
-                    <li>
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>Tasks</span>
                         </a>
                         <ul class="ml-menu">
-                            
                                     <li>
                                         <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
-                                    <li >
+                                    <li class="active">
                                         <a href="{{route('tasks.create')}}">Assign Task</a>
                                     </li>
                         </ul>
@@ -110,20 +108,25 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>CREATE LETTER</h2>
+                <h2>CREATE TASK</h2>
             </div>
             <div class="card">
                 
                 <div class="body">
-                    <form action="{{ route('letters.store') }}" method="POST" enctype="multipart/form-data" id="letter_add_form">
+                    <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" id="tasks_add_form">
                     @csrf
                         <div class="row clearfix">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="letter_no" class="form-control" name="letter_no" value="{{ old('letter_no') }}">
-                                        <label class="form-label">Letter Number</label>
+                                    <select class="form-control letter_no_dropdown" style="width:100%;" id="letter_no" name="letter_no" value="{{ old('letter_no') }}">
+                                    <option value="" ></option>
+                                    @foreach($letters as $letter)
+                                    <option value="{{$letter->id}}">{{$letter->letter_no}} - <i>{{$letter->letter_title}}</i></option>
+                                    @endforeach
+                                    </select>
                                     </div>
+                                    
                                     @error('letter_no')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -131,58 +134,66 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                    <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="letter_date" name="letter_date" value="{{ old('letter_date') }}">
-                                    <label class="form-label">Letter Date</label> 
+                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to" value="{{ old('assigned_to') }}">
+                                        <option value="" ></option>
+                                        @foreach($users as $user)
+                                        <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i></option>
+                                        @endforeach
+                                        </select>
                                     </div>
-                                    @error('letter_date')
+                                    
+                                    @error('assigned_to')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </label>
                                     @enderror
                                 </div>
                             </div> 
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="letter_sender" class="form-control" name="letter_sender" value="{{ old('letter_sender') }}">
-                                        <label class="form-label">Letter Sender</label>
-                                    </div>
-                                    @error('letter_sender')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>   
+                              
                         </div>
                         
                         <div class="row clearfix">
-                            <div class="col-md-12">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="letter_title" class="form-control" name="letter_title" value="{{ old('letter_title') }}" />
-                                        <label class="form-label">Letter Title</label>
+                            <div class="col-md-6">
+                                <div class="row clearfix">
+                                <div class="col-md-6">
+                                        <div class="form-group form-float">
+                                            
+                                            <input placeholder="" class="form-control" type="checkbox"  id="deadlinetf"   name="deadlinetf" value="{{ old('deadlinetf') }}" onchange="if(this.checked==true){document.getElementById('deadline').value='';document.getElementById('deadline').disabled=true;}else{document.getElementById('deadline').disabled=false;}">
+                                            <label class="form-label" for="deadlinetf">No Deadline Task</label> 
+                                            </div>
+                                            @error('deadlinetf')
+                                                    <label class="error" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </label>
+                                            @enderror
+                                           
                                     </div>
-                                    @error('letter_title')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                            <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="deadline" name="deadline" value="{{ old('deadline') }}">
+                                            <label class="form-label">Deadline</label> 
+                                            </div>
+                                            @error('deadline')
+                                                    <label class="error" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </label>
+                                            @enderror
+                                        </div>    
+                                    </div>
+                                </div>  
+                             
                             </div>
-                        </div>
-                        
-                        <div class="row clearfix">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <textarea rows="3" class="form-control no-resize" name="letter_content">{{ old('letter_content') }}</textarea>
-                                        <label class="form-label">Letter Content</label>
+                                        <textarea rows="3" class="form-control no-resize" name="remarks">{{ old('remarks') }}</textarea>
+                                        <label class="form-label">Remarks</label>
                                     </div>
-                                    @error('letter_content')
+                                    @error('remarks')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </label>
@@ -191,19 +202,7 @@
                             </div>
                         </div>
 
-                        <div class="row clearfix">
-                            <div class="col-md-12">
-                                <div class="form-group form-float">
-                                    <label class="form-label">Letter Scanned Copy</label>
-                                    <input type="file" name="letter_scanned_copy" class="form-control"> 
-                                    @error('letter_scanned_copy')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
+                        
                         
                         <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
                         <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px">
