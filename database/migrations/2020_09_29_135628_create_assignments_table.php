@@ -18,7 +18,8 @@ class CreateAssignmentsTable extends Migration
             $table->foreignId('letter_id');
             $table->unsignedBigInteger('assigned_by');
             $table->foreignId('assigned_to');
-            $table->longText('remarks');
+            $table->longText('remarks')->nullable();
+            $table->date('deadline')->nullable();
             $table->timestamps();
             $table->foreign('letter_id')->references('id')->on('letters')->onDelete('cascade');
             $table->foreign('assigned_to')->references('id')->on('users')->onDelete('cascade');

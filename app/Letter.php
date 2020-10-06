@@ -14,4 +14,9 @@ class Letter extends Model
 
     //Timestamps
     public $timestamps = true;
+
+    //link
+    public function tasks(){
+        return $this->hasMany('App\Task');
+    }
 }

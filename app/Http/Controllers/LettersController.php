@@ -56,13 +56,13 @@ class LettersController extends Controller
          //Handle File Upload
          if($request->hasFile('letter_scanned_copy')){
             // Get file name with extension
-            //$filenameWithExt = $request->letter_scanned_copy->path();
+            $filenameWithExt = $request->letter_scanned_copy->path();
             // Get filename only
             //$filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             //Get extension only
             $extension = $request->letter_scanned_copy->extension();
             //Filename to store
-            $fileNameToStore = date('Y-m-d') . '.' . $extension;
+            $fileNameToStore = time() . date('Ymd') . '.' . $extension;
             //UploadFile
             $path = $request->letter_scanned_copy->storeAs('public/scanned_letters', $fileNameToStore);
         }else{

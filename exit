@@ -1,0 +1,137 @@
+[33mcommit b5e3e93a79e4ebdeccebbb1c1e3462ede4501374[m[33m ([m[1;36mHEAD -> [m[1;32mtask_section[m[33m, [m[1;31morigin/letter_section[m[33m, [m[1;32mletter_section[m[33m)[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Mon Oct 5 09:52:53 2020 +0530
+
+    kDlettte bug fixed
+
+[33mcommit bf2d318c468387561c696246dce95cae4fc30bbd[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Mon Oct 5 09:11:50 2020 +0530
+
+    kDlettte bug fixed
+
+[33mcommit 8d82ab06ca30004769b37de4f2fca6b2bedad0f9[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Sun Oct 4 21:43:40 2020 +0530
+
+    letters view,create back & front end
+
+[33mcommit a0c021e2615730539b28d42c323dffec2cd5146f[m
+Author: vskisho <vskisho@live.com>
+Date:   Fri Oct 2 16:01:16 2020 +0530
+
+    Letter View Updated
+
+[33mcommit 54b302b2904cb7e29165c88b85989bd5d6cbacd0[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Fri Oct 2 13:47:47 2020 +0530
+
+    letter route update
+
+[33mcommit dc74a779af55759e83aaead155e0be1e0db5cb2c[m
+Merge: 28352df 760c866
+Author: vskisho <vskisho@live.com>
+Date:   Fri Oct 2 13:38:45 2020 +0530
+
+    something
+
+[33mcommit 760c866136db3b52c710206f775c64857c2e7067[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Fri Oct 2 13:37:13 2020 +0530
+
+    routes update
+
+[33mcommit 28352df7dda7b7a2ebdb5548cbc5d4e6c11a661b[m
+Merge: 1b1d674 852a4d7
+Author: vskisho <vskisho@live.com>
+Date:   Fri Oct 2 13:35:42 2020 +0530
+
+    something
+
+[33mcommit 1b1d6740c8cf248a651b078fab5d2856ac0078c2[m
+Author: vskisho <vskisho@live.com>
+Date:   Fri Oct 2 13:32:17 2020 +0530
+
+    Side bar Icon Added
+
+[33mcommit 852a4d7e5b5f77e4cf6fd624f1d2e1fa2d0a5be6[m
+Merge: 6979791 556fa06
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Fri Oct 2 13:29:50 2020 +0530
+
+    changes
+
+[33mcommit 697979145bcf707e7d5f8fdde3a8c195e9e16077[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Fri Oct 2 13:26:44 2020 +0530
+
+    letters resource
+
+[33mcommit 556fa06127669a26156060815574d712a8305ff9[m
+Author: vskisho <vskisho@live.com>
+Date:   Fri Oct 2 12:50:25 2020 +0530
+
+    Side bar Design
+
+[33mcommit d4b5106518ad40f780fc6d523da6c5e6ab4d589a[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Merge: a44b17f 65030cb
+Author: Sanojan <57349426+sanojan@users.noreply.github.com>
+Date:   Fri Oct 2 09:54:59 2020 +0530
+
+    Merge pull request #1 from sanojan/user-login
+    
+    User login
+
+[33mcommit 65030cb0fc6a2299f2315f448fae9c6fd6776070[m[33m ([m[1;32muser-login[m[33m)[m
+Author: vskisho <vskisho@live.com>
+Date:   Fri Oct 2 09:17:43 2020 +0530
+
+    user Migration fix
+
+[33mcommit 18a243af69a89e5fcb58fe229811871454d63a18[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Fri Oct 2 08:59:57 2020 +0530
+
+    register validation fixed
+
+[33mcommit 80371d38ddbef4af3702e9d81b0d844a977ea614[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Thu Oct 1 22:17:31 2020 +0530
+
+    User registration and login added
+
+[33mcommit 37c098351f927dae1274d84b24ee94d8a3f9187f[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Wed Sep 30 22:41:12 2020 +0530
+
+    user login
+
+[33mcommit 5cd7793cc74e2da00c61233493d477e6aeeb1337[m
+Author: vskisho <vskisho@live.com>
+Date:   Wed Sep 30 15:16:29 2020 +0530
+
+    Login Page Asset Asign
+
+[33mcommit 9c0d4d0a4c1d0e33f3ad43f950b04b112297495c[m
+Author: vskisho <vskisho@live.com>
+Date:   Wed Sep 30 14:59:16 2020 +0530
+
+    Signup Page Front End
+
+[33mcommit b2b257b6172b136d4874bafc7bf3acc71729f100[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Wed Sep 30 11:14:47 2020 +0530
+
+    user login
+
+[33mcommit a44b17f92138acc970b427fe1946d573b451aa3b[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Wed Sep 30 10:36:52 2020 +0530
+
+    bugs fixed
+
+[33mcommit 5b4af5a50deebfff7919d088529c3af8c2bb8778[m
+Author: sanojan <starnetsweb@gmail.com>
+Date:   Tue Sep 29 21:50:12 2020 +0530
+
+    base created

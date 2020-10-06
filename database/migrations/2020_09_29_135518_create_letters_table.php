@@ -17,7 +17,7 @@ class CreateLettersTable extends Migration
             $table->id();
             $table->string('letter_no',60);
             $table->date('letter_date');
-            $table->date('letter_received_on');
+            $table->date('letter_received_on')->nullable();
             $table->string('letter_from',100);
             $table->string('letter_title');
             $table->longText('letter_content')->nullable();

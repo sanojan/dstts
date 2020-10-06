@@ -7,7 +7,7 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li class="active">
+                    <li >
                         <a href="{{route('home')}}">
                             <i class="material-icons">dashboard</i>
                             <span>Dashboard</span>
@@ -20,7 +20,7 @@
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li>
+                                    <li >
                                         <a href="{{route('letters.index')}}">View Letter</a>
                                     </li>
                                     <li >
@@ -29,14 +29,14 @@
                         </ul>
                     </li>
                     
-                    <li>
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>Tasks</span>
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
                                     <li >
@@ -110,7 +110,48 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>Home</h2>
+                <h2>VIEW LETTERS</h2>
+            </div>
+            <div class="card">
+                <div class="body">
+                    
+                    <table id="table_id" class="display compact">
+                        <thead>
+                            <tr>
+                                <th>Letter No.</th>
+                                <th>Letter Title</th>
+                                <th>Task Assigned To</th>
+                                <th>Task Assigned On</th>
+                                <th>Remarks</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(count($tasks) > 0)
+                                @foreach($tasks as $task)
+                                <tr>
+                                        <td>{{$task->letter->letter_no}}</td>
+                                    <td>{{$task->letter->letter_title}}&nbsp;</td>
+                                    @foreach($users as $user)
+                                        @if($user->id==$task->assigned_to)
+                                        <td>{{$user->name}}&nbsp;</td>
+                                        @endif
+                                    @endforeach
+                                    <td>{{$task->created_at}}</td>
+                                    <td>{{$task->remarks}}&nbsp;</td>
+                                    <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('tasks.show', $task->id) }}">
+                                            <i class="material-icons">pageview</i>
+                                                <span>VIEW</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @else
+                                <tr>No records found</tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 </section>
