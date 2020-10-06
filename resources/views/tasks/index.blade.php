@@ -132,11 +132,11 @@
                                 <tr>
                                         <td>{{$task->letter->letter_no}}</td>
                                     <td>{{$task->letter->letter_title}}&nbsp;</td>
-                                    @foreach($users as $user)
-                                        @if($user->id==$task->assigned_to)
-                                        <td>{{$user->name}}&nbsp;</td>
-                                        @endif
-                                    @endforeach
+                                    
+                                        
+                                        <td>{{$task->user->name}}</td>
+                                        
+                                    
                                     <td>{{$task->created_at}}</td>
                                     <td>{{$task->remarks}}&nbsp;</td>
                                     <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('tasks.show', $task->id) }}">

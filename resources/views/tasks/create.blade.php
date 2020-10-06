@@ -154,7 +154,38 @@
                             </div> 
                               
                         </div>
+                        <div class="row clearfix">
+                        <div class="col-md-12">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <textarea rows="3" class="form-control no-resize" name="remarks">{{ old('remarks') }}</textarea>
+                                        <label class="form-label">Remarks</label>
+                                    </div>
+                                    @error('remarks')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div>
                         
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                    <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="deadline" name="deadline" value="{{ old('deadline') }}">
+                                    <label class="form-label">Deadline</label> 
+                                    </div>
+                                    @error('deadline')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>    
+                            </div>
+                        </div>
                         <div class="row clearfix">
                             <div class="col-md-6">
                                 <div class="row clearfix">
@@ -171,36 +202,12 @@
                                             @enderror
                                            
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                            <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="deadline" name="deadline" value="{{ old('deadline') }}">
-                                            <label class="form-label">Deadline</label> 
-                                            </div>
-                                            @error('deadline')
-                                                    <label class="error" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </label>
-                                            @enderror
-                                        </div>    
-                                    </div>
                                 </div>  
                              
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <textarea rows="3" class="form-control no-resize" name="remarks">{{ old('remarks') }}</textarea>
-                                        <label class="form-label">Remarks</label>
-                                    </div>
-                                    @error('remarks')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
                         </div>
+                            
+                        
 
                         
                         

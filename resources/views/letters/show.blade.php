@@ -188,7 +188,119 @@
                                 <br />
                                 <div class="collapse" id="createTask" aria-expanded="false" style="height: 0px;">
                                     <div class="well">
-                                        This is createTask
+                                    <div class="card">
+                
+                <div class="body">
+                    <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" id="tasks_add_form">
+                    @csrf
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                    <select class="form-control letter_no_dropdown" style="width:100%;" id="letter_no" name="letter_no" value="{{ old('letter_no') }}">
+                                    <option value="{{$letter->id}}" selected>{{$letter->letter_no}} - <i>{{$letter->letter_title}}</i></option>
+                                    </select>
+                                    </div>
+                                    
+                                    @error('letter_no')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to" value="{{ old('assigned_to') }}">
+                                        <option value="" ></option>
+                                        @foreach($users as $user)
+                                        <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i></option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    @error('assigned_to')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div> 
+                              
+                        </div>
+                        <div class="row clearfix">
+                        <div class="col-md-12">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <textarea rows="3" class="form-control no-resize" name="remarks">{{ old('remarks') }}</textarea>
+                                        <label class="form-label">Remarks</label>
+                                    </div>
+                                    @error('remarks')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div>
+                        
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                    <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="deadline" name="deadline" value="{{ old('deadline') }}">
+                                    <label class="form-label">Deadline</label> 
+                                    </div>
+                                    @error('deadline')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="row clearfix">
+                                <div class="col-md-6">
+                                        <div class="form-group form-float">
+                                            
+                                            <input placeholder="" class="form-control" type="checkbox"  id="deadlinetf"   name="deadlinetf" value="{{ old('deadlinetf') }}" onchange="if(this.checked==true){document.getElementById('deadline').value='';document.getElementById('deadline').disabled=true;}else{document.getElementById('deadline').disabled=false;}">
+                                            <label class="form-label" for="deadlinetf">No Deadline Task</label> 
+                                            </div>
+                                            @error('deadlinetf')
+                                                    <label class="error" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </label>
+                                            @enderror
+                                           
+                                    </div>
+                                </div>  
+                             
+                            </div>
+                        </div>
+                            
+                        
+
+                        
+                        
+                        <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
+                        <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px">
+                            <i class="material-icons">note_add</i>
+                            <span>CREATE</span>
+                        </button>
+                        
+                        <a class="btn bg-grey waves-effect" style="margin-right:10px" href="{{route('letters.index')}}">
+                            <i class="material-icons">keyboard_backspace</i>
+                            <span>BACK</span>
+                        </a>
+
+                        
+                    </form>
+                </div>
+            </div>
                                     </div>
                                 </div>
                                 <br />

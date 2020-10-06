@@ -141,13 +141,13 @@
                                     </tr>
                                     <tr>
                                         <td>Assigned On:</td>
-                                        <th>{{$task->created_at}}</th>
+                                        <td>{{$task->created_at}}</td>
                                         
                                         
                                     </tr>
                                     <tr>
                                         <td>Remarks:</td>
-                                        <td>{{$task->remarks}}&nbsp;</td>
+                                        <td>{{$task->remarks}}</td>
                                         
                                     </tr>
                                     <tr>

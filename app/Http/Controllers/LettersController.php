@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Letter;
+use App\User;
 
 class LettersController extends Controller
 {
@@ -100,8 +101,9 @@ class LettersController extends Controller
     public function show($id)
     {
         $letter = Letter::find($id);
+        $users = User::all();
         //Return letters show page
-        return view('letters.show')->with('letter', $letter);
+        return view('letters.show')->with('letter', $letter)->with('users', $users);
     }
 
     /**

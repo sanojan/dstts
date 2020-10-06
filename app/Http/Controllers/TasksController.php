@@ -57,12 +57,12 @@ class TasksController extends Controller
 
          
 
-        //Create an instance of letter model
-        $id = Auth::id();
+        //Create an instance of task model
+        //$id = Auth::id();
         $task = new Task;
         $task->letter_id = $request->letter_no;
-        $task->assigned_by=$id;
-        $task->assigned_to = $request->assigned_to;
+        $task->assigned_by= Auth::user()->id;
+        $task->user_id = $request->assigned_to;
         $task->deadline = $request->deadline;
         $task->remarks = $request->remarks;;
         

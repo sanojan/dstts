@@ -13,16 +13,16 @@ class CreateAssignmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('assignments', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('letter_id');
             $table->unsignedBigInteger('assigned_by');
-            $table->foreignId('assigned_to');
+            $table->foreignId('user_id');
             $table->longText('remarks')->nullable();
             $table->date('deadline')->nullable();
             $table->timestamps();
             $table->foreign('letter_id')->references('id')->on('letters')->onDelete('cascade');
-            $table->foreign('assigned_to')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -33,6 +33,6 @@ class CreateAssignmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assignments');
+        Schema::dropIfExists('tasks');
     }
 }
