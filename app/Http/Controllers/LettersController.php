@@ -62,7 +62,7 @@ class LettersController extends Controller
             //Get extension only
             $extension = $request->letter_scanned_copy->extension();
             //Filename to store
-            $fileNameToStore = date('Y-m-d') . '.' . $extension;
+            $fileNameToStore = time() . date('Ymd') . '.' . $extension;
             //UploadFile
             $path = $request->letter_scanned_copy->storeAs('public/scanned_letters', $fileNameToStore);
         }else{
@@ -112,7 +112,10 @@ class LettersController extends Controller
      */
     public function edit($id)
     {
-        //
+        //Validation for edit fields
+        
+        $letter = Letter::find($id);
+        return view('letters.edit')->with('letter', $letter);
     }
 
     /**
@@ -124,7 +127,63 @@ class LettersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //Update letter details
+        $this->validate($request, [
+            'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
+            'letter_date' => 'before:tomorrow',
+            'letter_sender' => 'required|regex:/^[a-z .\'\/ - 0-9]+$/i|max:150',
+            'letter_title' => 'required|max:150',
+            'letter_content' => 'nullable|max:250',
+            'letter_scanned_copy' => 'max:1999|nullable|mimes:jpeg,jpg,pdf'
+
+        ],
+        ['letter_no.regex' => 'letter number cannot contain special characters',
+        'letter_sender.regex' => 'letter sender name cannot contain special characters',
+        'letter_scanned_copy.max' => 'Document file size should be less than 2 MB',
+        'letter_scanned_copy.mimes' => 'Only PDF, JPEG & JPG formats are allowed']);
+
+        $letter = Letter::find($id);
+
+        //Handle File Upload
+        if($request->hasFile('letter_scanned_copy')){
+            // Get file name with extension
+            //$filenameWithExt = $request->letter_scanned_copy->path();
+            // Get filename only
+            //$filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            //Get extension only
+            $extension = $request->letter_scanned_copy->extension();
+            //Filename to store
+            $fileNameToStore = time() . date('Ymd') . '.' . $extension;
+            //UploadFile
+            $path = $request->letter_scanned_copy->storeAs('public/scanned_letters', $fileNameToStore);
+
+            if($letter->letter_scanned_copy != NULL){
+                $oldpic = 'public/scanned_letters/' . $letter->letter_scanned_copy;
+                Storage::delete($oldpic);
+            }
+
+        }else{
+            $fileNameToStore = NULL;
+        }
+
+        
+
+        $letter->letter_no = $request->letter_no;
+        $letter->letter_date = $request->letter_date;
+        $letter->letter_from = $request->letter_sender;
+        $letter->letter_title = $request->letter_title;
+        $letter->letter_content = $request->letter_content;
+        $letter->letter_scanned_copy = $fileNameToStore;
+        
+        $letter->save();
+
+        $notification = array(
+            'message' => 'Letter has been updated successfully!', 
+            'alert-type' => 'success'
+        );
+
+        return redirect('/letters/' . $id)->with($notification);
+
     }
 
     /**
@@ -135,6 +194,15 @@ class LettersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //Delete letter
+        $letter = Letter::find($id);
+        $letter->delete();
+        
+        $notification = array(
+            'message' => 'Letter has been deleted sucessfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect('/letters')->with($notification);
     }
 }

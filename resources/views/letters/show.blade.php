@@ -162,36 +162,56 @@
                                     </tr>
                                     <tr>
                                         <td>Scanned Copy:</td>
-                                        <td><button type="button" class="btn btn-default btn-xs waves-effect">
-                                                <i class="material-icons">file_download</i>
-                                            </button> 
-                                        </td>
-                                        
+                                        @if($letter->letter_scanned_copy)
+                                            <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('scanned_letters/' . $letter->letter_scanned_copy) }}" target="_blank">
+                                                    <i class="material-icons">file_download</i>
+                                                </a> Click to view attached scanned copy
+                                            </td>
+                                        @else
+                                            <td>No Scanned copy was attached</td>
+                                        @endif    
                                     </tr>
                                 </tbody>    
                             </table>
                             <div>
-                                <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('letters.index')}}">
-                                    <i class="material-icons">keyboard_backspace</i>
-                                    <span>BACK</span>
-                                </a>
-                                <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect">
+                                <a type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" href="{{route('letters.edit', $letter->id)}}">
                                     <i class="material-icons">mode_edit</i>
                                     <span>EDIT DETAILS</span>
-                                </button>
-                                <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect" >
+                                </a>
+                                <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#createTask" aria-expanded="false" aria-controls="createTask">
                                     <i class="material-icons">add_to_photos</i>
                                     <span>CREATE TASK</span>
                                 </button>
-                                <button type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" >
+                                <button type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect collapsed " data-toggle="collapse" data-target="#taskHistory" aria-expanded="false" aria-controls="taskHistory">
                                     <i class="material-icons">access_time</i>
                                     <span>VIEW TASK HISTORY</span>
-                                </button>
-                                <button type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" >
+                                </button><br /><br />
+
+                                <form method="POST" action="{{ route('letters.destroy', $letter->id) }}">
+                                    {{ csrf_field() }}
+                                    {{ method_field('DELETE') }}
+
+                                    <button type="submit" class="btn btn-danger btn-xs waves-effect"  onclick="return confirm('Are you sure? You cannot revert this action.')">
+                                        <i class="material-icons">delete</i>
+                                            <span>DELETE LETTER</span>
+                                    </button>
+                                </form>                                                                                                     
+                                <!-- <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" href="{{route('letters.destroy', $letter->id)}}">
                                     <i class="material-icons">delete</i>
                                     <span>DELETE LETTER</span>
-                                </button>
-                                
+                                </a> -->
+                                <br />
+                                <div class="collapse" id="createTask" aria-expanded="false" style="height: 0px;">
+                                    <div class="well">
+                                        This is createTask
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="collapse" id="taskHistory" aria-expanded="false" style="height: 0px;">
+                                    <div class="well">
+                                        This is taskHistory
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
