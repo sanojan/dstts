@@ -161,7 +161,7 @@ class LettersController extends Controller
 
             if($letter->letter_scanned_copy != NULL){
                 $oldpic = 'public/scanned_letters/' . $letter->letter_scanned_copy;
-                Storage::delete($oldpic);
+                \Storage::delete($oldpic);
             }
 
         }else{

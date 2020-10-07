@@ -24,4 +24,10 @@ class Task extends Model
      {
         return $this->belongsTo('App\User');
      }
+
+     public function histories()
+     {
+        return $this->hasMany('App\History');
+     }
+
 }

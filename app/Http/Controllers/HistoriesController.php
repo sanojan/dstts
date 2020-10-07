@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\History;
 use Illuminate\Http\Request;
 use App\Letter;
 use App\User;
 use App\Task;
 use Illuminate\Support\Facades\Auth;
 
-class TasksController extends Controller
+class HistoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,10 +18,11 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $letters = Letter::all();
-        $users = User::all();
-        $tasks = Task::all();
-        return view('tasks.index')->with('letters', $letters)->with('users', $users)->with('tasks', $tasks);
+        //$histories = History::all();
+        //$letters = Letter::all();
+        //$users = User::all();
+        //$tasks = Task::find($id);
+        //return view('histories.index')->with('histories', $histories)->with('letters', $letters)->with('users', $users)->with('tasks', $tasks);
     }
 
     /**
@@ -30,9 +32,7 @@ class TasksController extends Controller
      */
     public function create()
     {
-        $letters = Letter::all();
-        $users = User::all();
-        return view('tasks.create')->with('letters', $letters)->with('users', $users);
+        //
     }
 
     /**
@@ -43,10 +43,10 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-         //Create task
+         //Create history
          $this->validate($request, [
-            'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
-            'assigned_to' => 'required',
+            'task_id' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
+            'status' => 'required',
             'deadline' => 'nullable|after:today',
             'remarks' => 'nullable'
 
@@ -76,31 +76,30 @@ class TasksController extends Controller
         );
 
         return redirect('/tasks')->with($notification);
-
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\History  $history
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(History $history)
     {
-        //Return tasks show page
-        $task = Task::find($id);
+        $histories = History::find($id);
         $letters = Letter::all();
         $users = User::all();
-        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users);
+        $tasks = Task::all();
+        return view('histories.index')->with('histories', $histories)->with('letters', $letters)->with('users', $users)->with('tasks', $tasks);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\History  $history
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(History $history)
     {
         //
     }
@@ -109,10 +108,10 @@ class TasksController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\History  $history
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, History $history)
     {
         //
     }
@@ -120,10 +119,10 @@ class TasksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\History  $history
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(History $history)
     {
         //
     }
