@@ -13,6 +13,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -29,6 +30,7 @@
                         </ul>
                     </li>
                     
+                    
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -44,6 +46,7 @@
                                     </li>
                         </ul>
                     </li>
+
                     <li >
                         <a href="index.html">
                             <i class="material-icons">group</i>
@@ -68,6 +71,7 @@
                                     </li>
                         </ul>
                     </li>
+                    @endif
                     <li >
                         <a href="index.html">
                             <i class="material-icons">help</i>
