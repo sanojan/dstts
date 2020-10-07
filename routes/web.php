@@ -25,7 +25,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('users', 'UsersController');
+Route::resource('users', 'UsersController')->middleware('auth');
 Route::resource('letters', 'LettersController')->middleware('auth');
 Route::resource('tasks', 'TasksController')->middleware('auth');
 Route::resource('histories', 'HistoriesController')->middleware('auth');

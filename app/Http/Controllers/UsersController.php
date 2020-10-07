@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Gate;
+use App\User;
 
 class UsersController extends Controller
 {
@@ -13,7 +15,23 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        //Create History
+        if (Gate::allows('sys_admin')) {
+            //$letters = Letter::all();
+            //$users = User::all();
+            $users = User::all();
+
+            return view('users.index')->with('users', $users);
+            }
+            
+            else{
+                $notification = array(
+                    'message' => 'You do not have permission to view Users',
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect('/home')->with($notification);
+            }
     }
 
     /**
