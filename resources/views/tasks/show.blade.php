@@ -11,6 +11,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -26,6 +27,7 @@
                                     </li>
                         </ul>
                     </li>
+                    @endif
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -36,11 +38,14 @@
                                     <li class="active">
                                         <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
                                         <a href="{{route('tasks.create')}}">Assign Task</a>
                                     </li>
+                                    @endif
                         </ul>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li >
                         <a href="index.html">
                             <i class="material-icons">group</i>
@@ -65,6 +70,7 @@
                                     </li>
                         </ul>
                     </li>
+                    @endif
                     <li >
                         <a href="index.html">
                             <i class="material-icons">help</i>
@@ -131,11 +137,10 @@
                                     </tr>
                                     <tr>
                                         <td>Assigned To:</td>
-                                        @foreach($users as $user)
-                                        @if($user->id==$task->assigned_to)
-                                        <td>{{$user->name}}&nbsp;</td>
-                                        @endif
-                                    @endforeach
+                                        
+                                       
+                                        <td>{{$task->user->name}}</td>
+
                                         
                                         
                                     </tr>
@@ -173,9 +178,9 @@
                                     <span>ACCEPT TASK</span>
                                 </a>
                                
-                                <button type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" >
-                                    <i class="material-icons">access_time</i>
-                                    <span>VIEW TASK HISTORY</span>
+                                <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" >
+                                    <i class="material-icons">fast_forward</i>
+                                    <span>ACCEPT & FORWARD</span>
                                 </button>
                                 </button> <button type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" >
                                     <i class="material-icons">close</i>

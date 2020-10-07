@@ -7,6 +7,7 @@ use App\Letter;
 use App\User;
 use App\Task;
 use Illuminate\Support\Facades\Auth;
+use Gate;
 
 class TasksController extends Controller
 {
@@ -17,10 +18,16 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $letters = Letter::all();
-        $users = User::all();
+        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        //$letters = Letter::all();
+        //$users = User::all();
         $tasks = Task::all();
-        return view('tasks.index')->with('letters', $letters)->with('users', $users)->with('tasks', $tasks);
+        return view('tasks.index')->with('tasks', $tasks);
+        }
+        else{
+            $tasks = Auth::user()->tasks;
+            return view('tasks.index')->with('tasks', $tasks);
+        }
     }
 
     /**
@@ -30,9 +37,19 @@ class TasksController extends Controller
      */
     public function create()
     {
+        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
         $letters = Letter::all();
         $users = User::all();
         return view('tasks.create')->with('letters', $letters)->with('users', $users);
+        }
+        else{
+            $notification = array(
+                'message' => 'You do not have permission to create Tasks',
+                'alert-type' => 'warning'
+            );
+            
+            return redirect('/home')->with($notification);
+        }
     }
 
     /**
@@ -43,7 +60,8 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-         //Create task
+        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+         //Create letters
          $this->validate($request, [
             'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
             'assigned_to' => 'required',
@@ -76,6 +94,15 @@ class TasksController extends Controller
         );
 
         return redirect('/tasks')->with($notification);
+    }
+    else{
+        $notification = array(
+            'message' => 'You do not have permission to create Tasks',
+            'alert-type' => 'warning'
+        );
+        
+        return redirect('/home')->with($notification);
+    }
 
     }
 

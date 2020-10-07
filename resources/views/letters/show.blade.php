@@ -11,6 +11,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -26,6 +27,7 @@
                                     </li>
                         </ul>
                     </li>
+                    @endif
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -36,11 +38,14 @@
                                     <li>
                                         <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
                                         <a href="{{route('tasks.create')}}">Assign Task</a>
                                     </li>
+                                    @endif
                         </ul>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li >
                         <a href="index.html">
                             <i class="material-icons">group</i>
@@ -65,6 +70,7 @@
                                     </li>
                         </ul>
                     </li>
+                    @endif
                     <li >
                         <a href="index.html">
                             <i class="material-icons">help</i>
