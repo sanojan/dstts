@@ -115,7 +115,7 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>VIEW LETTERS</h2>
+                <h2>VIEW TASKS</h2>
             </div>
             <div class="card">
                 <div class="body">

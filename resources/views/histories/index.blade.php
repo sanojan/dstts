@@ -1,6 +1,8 @@
 @extends('inc.layout')
 
 @section('sidebar')
+ 
+            
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
@@ -11,7 +13,6 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -27,7 +28,7 @@
                                     </li>
                         </ul>
                     </li>
-                    @endif
+                    
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -38,14 +39,11 @@
                                     <li class="active">
                                         <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
                                         <a href="{{route('tasks.create')}}">Assign Task</a>
                                     </li>
-                                    @endif
                         </ul>
                     </li>
-                    @if(Gate::allows('sys_admin'))
                     <li >
                         <a href="index.html">
                             <i class="material-icons">group</i>
@@ -70,7 +68,6 @@
                                     </li>
                         </ul>
                     </li>
-                    @endif
                     <li >
                         <a href="index.html">
                             <i class="material-icons">help</i>
@@ -113,20 +110,26 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>TASK DETAILS</h2>
+                <h2>TASK HISTORIES</h2>
             </div>
             <div class="card">
-                        <div class="body table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th style="width:200px"></th>
-                                        <th style="width:20px"></th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
+                <div class="body">
+                    
+                    <table id="table_id" class="display compact">
+                        <thead>
+                            <tr>
+                                <th>Letter No.</th>
+                                <th>Letter Title</th>
+                                <th>Task Assigned To</th>
+                                <th>Task Assigned On</th>
+                                <th>Remarks</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(count($tasks) > 0)
+                                @foreach($tasks as $task)
+                                <tr>
                                         <td>Letter Number:</td>
                                         <td>{{$task->letter->letter_no}}</td>
                                     </tr>
@@ -137,12 +140,7 @@
                                     </tr>
                                     <tr>
                                         <td>Assigned To:</td>
-                                        
-                                       
-                                        <td>{{$task->user->name}}</td>
-
-                                        
-                                        
+                                        <td>{{$task->user->name}}&nbsp;</td>
                                     </tr>
                                     <tr>
                                         <td>Assigned On:</td>
@@ -165,31 +163,14 @@
                                         <td>&nbsp;</td>
                                         
                                     </tr>
-                                    
-                                </tbody>    
-                            </table>
-                            <div>
-                                <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index')}}">
-                                    <i class="material-icons">keyboard_backspace</i>
-                                    <span>BACK</span>
-                                </a>
-                                <a type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" href="{{route('histories.show', $task->id)}}">
-                                    <i class="material-icons">check</i>
-                                    <span>ACCEPT TASK</span>
-                                </a>
-                               
-                                <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" >
-                                    <i class="material-icons">fast_forward</i>
-                                    <span>ACCEPT & FORWARD</span>
-                                </button>
-                                </button> <button type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" >
-                                    <i class="material-icons">close</i>
-                                    <span>REJECT TASK</span>
-                                </button>
-                                
-                            </div>
-                        </div>
-                    </div>
+                                @endforeach
+                            @else
+                                <tr>No records found</tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 </section>
 @endsection
