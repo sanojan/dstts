@@ -45,7 +45,7 @@
                                     @endif
                         </ul>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    @if(Gate::allows('sys_admin'))
                     <li >
                         <a href="index.html">
                             <i class="material-icons">group</i>
