@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class History extends Model
 {
     //Table name
-    protected $table = 'letters';
+    protected $table = 'histories';
 
     //Primarykey
     public $primaryKey = 'id';
