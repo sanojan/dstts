@@ -127,7 +127,7 @@
                                 <th>Letter Title</th>
                                 <th>Task Assigned To</th>
                                 <th>Task Assigned On</th>
-                                <th>Remarks</th>
+                                <th>Current Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -143,7 +143,15 @@
                                         
                                     
                                     <td>{{$task->created_at}}</td>
-                                    <td>{{$task->remarks}}&nbsp;</td>
+                                    @if(count($task->histories) > 0)
+                                            @foreach($task->histories as $history)
+                                                @if($history->current==true)
+                                                <td>{{$history->status}}&nbsp;</td>
+                                                @endif
+                                            @endforeach
+                                    @else
+                                    <td>Waiting to be Accepted&nbsp;</td>
+                                    @endif
                                     <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('tasks.show', $task->id) }}">
                                             <i class="material-icons">pageview</i>
                                                 <span>VIEW</span>

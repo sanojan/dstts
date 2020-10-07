@@ -8,6 +8,7 @@ use App\User;
 use App\Task;
 use Illuminate\Support\Facades\Auth;
 use Gate;
+use DB;
 
 class TasksController extends Controller
 {
@@ -66,12 +67,12 @@ class TasksController extends Controller
             'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
             'assigned_to' => 'required',
             'deadline' => 'nullable|after:today',
-            'remarks' => 'nullable'
+            'remarks' => 'nullable | max:150'
 
         ],
         ['letter_no.regex' => 'letter number cannot contain special characters',
-        'deadline.regex' => 'Deadline can not be a previous day',
-        'assigned_to.max' => 'Assigned to Can not be empty']);
+        'deadline.after' => 'Deadline can not be a previous day',
+        'remarks.max' => 'Max 150 charectors']);
 
          
 
@@ -92,7 +93,42 @@ class TasksController extends Controller
             'message' => 'Task has been created successfully!', 
             'alert-type' => 'success'
         );
+        if(isset($request->accept_and_forward))
+        {
+             //Create history
+            $this->validate($request, [
+                'remarks' => 'nullable | max:150'
+            ],
+            ['remarks.max' => 'Maximu 150 charectors acceptable']);
+            //Create an instance of history model
+            //$id = Auth::id();
+            $status='Forwarded';
 
+            $tasks = Task::find($request->old_task_id);
+            foreach($tasks->histories as $history)
+            {
+                if($history->current==true)
+                {
+                    //$history1=History::find($history->id);
+                    $history->current=false;
+                    $history->save();
+                }
+            }
+            $history = new History;
+            $history->task_id = $request->old_task_id;
+            $history->status= $status;
+            $history->current= true;
+            $history->remarks = $request->reject_remarks;
+            $history->save();
+
+            //session()->put('success','Letter has been created successfully.');
+
+            $notification = array(
+                'message' => 'Task has been Accepted successfully!', 
+                'alert-type' => 'success'
+            );
+            //return redirect('/tasks/'.$request->task_id)->with($notification);
+        }
         return redirect('/tasks')->with($notification);
     }
     else{
@@ -118,7 +154,9 @@ class TasksController extends Controller
         $task = Task::find($id);
         $letters = Letter::all();
         $users = User::all();
-        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users);
+        $conditions=['workplace' => Auth::user()->workplace, 'branch' => Auth::user()->branch];
+        $limited_users = DB::table('users')->where($conditions)->whereNotIn('id', array(Auth::user()->id))->get();//User::where('workplace','workplace1');
+        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('limited_users', $limited_users);
     }
 
     /**
