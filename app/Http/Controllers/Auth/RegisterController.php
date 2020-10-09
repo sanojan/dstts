@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Designation;
+use App\Workplace;
+use App\Workplacetype;
+use App\Service;
 
 class RegisterController extends Controller
 {
@@ -75,6 +79,15 @@ class RegisterController extends Controller
         ]);
 
         
+    }
+    protected function showRegistrationForm()
+    {
+            $designations = Designation::all()->sortBy('name');
+            $services = Service::all()->sortBy('name');
+            $workplacetypes = Workplacetype::all();
+            $workplaces = Workplace::all();
+            //Return letters show page
+            return view('auth.register')->with('services', $services)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('workplaces', $workplaces);
     }
     
     /**

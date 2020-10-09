@@ -26,6 +26,9 @@
 
     <!-- Custom Css -->
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
+
+     <!-- Dropdown with search-->
+     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 
 <body class="signup-page">
@@ -62,7 +65,7 @@
                                     <i class="material-icons">people</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="gender" name="gender">
+                                <select class="form-control gender_dropdown" id="gender" name="gender">
                                     <option value="" @if(old('gender' )== '') selected disabled @endif>Select your Gender</option>
                                     <option value="Male" @if(old('gender')=='Male') selected @endif>Male</option>
                                     <option value="Female" @if(old('gender')=='Female') selected @endif>Female</option>
@@ -132,7 +135,7 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">phone_iphone</i>`
+                                    <i class="material-icons">phone_iphone</i>
                                 </span>
                                 <div class="form-line">
                                 <input type="text" class="form-control" placeholder="Mobile No" name="mobile_no" value="{{ old('mobile_no') }}">
@@ -145,49 +148,46 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row clearfix">
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">work</i>
+                                    <i class="material-icons">location_city</i>
                                 </span>
-                                <div class="form-line">
-                                    <select class="form-control" id="designation" name="designation" >
-                                        <option value="" @if(old('designation')=='') selected disabled @endif>Select your designation</option>
-                                        <option value="Des1" @if(old('designation')=='Des1') selected @endif>Des1</option>
-                                        <option value="Des2" @if(old('designation')=='Des2') selected @endif>Des2</option>
-                                    </select>
-                                </div>
-                                @error('designation')
+                                    <div class="form-line">
+                                        <select class="form-control workplace_type_dropdown" style="width:100%;" id="workplace_type" name="workplace_type" value="{{ old('workplace_type') }}">
+                                        <option value="" @if(old('workplace_type')=='') selected disabled @endif>Work Place Type</option>
+                                        @foreach($workplacetypes as $workplacetype)
+                                        <option value="{{$workplacetype->id}}" @if(old('workplace_type')=='{{$workplacetype->id}}') selected @endif>{{$workplacetype->name}} </option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    @error('workplace_type')
                                     <label class="error" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </label>
-                                @enderror
+                                    @enderror
                             </div>
                         </div>
-
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">share</i>
+                                    <i class="material-icons">location_city</i>
                                 </span>
-                                <div class="form-line">
-                                    <select class="form-control" id="branch" name="branch" >
-                                        <option value="" @if(old('branch')=='') selected disabled @endif>Select your branch</option>
-                                        <option value="branch1" @if(old('branch')=='branch1') selected @endif>branch1</option>
-                                        <option value="branch2" @if(old('branch')=='branch2') selected @endif>branch2</option>
-                                    </select>
-                                </div>
-                                @error('branch')
+                                    <div class="form-line">
+                                        <select class="form-control workplace_dropdown" style="width:100%;" id="workplace" name="workplace" value="{{ old('workplace') }}">
+                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Work Place</option>
+                                        </select>
+                                    </div>
+                                    @error('workplace')
                                     <label class="error" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </label>
-                                @enderror
+                                    @enderror
                             </div>
                         </div>
                     </div>
-
                     <div class="row clearfix">
 
                         <div class="col-sm-6">
@@ -196,10 +196,11 @@
                                     <i class="material-icons">business_center</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="service" name="service" >
+                                <select class="form-control service_dropdown" id="service" name="service" >
                                         <option value="" @if(old('service')=='') selected disabled @endif>Select your service</option>
-                                        <option value="service1" @if(old('service')=='service1') selected @endif>service1</option>
-                                        <option value="service2" @if(old('service')=='service2') selected @endif>service2</option>
+                                        @foreach($services as $service)
+                                        <option value="{{$service->id}}" @if(old('service')=='{{$service->id}}') selected @endif>{{$service->name}} </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 @error('service')   
@@ -215,7 +216,7 @@
                                     <i class="material-icons">people_outline</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="class" name="class" >
+                                <select class="form-control class_dropdown" id="class" name="class" >
                                         <option value="" @if(old('class')=='') selected disabled @endif>Select your class</option>
                                         <option value="1" @if(old('class')=='1') selected @endif>class1</option>
                                         <option value="2" @if(old('class')=='2') selected @endif>class2</option>
@@ -232,49 +233,61 @@
                     </div>
 
                     <div class="row clearfix">
+                    <div class="col-sm-6">
+                    <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">work</i>`
+                                </span>
+                                    <div class="form-line">
+                                        <select class="form-control designation_dropdown" style="width:100%;" id="designation" name="designation" value="{{ old('designation') }}">
+                                        <option value="" @if(old('designation')=='') selected disabled @endif>Select your designation</option>
+                                        @foreach($designations as $designation)
+                                        <option value="{{$designation->id}}" @if(old('designation')=='{{$designation->id}}') selected @endif>{{$designation->name}} </option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    @error('designation')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                    @enderror
+                                </div>
+
+                        </div>
+
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">location_city</i>
+                                    <i class="material-icons">share</i>
                                 </span>
                                 <div class="form-line">
-                                <select class="form-control" id="workplace_type" name="workplace_type" >
-                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Select your workplace type</option>
-                                        <option value="workplace1" @if(old('workplace_type')=='workplace1') selected @endif>workplace1</option>
-                                        <option value="workplace2" @if(old('workplace_type')=='workplace2') selected @endif>workplace2</option>
-                                        <option value="workplace3" @if(old('workplace_type')=='workplace3') selected @endif>workplace3</option>
+                                    <select class="form-control branch_dropdown" id="branch" name="branch" >
+                                        <option value="" @if(old('branch')=='') selected disabled @endif>Select your branch</option>
+                                        <option value="Administration" @if(old('branch')=='Administration') selected @endif>Administration</option>
+                                        <option value="Accounts" @if(old('branch')=='Accounts') selected @endif>Accounts</option>
+                                        <option value="Engineering" @if(old('branch')=='Engineering') selected @endif>Engineering</option>
+                                        <option value="Field Branch" @if(old('branch')=='Field Branch') selected @endif>Field Branch</option>
+                                        <option value="Internal Audit" @if(old('branch')=='Internal Audit') selected @endif>Internal Audit</option>
+                                        <option value="Land" @if(old('branch')=='Land') selected @endif>Land</option>
+                                        <option value="NIC Branch" @if(old('branch')=='NIC Branch') selected @endif>NIC Branch</option>
+                                        <option value="Planning" @if(old('branch')=='Planning') selected @endif>Planning</option> 
+                                        <option value="Registrar" @if(old('branch')=='Registrar') selected @endif>Registrar</option>
+                                        <option value="Samurdhy" @if(old('branch')=='Samurdhy') selected @endif>Samurdhy</option>
+                                        <option value="Social Service" @if(old('branch')=='Social Service') selected @endif>Social Service</option>
+
                                     </select>
                                 </div>
-                                @error('workplace_type')   
+                                @error('branch')
                                     <label class="error" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </label>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">location_city</i>
-                                </span>
-                                <div class="form-line">
-                                <select class="form-control" id="workplace" name="workplace" >
-                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Select your workplace</option>
-                                        <option value="workplace1" @if(old('workplace')=='workplace1') selected @endif>workplace1</option>
-                                        <option value="workplace2" @if(old('workplace')=='workplace2') selected @endif>workplace2</option>
-                                        <option value="workplace3" @if(old('workplace')=='workplace3') selected @endif>workplace3</option>
-                                    </select>
-                                </div>
-                                @error('workplace')   
-                                    <label class="error" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </label>
-                                @enderror
-                            </div>
-                        </div>
-                        
-                        
                     </div>
+                    
+                    
 
                     <div class="row clearfix">
                         
@@ -357,6 +370,73 @@
     <script src="{{asset('js/admin.js')}}"></script>
     
     <script src="{{asset('js/pages/examples/sign-up.js')}}"></script>
+    <!-- Dropdown with search-->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+<script type="text/javascript">
+$('.designation_dropdown').select2({
+  placeholder: 'Select Designation',
+  width: 'resolve'
+});
+
+$('.workplace_type_dropdown').select2({
+  placeholder: 'Select Work Place Type',
+  width: 'resolve'
+});
+
+$('.workplace_dropdown').select2({
+  placeholder: 'Select Work Place',
+  width: 'resolve'
+});
+
+$('.gender_dropdown').select2({
+  placeholder: 'Select Gender',
+  width: 'resolve'
+});
+
+$('.branch_dropdown').select2({
+  placeholder: 'Select Branch',
+  width: 'resolve'
+});
+
+$('.class_dropdown').select2({
+  placeholder: 'Select Class',
+  width: 'resolve'
+});
+
+$('.service_dropdown').select2({
+  placeholder: 'Select Service',
+  width: 'resolve'
+});
+
+</script>
+
+<script>
+    $('#workplace_type').change(function(){
+  var workplaceid = $(this).val();  
+  if(workplaceid){
+    $.ajax({
+      type:"GET",
+      url:"{{url('get-workplaces-list')}}?workplace_type_id="+workplaceid,
+      success:function(res){        
+      if(res){
+        $("#workplace").empty();
+        $("#workplace").append('<option>Select Work Place</option>');
+        $.each(res,function(key,value){
+          $("#workplace").append('<option value="'+key+'">'+value+'</option>');
+        });
+      
+      }else{
+        $("#workplace").empty();
+      }
+      }
+    });
+  }else{
+    $("#workplace").empty();
+  }   
+  });
+</script>
+
 </body>
 
 </html>
