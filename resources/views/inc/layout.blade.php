@@ -428,7 +428,8 @@
 });
 $('.assign_to_dropdown').select2({
   placeholder: 'Select Officer to Assign',
-  width: 'resolve'
+  width: 'resolve',
+  multiple:true
 });
 </script>
 

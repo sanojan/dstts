@@ -24,12 +24,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-<<<<<<< HEAD
-
-Route::resource('users', 'UsersController')->middleware('auth');
-=======
 Route::resource('users', 'UsersController');
->>>>>>> 8a0e7684981414db713d4739d3a1c9d99080b41a
 Route::resource('letters', 'LettersController')->middleware('auth');
 Route::resource('tasks', 'TasksController')->middleware('auth');
 Route::resource('histories', 'HistoriesController')->middleware('auth');
