@@ -43,14 +43,14 @@ class TasksController extends Controller
      */
     public function create()
     {
-        if (Gate::allows('admin') || Gate::allows('div_sec')) {
+        if (Gate::allows('admin') || Gate::allows('sys_admin')) {
         $letters = Auth::user()->letters;
-        $users = User::where('workplace', Auth::user()->workplace);
+        $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
         return view('tasks.create')->with('letters', $letters)->with('users', $users);
         }
-        elseif(Gate::allows('sys_admin') ){
-            $letters = Letter::all();
-            $users = User::all();
+        elseif(Gate::allows('div_sec') ){
+            $letters = Auth::user()->letters;
+            $users = DB::table('users')->where([['workplace', '=', 'Ampara - District Secretariat'],['designation', '=', 'District Secretary'],])->orWhere('designation', 'Divisional Secretary')->whereNotIn('id', array(Auth::user()->id))->get();
             return view('tasks.create')->with('letters', $letters)->with('users', $users);
         }else{
             $notification = array(
