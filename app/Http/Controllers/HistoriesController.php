@@ -100,6 +100,20 @@ class HistoriesController extends Controller
                 'message' => 'Task has been Completed successfully!', 
                 'alert-type' => 'success'
             );
+
+        }
+
+        if($request->subbutton == "undo_task"){
+            $status = "Cancelled";
+            $history->status = $status;
+            $history->remarks = $request->cancel_remarks;
+            $history->current= true;
+            $history->save();
+
+            $notification = array(
+                'message' => 'Task has been Canceled successfully!', 
+                'alert-type' => 'success'
+            );
         }
 
        

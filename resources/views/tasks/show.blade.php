@@ -220,9 +220,9 @@
                                                         <i class="material-icons">keyboard_backspace</i>
                                                         <span>BACK</span>
                                                     </a>
-                                                    <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
-                                                        <i class="material-icons">close</i>
-                                                        <span>REJECT TASK</span>
+                                                    <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#cancelTask" aria-expanded="false" aria-controls="rejectTask">
+                                                        <i class="material-icons">undo</i>
+                                                        <span>CANCEL TASK</span>
                                                     </a>
                                                     <a type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect" data-toggle="collapse" data-target="#completeTask" aria-expanded="false" aria-controls="completeTask">
                                                         <i class="material-icons">done</i>
@@ -240,7 +240,7 @@
                                                         <i class="material-icons">keyboard_backspace</i>
                                                         <span>BACK</span>
                                                     </a>
-                                                    @elseif($history->status == "Completed")
+                                                    @elseif($history->status == "Completed" | $history->status == "Cancelled")
                                                     <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index')}}">
                                                         <i class="material-icons">keyboard_backspace</i>
                                                         <span>BACK</span>
@@ -305,7 +305,25 @@
                                             <td>
                                         <button type="submit" style="margin-right:10px" name="subbutton" value="Reject" class="btn btn-danger btn-xs waves-effect" >
                                         <i class="material-icons">check</i>
-                                        <span>Reject</span>
+                                        <span>SUBMIT</span>
+                                        </button>
+                                        </td>
+                                        </tr>
+                                    
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="collapse" id="cancelTask" aria-expanded="false" style="height: 0px;">
+                                    <div class="well" style="background:#03B7F6;"><table class="table">
+                                        <tr>
+                                        <td style="color:black;">Reason for Cancellation :</td>
+                                            <td><input type="text" name="cancel_remarks" class="form-control" > </td>
+                                                
+                                            <td>
+                                        <button type="submit" style="margin-right:10px" name="subbutton" value="undo_task" class="btn btn-primary btn-xs waves-effect" >
+                                        <i class="material-icons">check</i>
+                                        <span>SUBMIT</span>
                                         </button>
                                         </td>
                                         </tr>
