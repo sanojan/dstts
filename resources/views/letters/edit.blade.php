@@ -11,7 +11,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -38,7 +38,7 @@
                                     <li>
                                         <a href="pages/widgets/cards/basic.html">View Task(s)</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                                     <li>
                                         <a href="pages/widgets/cards/colored.html">Assign Task</a>
                                     </li>

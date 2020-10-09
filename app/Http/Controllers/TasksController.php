@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Letter;
 use App\User;
 use App\Task;
+use App\History;
 use Illuminate\Support\Facades\Auth;
 use Gate;
 use DB;
@@ -19,15 +20,19 @@ class TasksController extends Controller
      */
     public function index()
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('admin') || Gate::allows('div_sec') || Gate::allows('user')) {
         //$letters = Letter::all();
         //$users = User::all();
-        $tasks = Task::all();
+        
+        $tasks = Task::where([['user_id', '=', Auth::user()->id],])->orWhere('assigned_by', Auth::user()->id)->get();
         return view('tasks.index')->with('tasks', $tasks);
+        
         }
-        else{
-            $tasks = Auth::user()->tasks;
+        elseif(Gate::allows('sys_admin')){
+            $tasks = Task::all();
             return view('tasks.index')->with('tasks', $tasks);
+        }else{
+            
         }
     }
 
@@ -38,19 +43,26 @@ class TasksController extends Controller
      */
     public function create()
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
-        $letters = Letter::all();
-        $users = User::all();
+        if (Gate::allows('admin') || Gate::allows('div_sec')) {
+        $letters = Auth::user()->letters;
+        $users = User::where('workplace', Auth::user()->workplace);
         return view('tasks.create')->with('letters', $letters)->with('users', $users);
         }
-        else{
+        elseif(Gate::allows('sys_admin') ){
+            $letters = Letter::all();
+            $users = User::all();
+            return view('tasks.create')->with('letters', $letters)->with('users', $users);
+        }else{
             $notification = array(
                 'message' => 'You do not have permission to create Tasks',
                 'alert-type' => 'warning'
             );
             
             return redirect('/home')->with($notification);
+
         }
+           
+        
     }
 
     /**
@@ -61,7 +73,7 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head') || Gate::allows('div_sec')) {
          //Create letters
          $this->validate($request, [
             'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
@@ -89,46 +101,50 @@ class TasksController extends Controller
 
         //session()->put('success','Letter has been created successfully.');
 
-        $notification = array(
-            'message' => 'Task has been created successfully!', 
-            'alert-type' => 'success'
-        );
-        if(isset($request->accept_and_forward))
+       
+
+        if($request->accept_and_forward_button == "accept_and_forward")
         {
-             //Create history
-            $this->validate($request, [
-                'remarks' => 'nullable | max:150'
-            ],
-            ['remarks.max' => 'Maximu 150 charectors acceptable']);
-            //Create an instance of history model
-            //$id = Auth::id();
-            $status='Forwarded';
 
             $tasks = Task::find($request->old_task_id);
-            foreach($tasks->histories as $history)
-            {
-                if($history->current==true)
-                {
-                    //$history1=History::find($history->id);
-                    $history->current=false;
-                    $history->save();
+            
+
+            foreach($tasks->histories as $history){
+
+                if($history->current == true){
+                    $history1 = History::find($history->id);
+                    $history1->task_id = $history->task_id;
+                    $history1->status = $history->status;
+                    $history1->remarks = $history->remarks;
+                    $history1->current = false;
+                    $history1->save();
                 }
             }
+            $status='Forwarded';
+
+             //Create history
             $history = new History;
             $history->task_id = $request->old_task_id;
             $history->status= $status;
             $history->current= true;
-            $history->remarks = $request->reject_remarks;
+            //$history->remarks = $request->reject_remarks;
             $history->save();
 
+            
             //session()->put('success','Letter has been created successfully.');
 
             $notification = array(
-                'message' => 'Task has been Accepted successfully!', 
+                'message' => 'Task has been Forwaded successfully!', 
                 'alert-type' => 'success'
             );
-            //return redirect('/tasks/'.$request->task_id)->with($notification);
+            return redirect('/tasks/'.$request->task_id)->with($notification);
         }
+
+        $notification = array(
+            'message' => 'Task has been created successfully!', 
+            'alert-type' => 'success'
+        );
+
         return redirect('/tasks')->with($notification);
     }
     else{
@@ -150,13 +166,43 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        //Return tasks show page
         $task = Task::find($id);
-        $letters = Letter::all();
-        $users = User::all();
-        $conditions=['workplace' => Auth::user()->workplace, 'branch' => Auth::user()->branch];
-        $limited_users = DB::table('users')->where($conditions)->whereNotIn('id', array(Auth::user()->id))->get();//User::where('workplace','workplace1');
-        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('limited_users', $limited_users);
+        $letters = $task->letter;
+
+        if($task->user->id == Auth::user()->id){
+            if(count($task->histories) < 1){
+            //create seen status for task
+            $history = new History;
+            $history->task_id = $id;
+            $history->status = "Seen";
+            $history->current = true;
+            $history->save();
+            }
+        }
+
+        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('user')) {
+        
+            //Return tasks show page
+            
+            $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
+
+        
+
+        $assigned_by = User::find($task->assigned_by);
+        //$conditions=['workplace' => Auth::user()->workplace, 'branch' => Auth::user()->branch];
+        //$limited_users = DB::table('users')->where($conditions)->whereNotIn('id', array(Auth::user()->id))->get();//User::where('workplace','workplace1');
+        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by);
+
+        } elseif(Gate::allows('div_sec')){
+           
+
+            
+            $users = DB::table('users')->where([['workplace', '=', Auth::user()->workplace],['designation', '<>', 'Divisional Secretary'],])->orWhere('workplace', 'Ampara - District Secretariat')->whereNotIn('id', array(Auth::user()->id))->get();
+            
+            $assigned_by = User::find($task->assigned_by);
+
+            return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by);
+        }
     }
 
     /**

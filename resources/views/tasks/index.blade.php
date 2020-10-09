@@ -13,7 +13,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                     <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -40,7 +40,7 @@
                                     <li class="active">
                                         <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                                     <li >
                                         <a href="{{route('tasks.create')}}">Assign Task</a>
                                     </li>
@@ -132,7 +132,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if(count($tasks) > 0)
+                            @if($tasks)
                                 @foreach($tasks as $task)
                                 <tr>
                                         <td>{{$task->letter->letter_no}}</td>

@@ -7,7 +7,8 @@ use Illuminate\Validation\Rule;
 use App\Letter;
 use App\User;
 use Gate;
-
+use Auth;
+use DB;
 
 class LettersController extends Controller
 {
@@ -18,10 +19,15 @@ class LettersController extends Controller
      */
     public function index()
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
-        $letters = Letter::all();
+        if (Gate::allows('admin') || Gate::allows('div_sec')) {
+        $letters = Auth::user()->letters;
         return view('letters.index')->with('letters', $letters);
-        } else {
+        } 
+        elseif(Gate::allows('sys_admin')){
+            $letters = Letter::all();
+            return view('letters.index')->with('letters', $letters);
+        
+        }else {
             $notification = array(
                 'message' => 'You do not have permission to view letters',
                 'alert-type' => 'warning'
@@ -38,15 +44,17 @@ class LettersController extends Controller
      */
     public function create()
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
             return view('letters.create');
+        
         }else{
+            
             $notification = array(
                 'message' => 'You do not have permission to create letters',
                 'alert-type' => 'warning'
             );
-            
             return redirect('/home')->with($notification);
+            
         }
     }
 
@@ -59,7 +67,7 @@ class LettersController extends Controller
     public function store(Request $request)
     {
 
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
         //Create letters
         $this->validate($request, [
             'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
@@ -99,6 +107,7 @@ class LettersController extends Controller
         $letter->letter_title = $request->letter_title;
         $letter->letter_content = $request->letter_content;
         $letter->letter_scanned_copy = $fileNameToStore;
+        $letter->user_id = Auth::user()->id;
         
         $letter->save();
 
@@ -130,17 +139,48 @@ class LettersController extends Controller
      */
     public function show($id)
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
         $letter = Letter::find($id);
-        $users = User::all();
-        //Return letters show page
-        return view('letters.show')->with('letter', $letter)->with('users', $users);
+        if (Gate::allows('sys_admin') || Gate::allows('admin') ) {
+            
+            
+            $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
+
+            if($letter->user->id == Auth::user()->id){
+                //Return letters show page
+                return view('letters.show')->with('letter', $letter)->with('users', $users);
+            }else{
+                $notification = array(
+                    'message' => 'You do not have permission to view this letter',
+                    'alert-type' => 'warning'
+                );
+                return redirect('/letters')->with($notification);
+            }
+        
         }
-        else{
+        elseif(Gate::allows('div_sec')){
+
+            $users = DB::table('users')->where([['workplace', '=', 'Ampara - District Secretariat'],['designation', '=', 'District Secretary'],])->orWhere('designation', 'Divisional Secretary')->whereNotIn('id', array(Auth::user()->id))->get();
+            
+            
+
+            if($letter->user->id == Auth::user()->id){
+                //Return letters show page
+                return view('letters.show')->with('letter', $letter)->with('users', $users);
+            }else{
+                $notification = array(
+                    'message' => 'You do not have permission to view this letter',
+                    'alert-type' => 'warning'
+                );
+                return redirect('/letters')->with($notification);
+            }
+            
+            
+        }else{
             $notification = array(
                 'message' => 'You do not have permission to view letters',
                 'alert-type' => 'warning'
             );
+            return redirect('/letters')->with($notification);
         }
     }
 
@@ -153,14 +193,24 @@ class LettersController extends Controller
     public function edit($id)
     {
         //Validation for edit fields
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
         $letter = Letter::find($id);
-        return view('letters.edit')->with('letter', $letter);
+        if($letter->user->id == Auth::user()->id){
+            return view('letters.edit')->with('letter', $letter);
+        }else{
+            $notification = array(
+                'message' => 'You do not have permission to edit this letter',
+                'alert-type' => 'warning'
+            );
+            return redirect('/letters')->with($notification);
+        }
+        
         }else{
             $notification = array(
                 'message' => 'You do not have permission to edit letters',
                 'alert-type' => 'warning'
             );
+            return redirect('/letters')->with($notification);
         }
     }
 
@@ -173,7 +223,7 @@ class LettersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
         //Update letter details
         $this->validate($request, [
             'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
@@ -190,7 +240,9 @@ class LettersController extends Controller
         'letter_scanned_copy.mimes' => 'Only PDF, JPEG & JPG formats are allowed']);
 
         $letter = Letter::find($id);
+        if($letter->user->id == Auth::user()->id){
 
+        
         //Handle File Upload
         if($request->hasFile('letter_scanned_copy')){
             // Get file name with extension
@@ -223,7 +275,13 @@ class LettersController extends Controller
         $letter->letter_scanned_copy = $fileNameToStore;
         
         $letter->save();
-
+        }else{
+            $notification = array(
+                'message' => 'You do not have permission to edit this letter',
+                'alert-type' => 'warning'
+            );
+            return redirect('/letters')->with($notification);
+        }
         $notification = array(
             'message' => 'Letter has been updated successfully!', 
             'alert-type' => 'success'
@@ -236,6 +294,7 @@ class LettersController extends Controller
             'message' => 'You do not have permission to edit letters',
             'alert-type' => 'warning'
         );
+        return redirect('/letters')->with($notification);
     }
 
     }
@@ -248,7 +307,7 @@ class LettersController extends Controller
      */
     public function destroy($id)
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin')) {
         //Delete letter
         $letter = Letter::find($id);
         $letter->delete();

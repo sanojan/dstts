@@ -11,7 +11,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                     <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -38,7 +38,7 @@
                                     <li class="active">
                                         <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                                     <li >
                                         <a href="{{route('tasks.create')}}">Assign Task</a>
                                     </li>
@@ -140,9 +140,24 @@
                                         
                                     </tr>
                                     <tr>
+                                        <td>Letter Sender:</td>
+                                        <td><input type="text" name="letter_sender" class="form-control" value="{{$task->letter->letter_from}}" readonly> </td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>Letter Content:</td>
+                                        <td><input type="text" name="letter_content" class="form-control" value="{{$task->letter->letter_content}}" readonly> </td>
+                                        
+                                    </tr>
+                                    <tr>
                                         <td>Assigned To:</td>
                                         
                                         <td><input type="text" name="assigned_to" class="form-control" value="{{$task->user->name}}" readonly> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Assigned By:</td>
+                                        
+                                        <td><input type="text" name="assigned_to" class="form-control" value="{{$assigned_by->name}} - {{$assigned_by->designation}}" readonly> </td>
                                     </tr>
                                     <tr>
                                         <td>Assigned On:</td>
@@ -161,11 +176,27 @@
                                         
                                     </tr>
                                     <tr>
+                                    <td>Letter Scanned Copy:</td>
+                                    @if($task->letter->letter_scanned_copy)
+                                    
+                                    <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('scanned_letters/' . $task->letter->letter_scanned_copy) }}" target="_blank">
+                                                    <i class="material-icons">file_download</i>
+                                                </a> Click to view attached scanned copy
+                                            </td>
+                                        @else
+                                            <td>No Scanned copy was attached</td>
+                                        @endif   
+                                    </tr>
+                                    <tr>
                                         <td>Current Status:</td>
                                         @if(count($task->histories) > 0)
                                             @foreach($task->histories as $history)
                                                 @if($history->current==true)
-                                                    <td><input type="text" name="current_status" class="form-control" value="{{$history->status}}" readonly> </td>
+                                                    @if($history->status == "Forwarded")
+                                                    <td><input type="text" name="current_status" class="form-control" value="{{$history->status}} by {{$task->user->name}}" readonly> </td>
+                                                    @else
+                                                    <td><input type="text" name="current_status" class="form-control" value="{{$history->status}} on {{$history->created_at}} " readonly> </td>
+                                                    @endif
                                                 @endif
                                             @endforeach
                                         @else
@@ -180,7 +211,7 @@
                                
                                 
                             <div>
-                                
+                            @if($task->user->id == Auth::user()->id)
                                 @if(count($task->histories) > 0)
                                             @foreach($task->histories as $history)
                                                 @if($history->current==true)
@@ -189,9 +220,13 @@
                                                         <i class="material-icons">keyboard_backspace</i>
                                                         <span>BACK</span>
                                                     </a>
-                                                    <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#acceptTask" aria-expanded="false" aria-controls="acceptTask">
+                                                    <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
                                                         <i class="material-icons">close</i>
                                                         <span>REJECT TASK</span>
+                                                    </a>
+                                                    <a type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect" data-toggle="collapse" data-target="#completeTask" aria-expanded="false" aria-controls="completeTask">
+                                                        <i class="material-icons">done</i>
+                                                        <span>COMPLETE TASK</span>
                                                     </a>
                                                     @elseif($history->status=='Rejected')
                                                     <table class="table">
@@ -205,6 +240,30 @@
                                                         <i class="material-icons">keyboard_backspace</i>
                                                         <span>BACK</span>
                                                     </a>
+                                                    @elseif($history->status == "Completed")
+                                                    <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index')}}">
+                                                        <i class="material-icons">keyboard_backspace</i>
+                                                        <span>BACK</span>
+                                                    </a>
+                                                    @elseif($history->status == "Seen")
+                                                    <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index')}}">
+                                                        <i class="material-icons">keyboard_backspace</i>
+                                                        <span>BACK</span>
+                                                    </a>
+                                                    <button type="submit" style="margin-right:10px" name="subbutton" value="Accept" class="btn btn-success btn-xs waves-effect" >
+                                                        <i class="material-icons">check</i>
+                                                        <span>ACCEPT TASK</span>
+                                                    </button>
+                                                    @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head') || Gate::allows('div_sec')) 
+                                                    <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
+                                                        <i class="material-icons">fast_forward</i>
+                                                        <span>ACCEPT & FORWARD</span>
+                                                    </button>
+                                                    @endif
+                                                    <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
+                                                        <i class="material-icons">close</i>
+                                                        <span>REJECT TASK</span>
+                                                    </a>
                                                     @endif
                                                 @endif
                                             @endforeach
@@ -217,32 +276,59 @@
                                     <i class="material-icons">check</i>
                                     <span>ACCEPT TASK</span>
                                 </button>
-                                <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
-                                    <i class="material-icons">fast_forward</i>
-                                    <span>ACCEPT & FORWARD</span>
-                                </button>
-                                <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#acceptTask" aria-expanded="false" aria-controls="acceptTask">
+                                    @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head') || Gate::allows('div_sec')) 
+                                    <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
+                                        <i class="material-icons">fast_forward</i>
+                                        <span>ACCEPT & FORWARD</span>
+                                    </button>
+                                    @endif
+                                <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
                                     <i class="material-icons">close</i>
                                     <span>REJECT TASK</span>
                                 </a>
                                 @endif
+                            @else
+                                <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index')}}">
+                                    <i class="material-icons">keyboard_backspace</i>
+                                    <span>BACK</span>
+                                </a>
+                            @endif
+                                
                             </div>
                             <br>
-                                <div class="collapse" id="acceptTask" aria-expanded="false" style="height: 0px;">
-                                <div class="well" style="background:#a35d6a;"><table class="table">
-                                    <tr>
-                                    <td style="color:white;">Reason for Rejection :</td>
-                                        <td><input type="text" name="reject_remarks" class="form-control" > </td>
-                                               
-                                        <td>
-                                    <button type="submit" style="margin-right:10px" name="subbutton" value="Reject" class="btn btn-danger btn-xs waves-effect" >
-                                    <i class="material-icons">check</i>
-                                    <span>Reject</span>
-                                    </button>
-                                    </td>
-                                    </tr>
-                                   
-                                    </table>
+                                <div class="collapse" id="rejectTask" aria-expanded="false" style="height: 0px;">
+                                    <div class="well" style="background:#a35d6a;"><table class="table">
+                                        <tr>
+                                        <td style="color:white;">Reason for Rejection :</td>
+                                            <td><input type="text" name="reject_remarks" class="form-control" > </td>
+                                                
+                                            <td>
+                                        <button type="submit" style="margin-right:10px" name="subbutton" value="Reject" class="btn btn-danger btn-xs waves-effect" >
+                                        <i class="material-icons">check</i>
+                                        <span>Reject</span>
+                                        </button>
+                                        </td>
+                                        </tr>
+                                    
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="collapse" id="completeTask" aria-expanded="false" style="height: 0px;">
+                                    <div class="well" style="background:#2DF366;"><table class="table">
+                                        <tr>
+                                        <td style="color:black;">Actions taken for this Task</td>
+                                            <td><input type="text" name="complete_remarks" class="form-control" > </td>
+                                                
+                                            <td>
+                                        <button type="submit" style="margin-right:10px" name="comp_button" value="Completed" class="btn btn-success btn-xs waves-effect" >
+                                        <i class="material-icons">check</i>
+                                        <span>SUBMIT</span>
+                                        </button>
+                                        </td>
+                                        </tr>
+                                    
+                                        </table>
                                     </div>
                                 </div>
                             </form>
@@ -276,8 +362,8 @@
                                                             <div class="form-line">
                                                                 <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to" value="{{ old('assigned_to') }}">
                                                                 <option value="" ></option>
-                                                                @foreach($limited_users as $user)
-                                                                <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i></option>
+                                                                @foreach($users as $user)
+                                                                <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i>({{$user->workplace}})</option>
                                                                 @endforeach
                                                                 </select>
                                                             </div>
@@ -349,9 +435,9 @@
                                                 
                                                 
                                                 <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
-                                                <button type="submit" class="btn btn-primary waves-effect" name="accept_and_forward" style="margin-right:10px">
-                                                    <i class="material-icons">note_add</i>
-                                                    <span>CREATE</span>
+                                                <button type="submit" class="btn btn-primary waves-effect" name="accept_and_forward_button" value="accept_and_forward" style="margin-right:10px">
+                                                    <i class="material-icons">fast_forward</i>
+                                                    <span>FORWARD</span>
                                                 </button>
                                                 
                                                 <a class="btn bg-grey waves-effect" style="margin-right:10px" href="{{route('letters.index')}}">

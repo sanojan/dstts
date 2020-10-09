@@ -126,8 +126,9 @@
                             <tr>
                                 <th>Name</th>
                                 <th>NIC</th>
-                                <th>Designation</th>
-                                <th>Workplace</th>
+                                <th>Designation & Workplace</th>
+                                <th>User Type</th>
+                                <th>Account Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -137,8 +138,13 @@
                                 <tr>
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->nic}}</td>
-                                    <td>{{$user->designation}}</td>
-                                    <td>{{$user->workplace}}</td>
+                                    <td>{{$user->designation}} - {{$user->workplace}}</td>
+                                    <td>{{$user->user_type}}</td>
+                                    @if($user->workplace == 1)
+                                    <td>Enabled</td>
+                                    @else
+                                    <td>Disabled</td>
+                                    @endif
                                     <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('users.show', $user->id) }}">
                                             <i class="material-icons">pageview</i>
                                                 <span>VIEW</span>

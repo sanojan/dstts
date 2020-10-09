@@ -15,7 +15,7 @@ class AddAccountStatusToUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //Add column
-            $table->boolean('account_status');
+            $table->boolean('account_status')->default(false);
         });
     }
 
@@ -28,7 +28,7 @@ class AddAccountStatusToUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //Remove Column
-            $table-
+            $table->dropColumn('account_status');
         });
     }
 }

@@ -43,56 +43,71 @@ class HistoriesController extends Controller
      */
     public function store(Request $request)
     {
-         //Create history
-         $this->validate($request, [
-            'remarks' => 'nullable | max:150'
-        ],
-        ['remarks.max' => 'Maximu 150 charectors acceptable']);
-        //Create an instance of history model
-        //$id = Auth::id();
+        
+        
+        $task = Task::find($request->task_id);
+        //$histories = Task::where('task_id',$request->task_id);
+
+        foreach($task->histories as $history)
+        {
+            if($history->current == true)
+            {
+                $history1=History::find($history->id);
+                $history1->task_id = $history->task_id;
+                $history1->status = $history->status;
+                $history1->remarks = $history->remarks;
+                $history1->current = false;
+                $history1->save();
+            }
+        }
         $status='';
+        $history = new History;
+        $history->task_id = $request->task_id;
+
         if($request->subbutton == "Accept"){
-            $status='Accepted';
+            $status= "Accepted";
+            
+            $history->status = $status;
+            $history->current = true;
+            $history->save();
+            
+            $notification = array(
+                'message' => 'Task has been Accepted successfully!', 
+                'alert-type' => 'success'
+            );
         }
         if($request->subbutton == "Reject")
         {
-            $status='Rejected';
+            $status= "Rejected";
+            $history->status= $status;
+            $history->remarks = $request->reject_remarks;
+            $history->current = true;
+            $history->save();
+            
+            $notification = array(
+                'message' => 'Task has been Rejected successfully!', 
+                'alert-type' => 'success'
+            );
         }
-        
-        $histories = History::where('task_id',$request->task_id);
-        foreach($histories as $history)
-        {
-            if($history->current==true)
-            {
-                //$history1=History::find($history->id);
-                $history->current=false;
-                $history->save();
-            }
+        if($request->subbutton == "Completed"){
+            $status = "Completed";
+            $history->status= $status;
+            $history->remarks = $request->complete_remarks;
+            $history->current= true;
+            $history->save();
+
+            $notification = array(
+                'message' => 'Task has been Completed successfully!', 
+                'alert-type' => 'success'
+            );
         }
 
-        //$tasks = Task::find($request->task_id);
-        //foreach($tasks->histories as $history)
-        //{
-        //    if($history->current==true)
-        //    {
-        //        //$history1=History::find($history->id);
-        //        $history->current=false;
-        //        $history->save();
-        //    }
-        //}
-        $history = new History;
-        $history->task_id = $request->task_id;
-        $history->status= $status;
-        $history->current= true;
-        $history->remarks = $request->reject_remarks;
-        $history->save();
+       
+        
 
         //session()->put('success','Letter has been created successfully.');
 
-        $notification = array(
-            'message' => 'Task has been Accepted successfully!', 
-            'alert-type' => 'success'
-        );
+       
         return redirect('/tasks/'.$request->task_id)->with($notification);
     }
 
@@ -104,11 +119,19 @@ class HistoriesController extends Controller
      */
     public function show(History $history)
     {
+        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
         $histories = History::find();
         $letters = Letter::all();
         $users = User::all();
         $tasks = Task::all();
         return view('histories.index')->with('histories', $histories)->with('letters', $letters)->with('users', $users)->with('tasks', $tasks);
+        }else{
+            $notification = array(
+                'message' => 'You dont have permission to view task history!', 
+                'alert-type' => 'warning'
+            );
+            return redirect('/tasks/')->with($notification);
+        }
     }
 
     /**

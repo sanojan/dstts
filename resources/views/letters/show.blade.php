@@ -11,7 +11,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -38,7 +38,7 @@
                                     <li>
                                         <a href="{{route('tasks.index')}}">View Task(s)</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                                     <li >
                                         <a href="{{route('tasks.create')}}">Assign Task</a>
                                     </li>
@@ -221,7 +221,7 @@
                                         <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to" value="{{ old('assigned_to') }}">
                                         <option value="" ></option>
                                         @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i></option>
+                                        <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i>({{$user->workplace}})</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -307,12 +307,39 @@
                     </form>
                 </div>
             </div>
-                                    </div>
-                                </div>
+        </div>
+</div>
                                 <br />
                                 <div class="collapse" id="taskHistory" aria-expanded="false" style="height: 0px;">
                                     <div class="well">
-                                        This is taskHistory
+                                    <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+                                    @if($letter->tasks)
+                                        @foreach($letter->tasks as $task)
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading" role="tab" id="headingOne_{{$task->id}}">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_{{$task->id}}" aria-expanded="true" aria-controls="collapseOne_{{$task->id}}" class="">
+                                                        New Task Assigned To {{$task->user->name}} - {{$task->user->designation}} ({{$task->user->workplace}}) On {{$task->created_at}} 
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseOne_{{$task->id}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_{{$task->id}}" aria-expanded="true" style="">
+                                                <div class="panel-body">
+                                                <ul>
+                                                    @foreach($task->histories as $history)
+                                                    <li>This Task was {{$history->status}} by {{$history->task->user->name}} on {{$history->created_at}}</li>
+                                                    @if($history->remarks)
+                                                        <ul><li>Remarks: {{$history->remarks}}</li></ul>
+                                                    @endif
+                                                    @endforeach
+                                                </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                        @endif
+                                        
+                                    </div>
                                     </div>
                                 </div>
                             </div>
