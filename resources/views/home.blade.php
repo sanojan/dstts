@@ -10,14 +10,14 @@
                     <li class="active">
                         <a href="{{route('home')}}">
                             <i class="material-icons">dashboard</i>
-                            <span>Dashboard</span>
+                            <span>{{__("DASHBOARD")}}</span>
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                     <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
-                            <span>Letters</span>
+                            <span>{{ __("Letters") }}</span>
                         </a>
                         <ul class="ml-menu">
                             

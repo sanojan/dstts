@@ -85,9 +85,18 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
+                
                     <!-- Call Search -->
                     <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
                     <!-- #END# Call Search -->
+                    <li class="dropdown">
+                    
+                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'en'])}}"> English</a>
+                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'si'])}}"> Sinhala</a>
+                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'ta'])}}"> Tamil</a>
+                            
+                        
+                    </li>
                     <!-- Notifications -->
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">

@@ -26,12 +26,26 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::resource('users', 'UsersController')->middleware('auth');
 
-Route::resource('users', 'UsersController');
+
+//Route::resource('users', 'UsersController');
 
 Route::resource('letters', 'LettersController')->middleware('auth');
 Route::resource('tasks', 'TasksController')->middleware('auth');
 Route::resource('histories', 'HistoriesController')->middleware('auth');
 Route::get('get-workplaces-list','WorkplacetypeController@getWorkplaces');
+
+
 //Route::resource('workplace', 'WorkplaceController');
+
+Route::get('/{lang}', function ($lang) {
+    App::setlocale($lang);
+    return view('welcome');
+});
+
+
+    
+
+
+
+Route::get('/{locale}', 'LocalizationController@index')->name('lang');

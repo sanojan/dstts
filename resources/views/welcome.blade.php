@@ -64,6 +64,36 @@
         </style>
     </head>
     <body>
+    <div class="collapse navbar-collapse" id="navbarToggler">
+                <ul class="navbar-nav ml-auto">
+                    @php $locale = session()->get('locale'); @endphp
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            @switch($locale)
+                                @case('en')
+                                English
+                                @break
+                                @case('si')
+                                Sinhala
+                                @break
+                                @case('ta')
+                                Tamil
+                                @break
+                                @default
+                                English
+                            @endswitch
+                            <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'en'])}}"> English</a>
+                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'si'])}}"> Sinhala</a>
+                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'ta'])}}"> Tamil</a>
+                            
+                        </div>
+                    </li>
+                </ul>
+            </div>
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
@@ -81,13 +111,13 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Task Tracking System
+                {{ __("Task Tracking System") }}
                 </div>
                 <div class="m-b-md"><h2>
-                    District Secretariat Ampara</h2>
+                {{ __("District Secretariat - Ampara") }}</h2>
                 </div>
                 <div class="m-b-md"><h5>
-                &copy;2020 <a href="{{route('welcome')}}">District Secretariat - Ampara</a>.</h5>
+                &copy;2020 <a href="#">District Secretariat - Ampara</a>.</h5>
                 </div>
                 
             </div>
