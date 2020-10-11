@@ -432,7 +432,9 @@ $('.assign_to_dropdown').select2({
   multiple:true
 });
 </script>
-
+<script type="text/javascript">
+  $('.task-number').countTo();
+</script>
 
 
 </body>

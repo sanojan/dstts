@@ -43,6 +43,11 @@ class HistoriesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            
+            'task_report' => 'max:1999|nullable|mimes:jpeg,jpg,pdf'
+
+        ]);
         
         
         $task = Task::find($request->task_id);
@@ -60,7 +65,7 @@ class HistoriesController extends Controller
                 $history1->save();
             }
         }
-        $status='';
+        //$status='';
         $history = new History;
         $history->task_id = $request->task_id;
 
@@ -94,6 +99,21 @@ class HistoriesController extends Controller
             $history->status= $status;
             $history->remarks = $request->complete_remarks;
             $history->current= true;
+            if($request->hasFile('task_report')){
+                $extension = $request->task_report->extension();
+                //Filename to store
+                $fileNameToStore = time() . date('Ymd') . '.' . $extension;
+                //UploadFile
+                $path = $request->task_report->storeAs('public/task_reports', $fileNameToStore);
+            }else{
+                $fileNameToStore = NULL;
+            }
+
+            $task = Task::find($request->task_id);
+            $task->task_report = $fileNameToStore;
+            $task->save();
+            
+            
             $history->save();
 
             $notification = array(

@@ -19,13 +19,19 @@ class LettersController extends Controller
      */
     public function index()
     {
+        $new_tasks = 0;
+        foreach(Auth::user()->tasks as $task){
+            if(!count($task->histories) > 0){
+                $new_tasks += 1;
+            }
+        }
         if (Gate::allows('admin') || Gate::allows('div_sec')) {
         $letters = Auth::user()->letters;
-        return view('letters.index')->with('letters', $letters);
+        return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks);
         } 
         elseif(Gate::allows('sys_admin')){
             $letters = Letter::all();
-            return view('letters.index')->with('letters', $letters);
+            return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks);
         
         }else {
             $notification = array(
@@ -44,8 +50,15 @@ class LettersController extends Controller
      */
     public function create()
     {
+        $new_tasks = 0;
+        foreach(Auth::user()->tasks as $task){
+            if(!count($task->histories) > 0){
+                $new_tasks += 1;
+            }
+        }
+
         if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
-            return view('letters.create');
+            return view('letters.create')->with('new_tasks', $new_tasks);
         
         }else{
             
@@ -53,7 +66,7 @@ class LettersController extends Controller
                 'message' => 'You do not have permission to create letters',
                 'alert-type' => 'warning'
             );
-            return redirect('/home')->with($notification);
+            return redirect('/home')->with($notification)->with('new_tasks', $new_tasks);
             
         }
     }
@@ -192,18 +205,25 @@ class LettersController extends Controller
      */
     public function edit($id)
     {
+        $new_tasks = 0;
+        foreach(Auth::user()->tasks as $task){
+            if(!count($task->histories) > 0){
+                $new_tasks += 1;
+            }
+        }
+
         //Validation for edit fields
         if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
         $letter = Letter::find($id);
-        if($letter->user->id == Auth::user()->id){
-            return view('letters.edit')->with('letter', $letter);
-        }else{
-            $notification = array(
-                'message' => 'You do not have permission to edit this letter',
-                'alert-type' => 'warning'
-            );
-            return redirect('/letters')->with($notification);
-        }
+            if($letter->user->id == Auth::user()->id){
+                return view('letters.edit')->with('letter', $letter)->with('new_tasks', $new_tasks);
+            }else{
+                $notification = array(
+                    'message' => 'You do not have permission to edit this letter',
+                    'alert-type' => 'warning'
+                );
+                return redirect('/letters')->with($notification);
+            }
         
         }else{
             $notification = array(

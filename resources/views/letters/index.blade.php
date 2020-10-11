@@ -35,6 +35,9 @@
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>Tasks</span>
+                            @if($new_tasks > 0)
+                            <span class="badge bg-red">{{$new_tasks}} New</span>
+                            @endif
                         </a>
                         <ul class="ml-menu">
                             

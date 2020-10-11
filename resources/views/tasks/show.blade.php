@@ -32,6 +32,9 @@
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>Tasks</span>
+                            @if($new_tasks > 0)
+                            <span class="badge bg-red">{{$new_tasks}} New</span>
+                            @endif
                         </a>
                         <ul class="ml-menu">
                             
@@ -228,7 +231,7 @@
                                                         <i class="material-icons">done</i>
                                                         <span>COMPLETE TASK</span>
                                                     </a>
-                                                    @elseif($history->status=='Rejected')
+                                                    @elseif($history->status == "Rejected")
                                                     <table class="table">
                                                     <tr>
                                                         <td >Reason for Rejection :</td>
@@ -240,7 +243,14 @@
                                                         <i class="material-icons">keyboard_backspace</i>
                                                         <span>BACK</span>
                                                     </a>
-                                                    @elseif($history->status == "Completed" | $history->status == "Cancelled")
+                                                    @elseif($history->status == "Cancelled")
+                                                    <table class="table">
+                                                    <tr>
+                                                        <td >Reason for Cancellation :</td>
+                                                        <td><input type="text" name="cancel_remarks" class="form-control" value="{{$history->remarks}}" readonly> </td>
+                                                    </tr>
+                                                
+                                                    </table>
                                                     <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index')}}">
                                                         <i class="material-icons">keyboard_backspace</i>
                                                         <span>BACK</span>
@@ -254,16 +264,37 @@
                                                         <i class="material-icons">check</i>
                                                         <span>ACCEPT TASK</span>
                                                     </button>
-                                                    @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head') || Gate::allows('div_sec')) 
-                                                    <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
-                                                        <i class="material-icons">fast_forward</i>
-                                                        <span>ACCEPT & FORWARD</span>
-                                                    </button>
+                                                    @elseif($history->status == "Completed")
+                                                    <table class="table">
+                                                    <tr>
+                                                        <td >Actions Taken for the task :</td>
+                                                        <td><input type="text" name="complete_remarks" class="form-control" value="{{$history->remarks}}" readonly> </td>
+                                                    </tr>
+                                                    @if($task->task_report)
+                                                    <tr>
+                                                    <td>Task completion report</td>
+                                                    <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('task_reports/' . $task->task_report) }}" target="_blank">
+                                                    <i class="material-icons">file_download</i>
+                                                    </a> Click to view attached Task report
+                                                    </td>
+                                                    </tr>
+                                                    @else
+                                                    <tr>
+                                                    <td>Task completion report</td>
+                                                    <td>No Task report was attached</td>
+                                                    </tr>
                                                     @endif
-                                                    <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
-                                                        <i class="material-icons">close</i>
-                                                        <span>REJECT TASK</span>
+                                                    <tr>
+                                                    
+                                                    </tr>
+                                                
+                                                    </table>
+                                                    <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index')}}">
+                                                        <i class="material-icons">keyboard_backspace</i>
+                                                        <span>BACK</span>
                                                     </a>
+                                                    
+                                                    
                                                     @endif
                                                 @endif
                                             @endforeach
@@ -338,12 +369,21 @@
                                         <td style="color:black;">Actions taken for this Task</td>
                                             <td><input type="text" name="complete_remarks" class="form-control" > </td>
                                                 
-                                            <td>
-                                        <button type="submit" style="margin-right:10px" name="comp_button" value="Completed" class="btn btn-success btn-xs waves-effect" >
+                                        <td>
+                                        <button type="submit" style="margin-right:10px" name="subbutton" value="Completed" class="btn btn-success btn-xs waves-effect" >
                                         <i class="material-icons">check</i>
                                         <span>SUBMIT</span>
                                         </button>
                                         </td>
+                                        <tr>
+                                        <td><label class="form-label">Task Report (Optional)</label></td>
+                                        <td><input type="file" name="task_report" class="form-control"></td>
+                                        @error('task_report')
+                                                <label class="error" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </label>
+                                        @enderror
+                                        </tr>
                                         </tr>
                                     
                                         </table>

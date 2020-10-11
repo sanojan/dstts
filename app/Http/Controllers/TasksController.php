@@ -20,19 +20,24 @@ class TasksController extends Controller
      */
     public function index()
     {
+        $new_tasks = 0;
+        foreach(Auth::user()->tasks as $task){
+            if(!count($task->histories) > 0){
+                $new_tasks += 1;
+            }
+        }
+
         if (Gate::allows('admin') || Gate::allows('div_sec') || Gate::allows('user')) {
         //$letters = Letter::all();
         //$users = User::all();
         
         $tasks = Task::where([['user_id', '=', Auth::user()->id],])->orWhere('assigned_by', Auth::user()->id)->get();
-        return view('tasks.index')->with('tasks', $tasks);
+        return view('tasks.index')->with('tasks', $tasks)->with('new_tasks', $new_tasks);
         
         }
         elseif(Gate::allows('sys_admin')){
             $tasks = Task::all();
-            return view('tasks.index')->with('tasks', $tasks);
-        }else{
-            
+            return view('tasks.index')->with('tasks', $tasks)->with('new_tasks', $new_tasks);
         }
     }
 
@@ -43,15 +48,22 @@ class TasksController extends Controller
      */
     public function create()
     {
+        $new_tasks = 0;
+        foreach(Auth::user()->tasks as $task){
+            if(!count($task->histories) > 0){
+                $new_tasks += 1;
+            }
+        }
+
         if (Gate::allows('admin') || Gate::allows('sys_admin')) {
         $letters = Auth::user()->letters;
         $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
-        return view('tasks.create')->with('letters', $letters)->with('users', $users);
+        return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks);
         }
         elseif(Gate::allows('div_sec') ){
             $letters = Auth::user()->letters;
-            $users = DB::table('users')->where([['workplace', '=', 'Ampara - District Secretariat'],['designation', '=', 'District Secretary'],])->orWhere('designation', 'Divisional Secretary')->whereNotIn('id', array(Auth::user()->id))->get();
-            return view('tasks.create')->with('letters', $letters)->with('users', $users);
+            $users = DB::table('users')->where('designation', '=', 'District Secretary')->orWhere('workplace', Auth::user()->workplace)->whereNotIn('id', array(Auth::user()->id))->get();
+            return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks);
         }else{
             $notification = array(
                 'message' => 'You do not have permission to create Tasks',
@@ -86,18 +98,32 @@ class TasksController extends Controller
         'deadline.after' => 'Deadline can not be a previous day',
         'remarks.max' => 'Max 150 charectors']);
 
-         
+         if(count($request->assigned_to) > 0){
+            foreach($request->assigned_to as $recipients){
+                if($recipients == "")
+                    continue;
+                $task = new Task;
+                $task->letter_id = $request->letter_no;
+                $task->assigned_by= Auth::user()->id;
+                $task->user_id = $recipients;
+                $task->deadline = $request->deadline;
+                $task->remarks = $request->remarks;
 
-        //Create an instance of task model
-        //$id = Auth::id();
-        $task = new Task;
-        $task->letter_id = $request->letter_no;
-        $task->assigned_by= Auth::user()->id;
-        $task->user_id = $request->assigned_to;
-        $task->deadline = $request->deadline;
-        $task->remarks = $request->remarks;;
+                $task->save();
+            }
+         }else{
+
+            //Create an instance of task model
+            //$id = Auth::id();
+            $task = new Task;
+            $task->letter_id = $request->letter_no;
+            $task->assigned_by= Auth::user()->id;
+            $task->user_id = $request->assigned_to;
+            $task->deadline = $request->deadline;
+            $task->remarks = $request->remarks;;
         
         $task->save();
+        }
 
         //session()->put('success','Letter has been created successfully.');
 

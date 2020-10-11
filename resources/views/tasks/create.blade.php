@@ -34,6 +34,9 @@
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>Tasks</span>
+                            @if($new_tasks > 0)
+                            <span class="badge bg-red">{{$new_tasks}} New</span>
+                            @endif
                         </a>
                         <ul class="ml-menu">
                                     <li>
@@ -143,7 +146,7 @@
                             <div class="col-md-6">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to" value="{{ old('assigned_to') }}">
+                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to[]" value="{{ old('assigned_to') }}">
                                         <option value="" ></option>
                                         @foreach($users as $user)
                                         <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i></option>
