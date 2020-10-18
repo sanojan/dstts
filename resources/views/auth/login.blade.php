@@ -29,19 +29,19 @@
     <div class="login-box">
         <div class="logo">
             <a href="javascript:void(0);">DS-<b>TTS</b></a>
-            <small>Task Tracking System - District Secretariat, Ampara</small>
+            <small>{{ __('Task Tracking System - District Secretariat, Ampara') }}</small>
         </div>
         <div class="card">
             <div class="body">
-                <form id="sign_in" method="POST" action="{{ route('login') }}">
+                <form id="sign_in" method="POST" action="{{ route('login', app()->getLocale()) }}">
                 @csrf
-                    <div class="msg">Sign in to start your session</div>
+                    <div class="msg">{{__('Sign in to start your session')}}</div>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                        <input id="nic" type="nic" class="form-control @error('nic') is-invalid @enderror" name="nic" value="{{ old('nic') }}" required autocomplete="nic" autofocus placeholder="NIC">
+                        <input id="nic" type="nic" class="form-control @error('nic') is-invalid @enderror" name="nic" value="{{ old('nic') }}" required autocomplete="nic" autofocus placeholder="{{__('NIC NO')}}">
                         </div>
                         @error('nic')
                             <label class="error" role="alert">
@@ -54,7 +54,7 @@
                             <i class="material-icons">lock</i>
                         </span>
                         <div class="form-line">
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
+                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="{{__('Password')}}">
                         </div>
                         @error('password')
                             <label class="error" role="alert">
@@ -73,15 +73,15 @@
                                 </div>
                         </div>
                         <div class="col-xs-4">
-                            <button class="btn btn-block bg-pink waves-effect" type="submit">SIGN IN</button>
+                            <button class="btn btn-block bg-pink waves-effect" type="submit">{{__('SIGN IN') }}</button>
                         </div>
                     </div>
                     <div class="row m-t-15 m-b--20">
                         <div class="col-xs-6">
-                            <a href="{{route('register')}}">Register Now!</a>
+                            <a href="{{route('register', app()->getLocale())}}">{{__('Register Now!') }}</a>
                         </div>
                         <div class="col-xs-6 align-right">
-                            <a href="forgot-password.html">Forgot Password?</a>
+                            <a href="#">{{__('Forgot Password?')}}</a>
                         </div>
                     </div>
                 </form>

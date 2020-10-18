@@ -70,7 +70,7 @@ class TasksController extends Controller
                 'alert-type' => 'warning'
             );
             
-            return redirect('/home')->with($notification);
+            return redirect('/' . app()->getLocale() . '/home')->with($notification);
 
         }
            
@@ -171,7 +171,7 @@ class TasksController extends Controller
             'alert-type' => 'success'
         );
 
-        return redirect('/tasks')->with($notification);
+        return redirect('/' . app()->getLocale() .'/tasks')->with($notification);
     }
     else{
         $notification = array(
@@ -179,7 +179,7 @@ class TasksController extends Controller
             'alert-type' => 'warning'
         );
         
-        return redirect('/home')->with($notification);
+        return redirect('/' . app()->getLocale() . '/home')->with($notification);
     }
 
     }
@@ -190,8 +190,15 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($lang, $id)
     {
+        $new_tasks = 0;
+        foreach(Auth::user()->tasks as $task){
+            if(!count($task->histories) > 0){
+                $new_tasks += 1;
+            }
+        }
+
         $task = Task::find($id);
         $letters = $task->letter;
 
@@ -217,7 +224,7 @@ class TasksController extends Controller
         $assigned_by = User::find($task->assigned_by);
         //$conditions=['workplace' => Auth::user()->workplace, 'branch' => Auth::user()->branch];
         //$limited_users = DB::table('users')->where($conditions)->whereNotIn('id', array(Auth::user()->id))->get();//User::where('workplace','workplace1');
-        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by);
+        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
 
         } elseif(Gate::allows('div_sec')){
            
@@ -227,7 +234,7 @@ class TasksController extends Controller
             
             $assigned_by = User::find($task->assigned_by);
 
-            return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by);
+            return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
         }
     }
 

@@ -13,39 +13,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+Route::redirect('/', '/en');
+Route::redirect('/home', 'en/home');
 
-//Route::get('/letters', function () {
-//    return view('letters.create');
-//});
+Route::group(['prefix' => '{language}'], function () {
 
-Auth::routes();
+    Route::get('/', function () {
+        return view('welcome');
+    })->name('welcome');
 
-Route::get('/home', 'HomeController@index')->name('home');
+    //Route::get('/letters', function () {
+    //    return view('letters.create');
+    //});
 
+    Auth::routes();
 
-
-
-//Route::resource('users', 'UsersController');
-
-Route::resource('letters', 'LettersController')->middleware('auth');
-Route::resource('tasks', 'TasksController')->middleware('auth');
-Route::resource('histories', 'HistoriesController')->middleware('auth');
-Route::get('get-workplaces-list','WorkplacetypeController@getWorkplaces');
+    Route::get('/home', 'HomeController@index')->name('home');
 
 
-//Route::resource('workplace', 'WorkplaceController');
 
-Route::get('/{lang}', function ($lang) {
-    App::setlocale($lang);
-    return view('welcome');
+
+    //Route::resource('users', 'UsersController');
+
+    Route::resource('letters', 'LettersController')->middleware('auth');
+    Route::resource('tasks', 'TasksController')->middleware('auth');
+    Route::resource('histories', 'HistoriesController')->middleware('auth');
+    Route::get('get-workplaces-list','WorkplacetypeController@getWorkplaces');
+
+
+    //Route::resource('workplace', 'WorkplaceController');
+
 });
-
-
-    
-
-
-
-Route::get('/{locale}', 'LocalizationController@index')->name('lang');

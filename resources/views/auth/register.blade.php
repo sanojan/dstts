@@ -34,14 +34,14 @@
 <body class="signup-page">
     <div class="signup-box">
         <div class="logo">
-            <a href="{{route('home')}}">DS-<b>TTS</b></a>
-            <small>Task Tracking System - District Secretariat, Ampara</small>
+            <a href="{{route('home', app()->getLocale())}}">DS-<b>TTS</b></a>
+            <small>{{ __('Task Tracking System - District Secretariat, Ampara') }}</small>
         </div>
         <div class="card">
             <div class="body">
-                <form id="sign_up" method="POST" action="{{ route('register') }}">
+                <form id="sign_up" method="POST" action="{{ route('register', app()->getLocale()) }}">
                     @csrf
-                    <div class="msg">Register a new membership</div>
+                    <div class="msg">{{__('Register a new membership')}}</div>
                     <div class="row clearfix">
                         <div class="col-sm-6">
                             <div class="input-group">
@@ -49,7 +49,7 @@
                                     <i class="material-icons">person</i>
                                 </span>
                                 <div class="form-line">
-                                <input id="name" type="text" class="form-control " name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="Name with Initial">
+                                <input id="name" type="text" class="form-control " name="name" value="{{ old('name') }}" required autocomplete="name" autofocus placeholder="{{__('Name with Initial')}}">
                                 
                                 </div>
                                 @error('name')
@@ -66,9 +66,9 @@
                                 </span>
                                 <div class="form-line">
                                 <select class="form-control gender_dropdown" id="gender" name="gender">
-                                    <option value="" @if(old('gender' )== '') selected disabled @endif>Select your Gender</option>
-                                    <option value="Male" @if(old('gender')=='Male') selected @endif>Male</option>
-                                    <option value="Female" @if(old('gender')=='Female') selected @endif>Female</option>
+                                    <option value="" @if(old('gender' )== '') selected disabled @endif>{{_('Select your Gender')}}</option>
+                                    <option value="Male" @if(old('gender')=='Male') selected @endif>{{__('Male')}}</option>
+                                    <option value="Female" @if(old('gender')=='Female') selected @endif>{{__('Female')}}</option>
                                 </select>
                                 </div>
                                 @error('gender')
@@ -88,7 +88,7 @@
                                     <i class="material-icons">event</i>
                                 </span>
                                 <div class="form-line">
-                                <input placeholder="Date of Birth" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="dob" name="dob" value="{{ old('dob') }}">
+                                <input placeholder="{{__('Date of Birth')}}" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="dob" name="dob" value="{{ old('dob') }}">
                                 </div>
                                 @error('dob')
                                     <label class="error" role="alert">
@@ -104,7 +104,7 @@
                                     <i class="material-icons">card_membership</i>
                                 </span>
                                 <div class="form-line">
-                                <input type="text" class="form-control" placeholder="NIC NO" name="nic" value="{{ old('nic') }}">
+                                <input type="text" class="form-control" placeholder="{{__('NIC NO')}}" name="nic" value="{{ old('nic') }}">
                                 </div>
                                 @error('nic')
                                     <label class="error" role="alert">
@@ -122,7 +122,7 @@
                                     <i class="material-icons">email</i>
                                 </span>
                                 <div class="form-line">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="Email">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="{{__('Email Address')}}">
                                 </div>
                                 @error('email')
                                     <label class="error" role="alert">
@@ -138,7 +138,7 @@
                                     <i class="material-icons">phone_iphone</i>
                                 </span>
                                 <div class="form-line">
-                                <input type="text" class="form-control" placeholder="Mobile No" name="mobile_no" value="{{ old('mobile_no') }}">
+                                <input type="text" class="form-control" placeholder="{{__('Mobile No')}}" name="mobile_no" value="{{ old('mobile_no') }}">
                                 </div>
                                 @error('mobile_no')
                                     <label class="error" role="alert">
@@ -156,7 +156,7 @@
                                 </span>
                                     <div class="form-line">
                                         <select class="form-control workplace_type_dropdown" style="width:100%;" id="workplace_type" name="workplace_type" value="{{ old('workplace_type') }}">
-                                        <option value="" @if(old('workplace_type')=='') selected disabled @endif>Work Place Type</option>
+                                        <option value="" @if(old('workplace_type')=='') selected disabled @endif>Select Your Work Place Type</option>
                                         @foreach($workplacetypes as $workplacetype)
                                         <option value="{{$workplacetype->id}}" @if(old('workplace_type')=='{{$workplacetype->id}}') selected @endif>{{$workplacetype->name}} </option>
                                         @endforeach
@@ -177,7 +177,7 @@
                                 </span>
                                     <div class="form-line">
                                         <select class="form-control workplace_dropdown" style="width:100%;" id="workplace" name="workplace" value="{{ old('workplace') }}">
-                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Work Place</option>
+                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Select Your Work Place</option>
                                         </select>
                                     </div>
                                     @error('workplace')
@@ -197,9 +197,9 @@
                                 </span>
                                 <div class="form-line">
                                 <select class="form-control service_dropdown" id="service" name="service" >
-                                        <option value="" @if(old('service')=='') selected disabled @endif>Select your service</option>
+                                        <option value="" @if(old('service')=='') selected disabled @endif>{{__('Select your service')}}</option>
                                         @foreach($services as $service)
-                                        <option value="{{$service->id}}" @if(old('service')=='{{$service->id}}') selected @endif>{{$service->name}} </option>
+                                        <option value="{{$service->name}}" @if(old('service')=='{{$service->name}}') selected @endif>{{$service->name}} </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -217,10 +217,10 @@
                                 </span>
                                 <div class="form-line">
                                 <select class="form-control class_dropdown" id="class" name="class" >
-                                        <option value="" @if(old('class')=='') selected disabled @endif>Select your class</option>
-                                        <option value="1" @if(old('class')=='1') selected @endif>class1</option>
-                                        <option value="2" @if(old('class')=='2') selected @endif>class2</option>
-                                        <option value="3" @if(old('class')=='3') selected @endif>class3</option>
+                                        <option value="" @if(old('class')=='') selected disabled @endif>Select your service class</option>
+                                        <option value="1" @if(old('class')=='1') selected @endif>{{__('Class I')}}</option>
+                                        <option value="2" @if(old('class')=='2') selected @endif>{{__('Class II')}}</option>
+                                        <option value="3" @if(old('class')=='3') selected @endif>{{__('Class III')}}</option>
                                     </select>
                                 </div>
                                 @error('class')   
@@ -240,9 +240,9 @@
                                 </span>
                                     <div class="form-line">
                                         <select class="form-control designation_dropdown" style="width:100%;" id="designation" name="designation" value="{{ old('designation') }}">
-                                        <option value="" @if(old('designation')=='') selected disabled @endif>Select your designation</option>
+                                        <option value="" @if(old('designation')=='') selected disabled @endif>{{__('Select your designation')}}</option>
                                         @foreach($designations as $designation)
-                                        <option value="{{$designation->id}}" @if(old('designation')=='{{$designation->id}}') selected @endif>{{$designation->name}} </option>
+                                        <option value="{{$designation->name}}" @if(old('designation')=='{{$designation->name}}') selected @endif>{{$designation->name}} </option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -263,18 +263,18 @@
                                 </span>
                                 <div class="form-line">
                                     <select class="form-control branch_dropdown" id="branch" name="branch" >
-                                        <option value="" @if(old('branch')=='') selected disabled @endif>Select your branch</option>
-                                        <option value="Administration" @if(old('branch')=='Administration') selected @endif>Administration</option>
-                                        <option value="Accounts" @if(old('branch')=='Accounts') selected @endif>Accounts</option>
-                                        <option value="Engineering" @if(old('branch')=='Engineering') selected @endif>Engineering</option>
-                                        <option value="Field Branch" @if(old('branch')=='Field Branch') selected @endif>Field Branch</option>
-                                        <option value="Internal Audit" @if(old('branch')=='Internal Audit') selected @endif>Internal Audit</option>
-                                        <option value="Land" @if(old('branch')=='Land') selected @endif>Land</option>
-                                        <option value="NIC Branch" @if(old('branch')=='NIC Branch') selected @endif>NIC Branch</option>
-                                        <option value="Planning" @if(old('branch')=='Planning') selected @endif>Planning</option> 
-                                        <option value="Registrar" @if(old('branch')=='Registrar') selected @endif>Registrar</option>
-                                        <option value="Samurdhy" @if(old('branch')=='Samurdhy') selected @endif>Samurdhy</option>
-                                        <option value="Social Service" @if(old('branch')=='Social Service') selected @endif>Social Service</option>
+                                        <option value="" @if(old('branch')=='') selected disabled @endif>{{__('Select your branch')}}</option>
+                                        <option value="Administration" @if(old('branch')=='Administration') selected @endif>{{__('Administration Division')}}</option>
+                                        <option value="Accounts" @if(old('branch')=='Accounts') selected @endif>{{__('Accounts Division')}}</option>
+                                        <option value="Engineering" @if(old('branch')=='Engineering') selected @endif>{{__('Engineering Division')}}</option>
+                                        <option value="Field Branch" @if(old('branch')=='Field Branch') selected @endif>{{__('Field Division')}}</option>
+                                        <option value="Internal Audit" @if(old('branch')=='Internal Audit') selected @endif>{{__('Internal Audit Division')}}</option>
+                                        <option value="Land" @if(old('branch')=='Land') selected @endif>{{__('Land Division')}}</option>
+                                        <option value="NIC Branch" @if(old('branch')=='NIC Branch') selected @endif>{{__('NIC Division')}}</option>
+                                        <option value="Planning" @if(old('branch')=='Planning') selected @endif>{{__('Planning Division')}}</option> 
+                                        <option value="Registrar" @if(old('branch')=='Registrar') selected @endif>{{__('Registrar Division')}}</option>
+                                        <option value="Samurdhy" @if(old('branch')=='Samurdhy') selected @endif>{{__('Samurdhy Division')}}</option>
+                                        <option value="Social Service" @if(old('branch')=='Social Service') selected @endif>{{__('Social Service Division')}}</option>
 
                                     </select>
                                 </div>
@@ -298,7 +298,7 @@
                                     <i class="material-icons">lock</i>
                                 </span>
                                 <div class="form-line">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="Password">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="{{__('Password')}}">
                                 </div>
                                 @error('password')
                                     <label class="error" role="alert">
@@ -315,7 +315,7 @@
                                     <i class="material-icons">lock</i>
                                 </span>
                                 <div class="form-line">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm Password">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="{{__('Confirm Password')}}">
                                 </div>
                                 @error('password_confirmation')
                                     <label class="error" role="alert">
@@ -331,7 +331,7 @@
                         
                             <div class="form-group">
                                 <input type="checkbox" name="terms" id="terms" class="filled-in chk-col-pink">
-                                <label for="terms">I read and agree to the <a href="javascript:void(0);">terms of usage</a>.</label>
+                                <label for="terms">{{__('I read and agree to the')}} <a href="#">{{__('terms of usage')}}</a>.</label>
                             
                             @error('terms')
                                     <label class="error" role="alert">
@@ -340,10 +340,10 @@
                             @enderror
                             </div>
                 
-                    <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">SIGN UP</button>
+                    <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">{{__('SIGN UP')}}</button>
                     
                     <div class="m-t-25 m-b--5 align-center">
-                        <a href="{{route('login')}}">You already have a membership?</a>
+                        <a href="{{route('login', app()->getLocale())}}">{{__('You already have a membership?')}}</a>
                     </div>
                     </div>
                 </form>
@@ -375,37 +375,37 @@
 
 <script type="text/javascript">
 $('.designation_dropdown').select2({
-  placeholder: 'Select Designation',
+  placeholder: '{{__('Select your designation')}}',
   width: 'resolve'
 });
 
 $('.workplace_type_dropdown').select2({
-  placeholder: 'Select Work Place Type',
+  placeholder: '{{__('Select Your Work Place Type')}}',
   width: 'resolve'
 });
 
 $('.workplace_dropdown').select2({
-  placeholder: 'Select Work Place',
+  placeholder: '{{__('Select Your Work Place')}}',
   width: 'resolve'
 });
 
 $('.gender_dropdown').select2({
-  placeholder: 'Select Gender',
+  placeholder: '{{__('Select your Gender')}}',
   width: 'resolve'
 });
 
 $('.branch_dropdown').select2({
-  placeholder: 'Select Branch',
+  placeholder: '{{__('Select your branch')}}',
   width: 'resolve'
 });
 
 $('.class_dropdown').select2({
-  placeholder: 'Select Class',
+  placeholder: '{{__('Select your service class')}}',
   width: 'resolve'
 });
 
 $('.service_dropdown').select2({
-  placeholder: 'Select Service',
+  placeholder: '{{__('Select your service')}}',
   width: 'resolve'
 });
 
@@ -417,13 +417,13 @@ $('.service_dropdown').select2({
   if(workplaceid){
     $.ajax({
       type:"GET",
-      url:"{{url('get-workplaces-list')}}?workplace_type_id="+workplaceid,
+      url:"{{url('app()->getLocale()/get-workplaces-list')}}?workplace_type_id="+workplaceid,
       success:function(res){        
       if(res){
         $("#workplace").empty();
-        $("#workplace").append('<option>Select Work Place</option>');
+        $("#workplace").append('<option>{{__('Select Your Work Place')}}</option>');
         $.each(res,function(key,value){
-          $("#workplace").append('<option value="'+key+'">'+value+'</option>');
+          $("#workplace").append('<option value="'+value+'">'+value+'</option>');
         });
       
       }else{

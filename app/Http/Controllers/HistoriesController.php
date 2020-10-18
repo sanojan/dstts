@@ -142,7 +142,7 @@ class HistoriesController extends Controller
         //session()->put('success','Letter has been created successfully.');
 
        
-        return redirect('/tasks/'.$request->task_id)->with($notification);
+        return redirect('/' . app()->getLocale() . '/tasks/'. $request->task_id)->with($notification);
     }
 
     /**
@@ -164,7 +164,7 @@ class HistoriesController extends Controller
                 'message' => 'You dont have permission to view task history!', 
                 'alert-type' => 'warning'
             );
-            return redirect('/tasks/')->with($notification);
+            return redirect('/' . app()->getLocale() . '/tasks/')->with($notification);
         }
     }
 

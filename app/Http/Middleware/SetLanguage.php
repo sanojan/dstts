@@ -2,10 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App;
 use Closure;
-
-class Localization
+use App;
+class SetLanguage
 {
     /**
      * Handle an incoming request.
@@ -16,9 +15,7 @@ class Localization
      */
     public function handle($request, Closure $next)
     {
-        if(session()->has('locale')){
-            App::setlocale(session()->get('locale'));
-        }
+        App::setLocale($request->language);
         return $next($request);
     }
 }

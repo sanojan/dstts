@@ -1,46 +1,51 @@
 @extends('inc.layout')
 
 @section('sidebar')
+         
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
-                    <li class="header">MAIN NAVIGATION</li>
+                    <li class="header">{{__('MAIN NAVIGATION')}}</li>
                     <li >
-                        <a href="{{route('home')}}">
+                        <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
-                            <span>Dashboard</span>
+                            <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
-                            <span>Letters</span>
+                            <span>{{__('Letters')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
                                     <li class="active">
-                                        <a href="{{route('letters.index')}}">View Letter</a>
+                                        <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
                                     <li >
-                                        <a href="{{route('letters.create')}}">Add Letter</a>
+                                        <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
                                     </li>
                         </ul>
                     </li>
                     @endif
+                    
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
-                            <span>Tasks</span>
+                            <span>{{__('Tasks')}}</span>
+                            @if($new_tasks > 0)
+                            <span class="badge bg-red">{{$new_tasks}} {{__('New')}}</span>
+                            @endif
                         </a>
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="{{route('tasks.index')}}">View Task(s)</a>
+                                        <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                     </li>
                                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                                     <li >
-                                        <a href="{{route('tasks.create')}}">Assign Task</a>
+                                        <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
                                     </li>
                                     @endif
                         </ul>
@@ -49,44 +54,44 @@
                     <li >
                         <a href="index.html">
                             <i class="material-icons">group</i>
-                            <span>Users</span>
+                            <span>{{__('Users')}}</span>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
-                            <span>System Data</span>
+                            <span>{{__('System Data')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="pages/widgets/cards/basic.html">Designation</a>
+                                        <a href="#">{{__('Designation')}}</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Work Place</a>
+                                        <a href="#">{{__('Work Place')}}</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Services</a>
+                                        <a href="#">{{__('Services')}}</a>
                                     </li>
                         </ul>
                     </li>
                     @endif
                     <li >
-                        <a href="index.html">
+                        <a href="#">
                             <i class="material-icons">help</i>
-                            <span>Help</span>
+                            <span>{{__('Help')}}</span>
                         </a>
                     </li>
                     <li >
-                        <a href="index.html">
+                        <a href="#">
                             <i class="material-icons">group</i>
-                            <span>About Us</span>
+                            <span>{{__('About Us')}}</span>
                         </a>
                     </li>
                     <li >
-                        <a href="index.html">
+                        <a href="#">
                             <i class="material-icons">contact_phone</i>
-                            <span>Contact Us</span>
+                            <span>{{__('Contact Us')}}</span>
                         </a>
                     </li>
                     
@@ -96,10 +101,10 @@
             <!-- Footer -->
             <div class="legal">
                 <div class="copyright">
-                    &copy;2020 <a href="javascript:void(0);">District Secretariat - Ampara</a>.
+                    &copy;2020 <a href="#">{{__('District Secretariat - Ampara')}}</a>.
                 </div>
                 <div class="version">
-                    <b>Version: </b> 1.0.1
+                    <b>{{__('Version:')}} </b> 1.0.1
                 </div>
             </div>
             <!-- #Footer -->
@@ -113,7 +118,7 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>LETTER DETAILS</h2>
+                <h2>{{__('LETTER DETAILS')}}</h2>
             </div>
             <div class="card">
                         <div class="body table-responsive">
@@ -127,67 +132,67 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Letter Number:</td>
+                                        <td>{{__('Letter No.')}}:</td>
                                         <td>{{$letter->letter_no}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Letter Date:</td>
+                                        <td>{{__('Letter Date')}}:</td>
                                         <td>{{$letter->letter_date}}</td>
                                         
                                     </tr>
                                     <tr>
-                                        <td>Sender:</td>
+                                        <td>{{__('Letter From')}}:</td>
                                         <td>{{$letter->letter_from}}</td>
                                         
                                     </tr>
                                     <tr>
-                                        <td>Title:</td>
+                                        <td>{{__('Letter Title')}}:</td>
                                         <td>{{$letter->letter_title}}</td>
                                         
                                         
                                     </tr>
                                     <tr>
-                                        <td>Content:</td>
+                                        <td>{{__('Letter Content')}}:</td>
                                         <td>{{$letter->letter_content}}</td>
                                         
                                     </tr>
                                     <tr>
-                                        <td>Scanned Copy:</td>
+                                        <td>{{__('Scanned Copy')}}:</td>
                                         @if($letter->letter_scanned_copy)
                                             <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('scanned_letters/' . $letter->letter_scanned_copy) }}" target="_blank">
                                                     <i class="material-icons">file_download</i>
-                                                </a> Click to view attached scanned copy
+                                                </a> {{__('Click to view attached scanned copy')}}
                                             </td>
                                         @else
-                                            <td>No Scanned copy was attached</td>
+                                            <td>{{__('No Scanned copy was attached')}}</td>
                                         @endif    
                                     </tr>
                                 </tbody>    
                             </table>
                             <div>
-                                <a type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" href="{{route('letters.edit', $letter->id)}}">
+                                <a type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" href="{{route('letters.edit', [app()->getLocale(), $letter->id])}}">
                                     <i class="material-icons">mode_edit</i>
-                                    <span>EDIT DETAILS</span>
+                                    <span>{{__('EDIT DETAILS')}}</span>
                                 </a>
                                 <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#createTask" aria-expanded="false" aria-controls="createTask">
                                     <i class="material-icons">add_to_photos</i>
-                                    <span>CREATE TASK</span>
+                                    <span>{{__('CREATE TASK')}}</span>
                                 </button>
                                 <button type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect collapsed " data-toggle="collapse" data-target="#taskHistory" aria-expanded="false" aria-controls="taskHistory">
                                     <i class="material-icons">access_time</i>
-                                    <span>VIEW TASK HISTORY</span>
+                                    <span>{{__('VIEW TASK HISTORY')}}</span>
                                 </button><br /><br />
 
-                                <form method="POST" action="{{ route('letters.destroy', $letter->id) }}">
+                                <form method="POST" action="{{ route('letters.destroy', [app()->getLocale(), $letter->id]) }}">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
 
                                     <button type="submit" class="btn btn-danger btn-xs waves-effect"  onclick="return confirm('Are you sure? You cannot revert this action.')">
                                         <i class="material-icons">delete</i>
-                                            <span>DELETE LETTER</span>
+                                            <span>{{__('DELETE LETTER')}}</span>
                                     </button>
                                 </form>                                                                                                     
-                                <!-- <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" href="{{route('letters.destroy', $letter->id)}}">
+                                <!-- <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" href="{{route('letters.destroy', [$letter->id, app()->getLocale()])}}">
                                     <i class="material-icons">delete</i>
                                     <span>DELETE LETTER</span>
                                 </a> -->
@@ -197,7 +202,7 @@
                                     <div class="card">
                 
                 <div class="body">
-                    <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" id="tasks_add_form">
+                    <form action="{{ route('tasks.store', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="tasks_add_form">
                     @csrf
                         <div class="row clearfix">
                             <div class="col-md-6">
@@ -240,7 +245,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <textarea rows="3" class="form-control no-resize" name="remarks">{{ old('remarks') }}</textarea>
-                                        <label class="form-label">Remarks</label>
+                                        <label class="form-label">{{__('Remarks')}}</label>
                                     </div>
                                     @error('remarks')
                                             <label class="error" role="alert">
@@ -257,7 +262,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                     <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="deadline" name="deadline" value="{{ old('deadline') }}">
-                                    <label class="form-label">Deadline</label> 
+                                    <label class="form-label">{{__('Deadline')}}</label> 
                                     </div>
                                     @error('deadline')
                                             <label class="error" role="alert">
@@ -274,7 +279,7 @@
                                         <div class="form-group form-float">
                                             
                                             <input placeholder="" class="form-control" type="checkbox"  id="deadlinetf"   name="deadlinetf" value="{{ old('deadlinetf') }}" onchange="if(this.checked==true){document.getElementById('deadline').value='';document.getElementById('deadline').disabled=true;}else{document.getElementById('deadline').disabled=false;}">
-                                            <label class="form-label" for="deadlinetf">No Deadline Task</label> 
+                                            <label class="form-label" for="deadlinetf">{{__('No Deadline Task')}}</label> 
                                             </div>
                                             @error('deadlinetf')
                                                     <label class="error" role="alert">
@@ -295,13 +300,9 @@
                         <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
                         <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px">
                             <i class="material-icons">note_add</i>
-                            <span>CREATE</span>
+                            <span>{{__('CREATE')}}</span>
                         </button>
                         
-                        <a class="btn bg-grey waves-effect" style="margin-right:10px" href="{{route('letters.index')}}">
-                            <i class="material-icons">keyboard_backspace</i>
-                            <span>BACK</span>
-                        </a>
 
                         
                     </form>

@@ -39,7 +39,7 @@ class LettersController extends Controller
                 'alert-type' => 'warning'
             );
             
-            return redirect('/home')->with($notification);
+            return redirect(app()->getLocale() . '/home')->with($notification);
         }
     }
 
@@ -66,7 +66,7 @@ class LettersController extends Controller
                 'message' => 'You do not have permission to create letters',
                 'alert-type' => 'warning'
             );
-            return redirect('/home')->with($notification)->with('new_tasks', $new_tasks);
+            return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks);
             
         }
     }
@@ -131,7 +131,7 @@ class LettersController extends Controller
             'alert-type' => 'success'
         );
 
-        return redirect('/letters')->with($notification);
+        return redirect(app()->getLocale() . '/letters')->with($notification);
     }
     else{
         $notification = array(
@@ -139,7 +139,7 @@ class LettersController extends Controller
             'alert-type' => 'warning'
         );
         
-        return redirect('/home')->with($notification);
+        return redirect(app()->getLocale() .'/home')->with($notification);
     }
 
     }
@@ -150,8 +150,17 @@ class LettersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($lang, $id)
     {
+        
+
+        $new_tasks = 0;
+        foreach(Auth::user()->tasks as $task){
+            if(!count($task->histories) > 0){
+                $new_tasks += 1;
+            }
+        }
+
         $letter = Letter::find($id);
         if (Gate::allows('sys_admin') || Gate::allows('admin') ) {
             
@@ -160,13 +169,13 @@ class LettersController extends Controller
 
             if($letter->user->id == Auth::user()->id){
                 //Return letters show page
-                return view('letters.show')->with('letter', $letter)->with('users', $users);
+                return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks);
             }else{
                 $notification = array(
                     'message' => 'You do not have permission to view this letter',
                     'alert-type' => 'warning'
                 );
-                return redirect('/letters')->with($notification);
+                return redirect(app()->getLocale(). '/letters')->with($notification);
             }
         
         }
@@ -184,7 +193,7 @@ class LettersController extends Controller
                     'message' => 'You do not have permission to view this letter',
                     'alert-type' => 'warning'
                 );
-                return redirect('/letters')->with($notification);
+                return redirect(app()->getLocale() . '/letters')->with($notification);
             }
             
             
@@ -193,7 +202,7 @@ class LettersController extends Controller
                 'message' => 'You do not have permission to view letters',
                 'alert-type' => 'warning'
             );
-            return redirect('/letters')->with($notification);
+            return redirect(app()->getLocale(). '/letters')->with($notification);
         }
     }
 
@@ -203,7 +212,7 @@ class LettersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($lang, $id)
     {
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
@@ -222,7 +231,7 @@ class LettersController extends Controller
                     'message' => 'You do not have permission to edit this letter',
                     'alert-type' => 'warning'
                 );
-                return redirect('/letters')->with($notification);
+                return redirect(app()->getLocale() . '/letters')->with($notification);
             }
         
         }else{
@@ -230,7 +239,7 @@ class LettersController extends Controller
                 'message' => 'You do not have permission to edit letters',
                 'alert-type' => 'warning'
             );
-            return redirect('/letters')->with($notification);
+            return redirect(app()->getLocale() . '/letters')->with($notification);
         }
     }
 
@@ -241,8 +250,10 @@ class LettersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $lang, $id)
     {
+        
+
         if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
         //Update letter details
         $this->validate($request, [
@@ -300,21 +311,21 @@ class LettersController extends Controller
                 'message' => 'You do not have permission to edit this letter',
                 'alert-type' => 'warning'
             );
-            return redirect('/letters')->with($notification);
+            return redirect(app()->getLocale() . '/letters')->with($notification);
         }
         $notification = array(
             'message' => 'Letter has been updated successfully!', 
             'alert-type' => 'success'
         );
 
-        return redirect('/letters/' . $id)->with($notification);
+        return redirect(app()->getLocale() . '/letters/' . $id)->with($notification);
     }
     else{
         $notification = array(
             'message' => 'You do not have permission to edit letters',
             'alert-type' => 'warning'
         );
-        return redirect('/letters')->with($notification);
+        return redirect(app()->getLocale() . '/letters')->with($notification);
     }
 
     }
@@ -337,13 +348,15 @@ class LettersController extends Controller
             'alert-type' => 'success'
         );
 
-        return redirect('/letters')->with($notification);
+        return redirect(app()->getLocale() . '/letters')->with($notification);
     }
     else{
         $notification = array(
-            'message' => 'You do not have permission to delete letters',
+            'message' => 'You do not have permission to delete this letter',
             'alert-type' => 'warning'
         );
+
+        return redirect(app()->getLocale() . '/letters' . $id)->with($notification);
     }
     }
 }

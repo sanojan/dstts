@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>{{ config('app.name') }}</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -64,46 +64,21 @@
         </style>
     </head>
     <body>
-    <div class="collapse navbar-collapse" id="navbarToggler">
-                <ul class="navbar-nav ml-auto">
-                    @php $locale = session()->get('locale'); @endphp
-                    <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            @switch($locale)
-                                @case('en')
-                                English
-                                @break
-                                @case('si')
-                                Sinhala
-                                @break
-                                @case('ta')
-                                Tamil
-                                @break
-                                @default
-                                English
-                            @endswitch
-                            <span class="caret"></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'en'])}}"> English</a>
-                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'si'])}}"> Sinhala</a>
-                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'ta'])}}"> Tamil</a>
-                            
-                        </div>
-                    </li>
-                </ul>
-            </div>
+    
         <div class="flex-center position-ref full-height">
+            <div class="top-right links">
+            <a href="{{ route(Route::currentRouteName(), 'en') }}">English</a>
+            <a href="{{ route(Route::currentRouteName(), 'si') }}">සිංහල</a>
+            <a href="{{ route(Route::currentRouteName(), 'ta') }}">தமிழ்</a>
             @if (Route::has('login'))
-                <div class="top-right links">
+                
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ route('home', app()->getLocale()) }}">Home</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ route('login', app()->getLocale())}}">Login</a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
+                            <a href="{{ route('register', app()->getLocale()) }}">Register</a>
                         @endif
                     @endauth
                 </div>

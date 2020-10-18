@@ -81,7 +81,7 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="{{route('home')}}">TASK TRACKING SYSTEM</a>
+                <a class="navbar-brand" href="{{route('home', app()->getLocale())}}">TASK TRACKING SYSTEM</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -89,20 +89,64 @@
                     <!-- Call Search -->
                     <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
                     <!-- #END# Call Search -->
+                    <!-- Language Switcher -->
                     <li class="dropdown">
-                    
-                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'en'])}}"> English</a>
-                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'si'])}}"> Sinhala</a>
-                            <a class="dropdown-item" href="{{route('lang', ['locale' => 'ta'])}}"> Tamil</a>
-                            
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            <i class="material-icons">language</i>
+                            <span class="label-count">
+                            @if(app()->getLocale() == "en")
+                                EN
+                                @elseif(app()->getLocale() == "si")
+                                සි
+                                @elseif(app()->getLocale() == "ta")
+                                த
+                            @endif
+                            </span>
+                        </a>
                         
+                        <ul class="dropdown-menu">
+                            <li class="header">CHOOSE YOUR LANGUAGE</li>
+                            <li class="body">
+                                <ul class="menu">
+                                    <li>
+                                        <a href="{{ route(Route::currentRouteName(), 'en') }}">
+                                            
+                                            <div class="menu-info">
+                                                <h4>ENGLISH</h4>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route(Route::currentRouteName(), 'si') }}">
+                                            
+                                            <div class="menu-info">
+                                                <h4>සිංහල</h4>
+                                                
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route(Route::currentRouteName(), 'ta') }}">
+                                            
+                                            <div class="menu-info">
+                                                <h4>தமிழ்</h4>
+                                                
+                                            </div>
+                                        </a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                            
+                        </ul>
                     </li>
-                    <!-- Notifications -->
+                    <!--Notifications -->
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">notifications</i>
-                            <span class="label-count">7</span>
+                            <span class="label-count"></span>
                         </a>
+                        
                         <ul class="dropdown-menu">
                             <li class="header">NOTIFICATIONS</li>
                             <li class="body">
@@ -120,84 +164,7 @@
                                             </div>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="icon-circle bg-cyan">
-                                                <i class="material-icons">add_shopping_cart</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4>4 sales made</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 22 mins ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="icon-circle bg-red">
-                                                <i class="material-icons">delete_forever</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4><b>Nancy Doe</b> deleted account</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 3 hours ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="icon-circle bg-orange">
-                                                <i class="material-icons">mode_edit</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4><b>Nancy</b> changed name</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 2 hours ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="icon-circle bg-blue-grey">
-                                                <i class="material-icons">comment</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4><b>John</b> commented your post</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 4 hours ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="icon-circle bg-light-green">
-                                                <i class="material-icons">cached</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4><b>John</b> updated status</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 3 hours ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="icon-circle bg-purple">
-                                                <i class="material-icons">settings</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4>Settings updated</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> Yesterday
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
+                                    
                                 </ul>
                             </li>
                             <li class="footer">
@@ -205,6 +172,7 @@
                             </li>
                         </ul>
                     </li>
+
                     <!-- #END# Notifications -->
                     <!-- Tasks -->
                     <li class="dropdown">
@@ -310,10 +278,10 @@
                             <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
                             <li role="seperator" class="divider"></li>
-                            <li><a href="{{ route('logout') }}"
+                            <li><a href="{{ route('logout', app()->getLocale()) }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i class="material-icons">input</i>{{ __('Sign Out') }}</a>
-                                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                                     <form id="logout-form" action="{{ route('logout', app()->getLocale()) }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
                             </li>
@@ -339,11 +307,11 @@
 <!-- Bootstrap Core Js -->
 <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
 
-<!-- Select Plugin Js -->
-<script src="{{asset('plugins/bootstrap-select/js/bootstrap-select.js')}}"></script>
+<!-- Select Plugin Js
+<script src="{{asset('plugins/bootstrap-select/js/bootstrap-select.js')}}"></script> -->
 
 <!-- Slimscroll Plugin Js -->
-<script src="{{asset('plugins/jquery-slimscroll/jquery.slimscroll.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js" integrity="sha512-cJMgI2OtiquRH4L9u+WQW+mz828vmdp9ljOcm/vKTQ7+ydQUktrPVewlykMgozPP+NUBbHdeifE6iJ6UVjNw5Q==" crossorigin="anonymous"></script>
 
 <!-- Waves Effect Plugin Js -->
 <script src="{{asset('plugins/node-waves/waves.js')}}"></script>
@@ -424,11 +392,60 @@
     }
   @endif
 </script>
+
 <script type="text/javascript">
-    $(document).ready( function () {
-        $('#table_id').DataTable();
-        
+var locale = '{{ config('app.locale') }}';
+
+if(locale == "si"){
+
+    $('#table_id').DataTable({
+        retrieve: true,
+        language: {
+            search: "වගුවේ සොයන්න:",
+            paginate: {
+            first:      "පළමුවන",
+            previous:   "පෙර",
+            next:       "ඊලඟ",
+            last:       "අවසන්"
+            },
+        zeroRecords:    "වගුවේ දත්ත නොමැත",
+        infoEmpty:      "ඇතුළත් කිරීම් 0 න් 0 සිට 0 දක්වා පෙන්වයි",
+        info:           "ඇතුළත් කිරීම් _TOTAL_ න් _START_ සිට   _END_ දක්වා පෙන්වයි",
+        lengthMenu:     "ඇතුළත් කිරීම් _MENU_ ක් පෙන්වන්න",
+        }
+            
+        } );
+} 
+if(locale == "ta"){
+
+    $('#table_id').DataTable({
+        retrieve: true,
+        language: {
+            search: "தேடுக:",
+            paginate: {
+            first:      "முதல்",
+            previous:   "முந்தையது",
+            next:       "அடுத்தது",
+            last:       "கடந்த"
+        },
+        zeroRecords:    "அட்டவணையில் தரவு இல்லை",
+        infoEmpty:      "0 முதல் 0 வரையிலான உள்ளீடுகளைக் காட்டுகிறது",
+        info:           "_TOTAL_ உள்ளீடுகளில் _START_ முதல் _END_ வரையான உள்ளீடுகள்",
+        lengthMenu:     "_MENU_ உள்ளீடுகளைக் காட்டு",
+        }
     } );
+}
+
+if(locale == "en"){
+        $('#table_id').DataTable({
+            retrieve: true,
+    } );
+}
+
+else
+$('#table_id').DataTable({
+    retrieve: true,
+} );
 </script>
 <script type="text/javascript">
    $('.letter_no_dropdown').select2({
