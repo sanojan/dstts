@@ -87,16 +87,18 @@ class TasksController extends Controller
     {
         if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head') || Gate::allows('div_sec')) {
          //Create letters
+         //dd($request);  
          $this->validate($request, [
-            'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
-            'assigned_to' => 'required',
+            'letter_no' => 'bail|required',
+            'assigned_to' => 'required|array|min:2',
             'deadline' => 'nullable|after:today',
-            'remarks' => 'nullable | max:150'
+            'remarks' => 'nullable|max:150',
 
         ],
         ['letter_no.regex' => 'letter number cannot contain special characters',
         'deadline.after' => 'Deadline can not be a previous day',
-        'remarks.max' => 'Max 150 charectors']);
+        'remarks.max' => 'Max 150 charectors',
+        'assigned_to.min' => 'Select atleast one officer name to assign task']);
 
          if(count($request->assigned_to) > 0){
             foreach($request->assigned_to as $recipients){
@@ -111,19 +113,7 @@ class TasksController extends Controller
 
                 $task->save();
             }
-         }else{
-
-            //Create an instance of task model
-            //$id = Auth::id();
-            $task = new Task;
-            $task->letter_id = $request->letter_no;
-            $task->assigned_by= Auth::user()->id;
-            $task->user_id = $request->assigned_to;
-            $task->deadline = $request->deadline;
-            $task->remarks = $request->remarks;;
-        
-        $task->save();
-        }
+         }
 
         //session()->put('success','Letter has been created successfully.');
 
@@ -192,6 +182,7 @@ class TasksController extends Controller
      */
     public function show($lang, $id)
     {
+        //dd($lang, $id);
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
             if(!count($task->histories) > 0){

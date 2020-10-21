@@ -14,7 +14,7 @@
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
-                    <li class="active">
+                    <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
@@ -31,7 +31,7 @@
                     </li>
                     @endif
                     
-                    <li>
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>{{__('Tasks')}}</span>
@@ -98,21 +98,6 @@
                     
                 </ul>
             </div>
-            <!-- #Menu -->
-            <!-- Footer -->
-            <div class="legal">
-                <div class="copyright">
-                    &copy;2020 <a href="#">{{__('District Secretariat - Ampara')}}</a>.
-                </div>
-                <div class="version">
-                    <b>{{__('Version:')}} </b> 1.0.1
-                </div>
-            </div>
-            <!-- #Footer -->
-        </aside>
-        <!-- #END# Left Sidebar -->
-      
-    </section>
 @endsection
 
 @section('content')

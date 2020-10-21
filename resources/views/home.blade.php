@@ -97,21 +97,6 @@
                     
                 </ul>
             </div>
-            <!-- #Menu -->
-            <!-- Footer -->
-            <div class="legal">
-                <div class="copyright">
-                    &copy;2020 <a href="javascript:void(0);">{{__('District Secretariat - Ampara')}}</a>.
-                </div>
-                <div class="version">
-                    <b>{{__('Version:')}} </b> 1.0.1
-                </div>
-            </div>
-            <!-- #Footer -->
-        </aside>
-        <!-- #END# Left Sidebar -->
-      
-    </section>
 @endsection
 
 @section('content')

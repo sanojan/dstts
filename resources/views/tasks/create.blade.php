@@ -14,7 +14,7 @@
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
-                    <li class="active">
+                    <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
@@ -31,7 +31,7 @@
                     </li>
                     @endif
                     
-                    <li>
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>{{__('Tasks')}}</span>
@@ -98,21 +98,7 @@
                     
                 </ul>
             </div>
-            <!-- #Menu -->
-            <!-- Footer -->
-            <div class="legal">
-                <div class="copyright">
-                    &copy;2020 <a href="#">{{__('District Secretariat - Ampara')}}</a>.
-                </div>
-                <div class="version">
-                    <b>{{__('Version:')}} </b> 1.0.1
-                </div>
-            </div>
-            <!-- #Footer -->
-        </aside>
-        <!-- #END# Left Sidebar -->
-      
-    </section>
+            
 @endsection
 
 @section('content')
@@ -130,7 +116,7 @@
                             <div class="col-md-6">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                    <select class="form-control letter_no_dropdown" style="width:100%;" id="letter_no" name="letter_no" value="{{ old('letter_no') }}">
+                                    <select class="form-control letter_no_dropdown" style="width:100%;" id="letter_no" name="letter_no" value="{{old('letter_no')}}">
                                     <option value="" ></option>
                                     @foreach($letters as $letter)
                                     <option value="{{$letter->id}}">{{$letter->letter_no}} - <i>{{$letter->letter_title}}</i></option>
@@ -148,19 +134,19 @@
                             <div class="col-md-6">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to[]" value="{{ old('assigned_to') }}">
+                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to[]">
                                         <option value="" ></option>
                                         @foreach($users as $user)
                                         <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i></option>
                                         @endforeach
                                         </select>
                                     </div>
-                                    
                                     @error('assigned_to')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </label>
                                     @enderror
+                                    
                                 </div>
                             </div> 
                               

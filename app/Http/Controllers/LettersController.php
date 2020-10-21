@@ -153,7 +153,7 @@ class LettersController extends Controller
     public function show($lang, $id)
     {
         
-
+        
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
             if(!count($task->histories) > 0){
@@ -169,6 +169,7 @@ class LettersController extends Controller
 
             if($letter->user->id == Auth::user()->id){
                 //Return letters show page
+                //dd($lang, $id, $letter);
                 return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks);
             }else{
                 $notification = array(
