@@ -2,6 +2,9 @@
     "Task Tracking System" : "Task Tracking System",
     "District Secretariat - Ampara" : "දිස්ත්‍රික් ලේකම් කාර්යාලය - අම්පාර",
     "Task Tracking System - District Secretariat, Ampara" : "Task Tracking System - දිස්ත්‍රික් ලේකම් කාර්යාලය, අම්පාරා",
+    "Home" : "මුල් පිටුව",
+    "Login" : "ඇතුල් වන්න",
+    "Register" : "ලියාපදිංචි වන්න",
     "Sign in to start your session" : "ඔබගේ සැසිය ආරම්භ කිරීමට පුරනය වන්න",
     "NIC NO" : "ජාතික හැඳුනුම්පත් අංකය",
     "Password" : "මුරපදය",
@@ -102,7 +105,10 @@
     "REJECT TASK" : "කාර්යය ප්‍රතික්ෂේප කරන්න",
     "SUBMIT" : "ඉදිරිපත් කරන්න",
     "Task Report (Optional)" : "කාර්ය වාර්තාව (අත්‍යවශ්‍ය නොවේ)",
-    "Task Assigned By" : "විසින් පවරන ලද කාර්යය"
+    "Task Assigned By" : "විසින් පවරන ලද කාර්යය",
+    "Submit Your Complaint" : "ඔබේ පැමිණිල්ල ඉදිරිපත් කරන්න",
+    "Select Officer to send complaint" : "ඔබට පැමිණිල්ලක් යැවීමට අවශ්‍ය නිලධාරියා තෝරන්න",
+    "Complaint content" : "පැමිණිල්ලේ අන්තර්ගතය"
 
     
 }

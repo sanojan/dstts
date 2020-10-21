@@ -2,6 +2,9 @@
     "Task Tracking System" : "Task Tracking System",
     "District Secretariat - Ampara" : "மாவட்ட செயலகம் - அம்பாறை",
     "Task Tracking System - District Secretariat, Ampara" : "Task Tracking System - மாவட்ட செயலகம், அம்பாறை",
+    "Home" : "முகப்புப்பக்கம்",
+    "Login" : "உள்நுழைய",
+    "Register" : "பதிவு செய்ய",
     "Sign in to start your session" : "உங்கள் அமர்வைத் தொடங்க உள்நுழைக",
     "NIC NO" : "தே.அ.அ.எண்",
     "Password" : "கடவுச்சொல்",
@@ -102,5 +105,8 @@
     "REJECT TASK" : "பணியை நிராகரிக்கவும்",
     "SUBMIT" : "சமர்ப்பிக்கவும்",
     "Task Report (Optional)" : "பணி அறிக்கை (விரும்பினால்)",
-    "Task Assigned By" : "பணி இவரால் நியமிக்கப்பட்டது"
+    "Task Assigned By" : "பணி இவரால் நியமிக்கப்பட்டது",
+    "Submit Your Complaint" : "உங்கள் புகாரைச் சமர்ப்பிக்கவும்",
+    "Select Officer to send complaint" : "நீங்கள் புகாரை அனுப்ப விரும்பும் அதிகாரியைத் தேர்ந்தெடுக்கவும்",
+    "Complaint content" : "புகாரின் உள்ளடக்கம்"
 }

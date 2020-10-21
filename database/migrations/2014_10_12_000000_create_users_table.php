@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('nic',12)->unique();
             $table->string('email')->unique()->nullable();
             $table->string('mobile_no', 10)->unique();
-            $table->string('designation',30);
+            $table->string('designation',50);
             $table->string('service',50);
             $table->char('class');
             $table->string('workplace',30);
