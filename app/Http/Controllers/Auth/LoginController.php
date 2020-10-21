@@ -46,9 +46,9 @@ class LoginController extends Controller
         return 'nic';
     }
 
-    public function logout() {
+    public function logout($lang) {
         Auth::logout();
-        \App::setLocale(app()->getLocale());
-        return redirect('/');
+        \App::setLocale($lang);
+        return redirect('/' . app()->getLocale());
     }
 }
