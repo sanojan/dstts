@@ -6,28 +6,32 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-     //Table name
-     protected $table = 'tasks';
+   //Table name
+   protected $table = 'tasks';
 
-     //Primarykey
-     public $primaryKey = 'id';
- 
-     //Timestamps
-     public $timestamps = true;
+   //Primarykey
+   public $primaryKey = 'id';
 
-     //link
-     public function letter(){
-        return $this->belongsTo('App\Letter');
-     }
-     
-     public function user()
-     {
-        return $this->belongsTo('App\User');
-     }
+   //Timestamps
+   public $timestamps = true;
 
-     public function histories()
-     {
-        return $this->hasMany('App\History');
-     }
+   //link
+   public function letter(){
+      return $this->belongsTo('App\Letter');
+   }
+
+   public function complaint(){
+   return $this->belongsTo('App\Complaint');
+   }
+   
+   public function user()
+   {
+      return $this->belongsTo('App\User');
+   }
+
+   public function histories()
+   {
+      return $this->hasMany('App\History');
+   }
 
 }

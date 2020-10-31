@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function letters(){
         return $this->hasMany('App\Letter');
     }
+
+    public function complaints(){
+        return $this->hasMany('App\Complaint');
+    }
 }

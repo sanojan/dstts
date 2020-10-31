@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-
+@inject('app', 'Illuminate\Contracts\Foundation\Application')
+@inject('urlGenerator', 'Illuminate\Routing\UrlGenerator')
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -18,6 +19,9 @@
     <!-- Waves Effect Css -->
     <link href="{{asset('plugins/node-waves/waves.css')}}" rel="stylesheet" />
     
+    <!-- Toastr Css -->
+    @toastr_css
+
     <!-- date time picker -->
     <link href="{{asset('plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet" />
     
@@ -30,8 +34,44 @@
      <!-- Dropdown with search-->
      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 </head>
-
+  
 <body class="signup-page">
+
+ <!-- Page Loader -->
+<div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-light-blue">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+ <!-- End Page Loader -->
+
+ <div class="btn-group">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    @if(app()->getLocale() == "en")
+        ENGLISH
+        @elseif(app()->getLocale() == "si")
+        සිංහල
+        @elseif(app()->getLocale() == "ta")
+        தமிழ்
+    @endif
+    <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="{{ $urlGenerator->toLanguage('en') }}" class=" waves-effect waves-block">ENGLISH</a></li>
+        <li><a href="{{ $urlGenerator->toLanguage('si') }}" class=" waves-effect waves-block">සිංහල</a></li>
+        <li><a href="{{ $urlGenerator->toLanguage('ta') }}" class=" waves-effect waves-block">தமிழ்</a></li>
+    </ul>
+</div>
     <div class="signup-box">
         <div class="logo">
             <a href="{{route('complaints.create', app()->getLocale())}}">{{__('Submit Your Complaint')}}</a>
@@ -39,8 +79,18 @@
         </div>
         <div class="card">
             <div class="body">
-                <form id="sign_up" method="POST" action="{{ route('complaints.store', app()->getLocale()) }}">
+                <form id="sign_up" method="POST" enctype="multipart/form-data" action="{{ route('complaints.store', app()->getLocale()) }}">
                     @csrf
+
+                    @if(session()->has('message'))
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ session()->get('message') }}
+                        </div>
+                    @endif
+
                     <div class="row clearfix">
                         <div class="col-sm-6">
                             <div class="input-group">
@@ -150,6 +200,51 @@
                     <div class="row clearfix">
                         <div class="col-sm-6">
                             <div class="input-group">
+                            <span class="input-group-addon">
+                                    <i class="material-icons">location_on</i>
+                                    </span>
+                                    <div class="form-line">
+                                        <select class="form-control dsdivision_dropdown" style="width:100%;" id="dsdivision" name="dsdivision">
+                                        <option value="" @if(old('dsdivision')=='') selected disabled @endif>{{__('Select Your DS Division')}}</option>
+                                        @foreach($dsdivisions as $dsdivision)
+                                        <option value="{{$dsdivision->name}}" {{ old('dsdivision') == $dsdivision->name ? "selected" :""}}>{{$dsdivision->name}} </option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                    @error('dsdivision')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                    @enderror
+                                
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                            <span class="input-group-addon">
+                                    <i class="material-icons">location_on</i>
+                                </span>
+                                    <div class="form-line">
+                                        <select class="form-control gndivision_dropdown" style="width:100%;" id="gndivision" name="gndivision" value="{{ old('gndivision') }}">
+                                        @if(old('gndivision'))
+                                        <option value="{{ old('gndivision') }}" selected>{{ old('gndivision')}}</option>
+                                        @else
+                                        <option value="" selected>Select your GN Division</option>
+                                        @endif
+                                        </select>
+                                    </div>
+                                    @error('gndivision')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                    @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">location_city</i>
                                 </span>
@@ -191,7 +286,7 @@
                                         <select class="form-control comp_officer_dropdown" style="width:100%;" id="comp_officer" name="comp_officer" value="{{ old('comp_officer') }}">
                                         <option value="" @if(old('comp_officer')=='') selected disabled @endif>{{__('Select the officer you want to  send complaint')}}</option>
                                         @foreach($comp_officers as $comp_officer)
-                                        <option value="{{$comp_officer->name}}" @if(old('comp_officer')=='{{$comp_officer->name}}') selected @endif>{{$comp_officer->name}} - {{$comp_officer->designation}} ({{$comp_officer->workplace}})</option>
+                                        <option value="{{$comp_officer->id}}" @if(old('comp_officer')=='{{$comp_officer->id}}') selected @endif>{{$comp_officer->name}} - {{$comp_officer->designation}} ({{$comp_officer->workplace}})</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -223,10 +318,29 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="row clearfix">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="material-icons"></i>
+                                    </span>
+                                    <label class="form-label">{{__('Complaint Scanned Copy (Optional)')}}</label>
+                                    <input type="file" name="complaint_scanned_copy" class="form-control"> 
+                                    @error('complaint_scanned_copy')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                    
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                
+                 
                     <button class="btn btn-block btn-lg bg-purple waves-effect" type="submit">{{__('SUBMIT')}}</button>
-    
+                    <div class="m-t-25 m-b--5 align-center">
+                        <a href="{{route('login', app()->getLocale())}}">{{__('You already submit a complaint?')}}</a>
+                    </div>
                     </div>
                 </form>
             </div>
@@ -238,6 +352,9 @@
 
     <!-- Bootstrap Core Js -->
     <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
+
+    <!-- Toastr Plugin Js -->
+    @toastr_js
 
     <!-- Waves Effect Plugin Js -->
     <script src="{{asset('plugins/node-waves/waves.js')}}"></script>
@@ -269,6 +386,43 @@ $('.gender_dropdown').select2({
   width: 'resolve'
 });
 
+$('.dsdivision_dropdown').select2({
+  placeholder: '{{__('Select your DS Division')}}',
+  width: 'resolve'
+});
+
+$('.gndivision_dropdown').select2({
+  placeholder: '{{__('Select your GN Division')}}',
+  width: 'resolve'
+});
+
+
+</script>
+
+<script>
+    $('#dsdivision').change(function(){
+  var dsdiv_name = $(this).val();  
+  if(dsdiv_name){
+    $.ajax({
+      type:"GET",
+      url:"{{url('app()->getLocale()/get-gndivision-list')}}?ds_name="+dsdiv_name,
+      success:function(res){        
+      if(res){
+        $("#gndivision").empty();
+        $("#gndivision").append('<option>{{__('Select your GN Division')}}</option>');
+        $.each(res,function(key,value){
+          $("#gndivision").append('<option value="'+value+'">'+value+'</option>');
+        });
+      
+      }else{
+        $("#gndivision").empty();
+      }
+      }
+    });
+  }else{
+    $("#gndivision").empty();
+  }   
+  });
 </script>
 
 </body>

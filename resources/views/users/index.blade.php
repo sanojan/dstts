@@ -48,6 +48,17 @@
                                     @endif
                         </ul>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    <li class="">
+                        <a href="#">
+                            <i class="material-icons">warning</i>
+                            <span>{{__('Complaints')}}</span>
+                            @if($new_complaints > 0)
+                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @endif
                     @if(Gate::allows('sys_admin'))
                     <li class="active">
                         <a href="index.html">

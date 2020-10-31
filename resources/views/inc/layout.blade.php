@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-
+@inject('app', 'Illuminate\Contracts\Foundation\Application')
+@inject('urlGenerator', 'Illuminate\Routing\UrlGenerator')
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -27,6 +28,7 @@
     
     <!-- Datatables Css -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css"/>
     
     <!-- Dropdown with search-->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
@@ -100,13 +102,12 @@
                             @endif
                             </span>
                         </a>
-                        
                         <ul class="dropdown-menu">
                             <li class="header">CHOOSE YOUR LANGUAGE</li>
                             <li class="body">
                                 <ul class="menu">
                                     <li>
-                                        <a href="{{ route(Route::currentRouteName(), 'en') }}">
+                                    <a href="{{ $urlGenerator->toLanguage('en') }}">
                                             
                                             <div class="menu-info">
                                                 <h4>ENGLISH</h4>
@@ -114,7 +115,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route(Route::currentRouteName(), 'si') }}">
+                                        <a href="{{ $urlGenerator->toLanguage('si') }}">
                                             
                                             <div class="menu-info">
                                                 <h4>සිංහල</h4>
@@ -123,7 +124,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route(Route::currentRouteName(), 'ta') }}">
+                                        <a href="{{ $urlGenerator->toLanguage('ta') }}">
                                             
                                             <div class="menu-info">
                                                 <h4>தமிழ்</h4>
@@ -131,6 +132,8 @@
                                             </div>
                                         </a>
                                     </li>
+                                        
+                                        
                                     
                                 </ul>
                             </li>
@@ -317,53 +320,62 @@
 
 <!-- Data Tables Js -->
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.colVis.min.js"></script>
 
 <!-- Dropdown with search-->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
-<script>
-  @if(Session::has('message'))
-    var type = "{{ Session::get('alert-type', 'info') }}";
-    switch(type){
-        case 'info':
-            toastr.options.positionClass = 'toast-top-right';
-            toastr.options.progressBar = true;
-            toastr.options.showDuration = 400;
-            toastr.info("{{ Session::get('message') }}");
-            break;
-        
-        case 'warning':
-            toastr.options.positionClass = 'toast-top-right';
-            toastr.options.progressBar = true;
-            toastr.options.showDuration = 400;
-            toastr.warning("{{ Session::get('message') }}");
-            break;
-
-        case 'success':
-            toastr.options.positionClass = 'toast-top-right';
-            toastr.options.progressBar = true;
-            //toastr.options.iconClasses = 'toast-success';
-            toastr.options.showDuration = 400;
-            toastr.success("{{ Session::get('message') }}");
-            break;
-
-        case 'error':
-            toastr.options.positionClass = 'toast-top-right';
-            toastr.options.progressBar = true;
-            toastr.options.showDuration = 400;
-            toastr.error("{{ Session::get('message') }}");
-            break;
-    }
-  @endif
-</script>
 
 <script type="text/javascript">
 var locale = '{{ config('app.locale') }}';
 
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
 if(locale == "si"){
 
-    $('#table_id').DataTable({
+    $('#export_table_id').DataTable({
         retrieve: true,
+        dom: 'Blfrtip',
+            buttons: [
+                {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                title: 'Daily summary of Letters-' + date,
+                messageTop: 'Letters details report generated from DS-TTS',
+                messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+                },
+                'colvis'
+        ],
+        language: {
+            search: "වගුවේ සොයන්න:",
+            paginate: {
+            first:      "පළමුවන",
+            previous:   "පෙර",
+            next:       "ඊලඟ",
+            last:       "අවසන්"
+            },
+        zeroRecords:    "වගුවේ දත්ත නොමැත",
+        infoEmpty:      "ඇතුළත් කිරීම් 0 න් 0 සිට 0 දක්වා පෙන්වයි",
+        info:           "ඇතුළත් කිරීම් _TOTAL_ න් _START_ සිට   _END_ දක්වා පෙන්වයි",
+        lengthMenu:     "ඇතුළත් කිරීම් _MENU_ ක් පෙන්වන්න",
+        }
+            
+        } );
+
+        $('#no_export_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+            buttons: [
+                'colvis'
+        ],
         language: {
             search: "වගුවේ සොයන්න:",
             paginate: {
@@ -382,8 +394,21 @@ if(locale == "si"){
 } 
 if(locale == "ta"){
 
-    $('#table_id').DataTable({
+    $('#export_table_id').DataTable({
         retrieve: true,
+        dom: 'Blfrtip',
+            buttons: [
+                {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                title: 'Daily summary of Letters-' + date,
+                messageTop: 'Letters details report generated from DS-TTS',
+                messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+                },
+                'colvis'
+        ],
         language: {
             search: "தேடுக:",
             paginate: {
@@ -398,17 +423,66 @@ if(locale == "ta"){
         lengthMenu:     "_MENU_ உள்ளீடுகளைக் காட்டு",
         }
     } );
+
+    $('#no_export_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+            buttons: [
+                'colvis'
+        ],
+        language: {
+            search: "தேடுக:",
+            paginate: {
+            first:      "முதல்",
+            previous:   "முந்தையது",
+            next:       "அடுத்தது",
+            last:       "கடந்த"
+        },
+        zeroRecords:    "அட்டவணையில் தரவு இல்லை",
+        infoEmpty:      "0 முதல் 0 வரையிலான உள்ளீடுகளைக் காட்டுகிறது",
+        info:           "_TOTAL_ உள்ளீடுகளில் _START_ முதல் _END_ வரையான உள்ளீடுகள்",
+        lengthMenu:     "_MENU_ உள்ளீடுகளைக் காட்டு",
+        }
+            
+        } );
 }
 
 if(locale == "en"){
-        $('#table_id').DataTable({
+        $('#export_table_id').DataTable({
             retrieve: true,
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                title: 'Daily summary of Letters-' + date,
+                messageTop: 'Letters details report generated from DS-TTS',
+                messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+                },
+                'colvis'
+            ],
+            
     } );
+
+    $('#no_export_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+            buttons: [
+                'colvis'
+        ],
+            
+        } );
 }
 
 else
-$('#table_id').DataTable({
+$('#export_table_id').DataTable({
     retrieve: true,
+} );
+
+$('#no_export_table_id').DataTable({
+        retrieve: true,
 } );
 </script>
 <script type="text/javascript">

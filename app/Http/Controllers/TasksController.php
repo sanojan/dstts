@@ -7,6 +7,7 @@ use App\Letter;
 use App\User;
 use App\Task;
 use App\History;
+use App\Complaint;
 use Illuminate\Support\Facades\Auth;
 use Gate;
 use DB;
@@ -27,17 +28,24 @@ class TasksController extends Controller
             }
         }
 
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
+
         if (Gate::allows('admin') || Gate::allows('div_sec') || Gate::allows('user')) {
         //$letters = Letter::all();
         //$users = User::all();
         
         $tasks = Task::where([['user_id', '=', Auth::user()->id],])->orWhere('assigned_by', Auth::user()->id)->get();
-        return view('tasks.index')->with('tasks', $tasks)->with('new_tasks', $new_tasks);
+        return view('tasks.index')->with('tasks', $tasks)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         
         }
         elseif(Gate::allows('sys_admin')){
             $tasks = Task::all();
-            return view('tasks.index')->with('tasks', $tasks)->with('new_tasks', $new_tasks);
+            return view('tasks.index')->with('tasks', $tasks)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }
     }
 
@@ -55,15 +63,38 @@ class TasksController extends Controller
             }
         }
 
-        if (Gate::allows('admin') || Gate::allows('sys_admin')) {
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
+
+        if (Gate::allows('admin')) {
         $letters = Auth::user()->letters;
-        $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
-        return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks);
+
+        $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
+        $orThose = ['designation' => 'Divisional Secretary'];
+            
+            
+        $users = DB::table('users')->where($matchThese)->orWhere($orThose)->whereNotIn('id', array(Auth::user()->id))->get();
+        return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }
         elseif(Gate::allows('div_sec') ){
             $letters = Auth::user()->letters;
-            $users = DB::table('users')->where('designation', '=', 'District Secretary')->orWhere('workplace', Auth::user()->workplace)->whereNotIn('id', array(Auth::user()->id))->get();
-            return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks);
+
+            $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
+            $orThose = ['designation' => 'District Secretary'];
+            $orThese = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+            $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->get();
+
+            return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+        }elseif(Gate::allows('sys_admin')){
+            $letters = Letter::all();
+            
+            
+        $users = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
+        return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }else{
             $notification = array(
                 'message' => 'You do not have permission to create Tasks',
@@ -88,32 +119,37 @@ class TasksController extends Controller
         if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head') || Gate::allows('div_sec')) {
          //Create letters
          //dd($request);  
-         $this->validate($request, [
-            'letter_no' => 'bail|required',
-            'assigned_to' => 'required|array|min:2',
-            'deadline' => 'nullable|after:today',
-            'remarks' => 'nullable|max:150',
+         
 
-        ],
-        ['letter_no.regex' => 'letter number cannot contain special characters',
-        'deadline.after' => 'Deadline can not be a previous day',
-        'remarks.max' => 'Max 150 charectors',
-        'assigned_to.min' => 'Select atleast one officer name to assign task']);
+        if($request->task_from_letter_button == "task_from_letter"){
+            $this->validate($request, [
+                'letter_no' => 'bail|required',
+                'assigned_to' => 'required|array|min:2',
+                'deadline' => 'nullable|after:today',
+                'remarks' => 'nullable|max:150',
+    
+            ],
+            ['letter_no.regex' => 'letter number cannot contain special characters',
+            'deadline.after' => 'Deadline can not be a previous day',
+            'remarks.max' => 'Max 150 charectors',
+            'assigned_to.min' => 'Select atleast one officer name to assign task']);
 
-         if(count($request->assigned_to) > 0){
-            foreach($request->assigned_to as $recipients){
-                if($recipients == "")
-                    continue;
-                $task = new Task;
-                $task->letter_id = $request->letter_no;
-                $task->assigned_by= Auth::user()->id;
-                $task->user_id = $recipients;
-                $task->deadline = $request->deadline;
-                $task->remarks = $request->remarks;
+            if(count($request->assigned_to) > 0){
+                foreach($request->assigned_to as $recipients){
+                    if($recipients == "")
+                        continue;
+                    $task = new Task;
+                    $task->letter_id = $request->letter_no;
+                    $task->assigned_by= Auth::user()->id;
+                    $task->user_id = $recipients;
+                    $task->deadline = $request->deadline;
+                    $task->remarks = $request->remarks;
+                    $task->complaint_id = null;
 
-                $task->save();
+                    $task->save();
+                }
             }
-         }
+        }
 
         //session()->put('success','Letter has been created successfully.');
 
@@ -156,6 +192,39 @@ class TasksController extends Controller
             return redirect('/tasks/'.$request->task_id)->with($notification);
         }
 
+        if($request->task_from_complaint_button == "task_from_complaint"){
+            $this->validate($request, [
+                'assigned_to' => 'required|array|min:2',
+                'deadline' => 'nullable|after:today',
+                'remarks' => 'nullable|max:150',
+    
+            ],
+            ['deadline.after' => 'Deadline can not be a previous day',
+            'remarks.max' => 'Max 150 charectors',
+            'assigned_to.min' => 'Select atleast one officer name to assign task']);
+
+            if(count($request->assigned_to) > 0){
+                foreach($request->assigned_to as $recipients){
+                    if($recipients == "")
+                        continue;
+                    $task = new Task;
+                    $task->letter_id = null;
+                    $task->assigned_by= Auth::user()->id;
+                    $task->user_id = $recipients;
+                    $task->deadline = $request->deadline;
+                    $task->remarks = $request->remarks;
+                    $task->complaint_id = $request->complaint_id;
+    
+                    $task->save();
+                }
+            }
+
+            $complaint = Complaint::find($request->complaint_id);
+            $complaint->status = "On Process";
+            $complaint->save();            
+            
+        }
+
         $notification = array(
             'message' => 'Task has been created successfully!', 
             'alert-type' => 'success'
@@ -190,6 +259,13 @@ class TasksController extends Controller
             }
         }
 
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
+
         $task = Task::find($id);
         $letters = $task->letter;
 
@@ -215,7 +291,7 @@ class TasksController extends Controller
         $assigned_by = User::find($task->assigned_by);
         //$conditions=['workplace' => Auth::user()->workplace, 'branch' => Auth::user()->branch];
         //$limited_users = DB::table('users')->where($conditions)->whereNotIn('id', array(Auth::user()->id))->get();//User::where('workplace','workplace1');
-        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
+        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
 
         } elseif(Gate::allows('div_sec')){
            
@@ -225,7 +301,7 @@ class TasksController extends Controller
             
             $assigned_by = User::find($task->assigned_by);
 
-            return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
+            return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }
     }
 

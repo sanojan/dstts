@@ -28,6 +28,8 @@ class HomeController extends Controller
         $tot_tasks = count(Auth::user()->tasks);
         $comp_tasks = 0;
         $new_tasks = 0;
+        $new_complaints = 0;
+        $ongoing_tasks = 0;
 
         foreach(Auth::user()->tasks as $task){
             if(count($task->histories) > 0){
@@ -36,21 +38,25 @@ class HomeController extends Controller
                         if($history->status == "Completed"){
                             $comp_tasks += 1;
                         }
+                        elseif($history->status == "Accepted"){
+                            $ongoing_tasks += 1;
+                        }
                     }
                 }
             }else{
                 $new_tasks += 1;
             }
         }
-            
+        
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
 
-        $tasks_count = array(
-            "tot_tasks" => $tot_tasks,
-            "comp_tasks" => $comp_tasks,
-            "new_tasks" => $new_tasks
-        );
+        
 
-        return view('home')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks);
+        return view('home')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints);
     }
     
 }

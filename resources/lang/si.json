@@ -59,6 +59,7 @@
     "Contact Us" : "අප අමතන්න",
     "Version:" : "පිටපත:",
     "NEW TASKS" : "නව කාර්යයන්",
+    "ON GOING TASKS" : "ඉදිරියට යන කාර්යයන්",
     "COMPLETED TASKS" : "සම්පූර්ණ කරන ලද කාර්යයන්",
     "TOTAL TASKS" : "මුළු කාර්යයන්",
     "VIEW LETTERS" : "ලිපි බලන්න",
@@ -108,7 +109,15 @@
     "Task Assigned By" : "විසින් පවරන ලද කාර්යය",
     "Submit Your Complaint" : "ඔබේ පැමිණිල්ල ඉදිරිපත් කරන්න",
     "Select Officer to send complaint" : "ඔබට පැමිණිල්ලක් යැවීමට අවශ්‍ය නිලධාරියා තෝරන්න",
-    "Complaint content" : "පැමිණිල්ලේ අන්තර්ගතය"
+    "Complaint content" : "පැමිණිල්ලේ අන්තර්ගතය",
+    "Permanant Address": "ස්ථිර ලිපිනය",
+    "Temporary Address" : "තාවකාලික ලිපිනය",
+    "Complaint Scanned Copy (Optional)" : "පැමිණිලි පරිලෝකනය කළ පිටපත (විකල්ප)",
+    "Select your DS Division" : "ඔබගේ ප්රාදේශීය ලේකම් කොට්ඨාශය",
+    "Select your GN Division" : "ඔබගේ ග්රාම නිලධාරී වසම",
+    "Complaints" : "පැමිණිලි",
+    "VIEW COMPLAINTS" : "පැමිණිලි බලන්න",
+    "Created On" : "නිර්මාණය කරන ලදි"
 
     
 }

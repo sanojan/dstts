@@ -15,17 +15,24 @@ class CreateComplaintsTable extends Migration
     {
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('letter_id');
             $table->string('name', 100);
             $table->string('nic',12);
             $table->date('dob');
-            $table->string('mobile_no', 10);
             $table->string('email')->nullable();
+            $table->string('mobile_no', 10);
+            $table->string('dsdivision', 35);
+            $table->string('gndivision', 45);
+            $table->string('permanant_address', 100);
+            $table->string('temporary_address', 100)->nullable();
+            $table->foreignId('user_id');
             $table->longText('complaint_content');
             $table->string('complaint_scanned_copy')->nullable();
+            $table->unsignedBigInteger('ref_no')->nullable();
+            $table->string('status', 30)->nullable();
+            $table->string('complaint_report')->nullable();
             $table->timestamps();
 
-            $table->foreign('letter_id')->references('id')->on('letters')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

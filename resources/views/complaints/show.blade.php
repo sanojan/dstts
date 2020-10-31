@@ -13,14 +13,14 @@
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
-                    <li class="active">
+                    <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li class="active">
+                                    <li class="">
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
                                     <li >
@@ -51,7 +51,7 @@
                         </ul>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
-                    <li class="">
+                    <li class="active">
                         <a href="{{route('complaints.index', app()->getLocale())}}">
                             <i class="material-icons">warning</i>
                             <span>{{__('Complaints')}}</span>
@@ -114,7 +114,7 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>{{__('LETTER DETAILS')}}</h2>
+                <h2>{{__('COMPLAINT DETAILS')}}</h2>
             </div>
             <div class="card">
                         <div class="body table-responsive">
@@ -128,34 +128,48 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>{{__('Letter No.')}}:</td>
-                                        <td>{{$letter->letter_no}}</td>
+                                        <td>{{__('Complainant Name')}}:</td>
+                                        <td>{{$complaint->name}}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{__('Letter Date')}}:</td>
-                                        <td>{{$letter->letter_date}}</td>
-                                        
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Letter From')}}:</td>
-                                        <td>{{$letter->letter_from}}</td>
+                                        <td>{{__('Complainant NIC')}}:</td>
+                                        <td>{{$complaint->nic}}</td>
                                         
                                     </tr>
                                     <tr>
-                                        <td>{{__('Letter Title')}}:</td>
-                                        <td>{{$letter->letter_title}}</td>
+                                        <td>{{__('Complainant Date of Birth')}}:</td>
+                                        <td>{{$complaint->dob}}</td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>{{__('Complainant Email & Phone No.')}}:</td>
+                                        <td>{{$complaint->email}} | {{$complaint->mobile_no}}</td>
                                         
                                         
                                     </tr>
                                     <tr>
-                                        <td>{{__('Letter Content')}}:</td>
-                                        <td>{{$letter->letter_content}}</td>
+                                        <td>{{__('Complainant DS & GN Division')}}:</td>
+                                        <td>{{$complaint->dsdivision}} - {{$complaint->gndivision}}</td>
                                         
+                                    </tr>
+                                    <tr>
+                                        <td>{{__('Complainant Permanant Address')}}:</td>
+                                        <td>{{$complaint->permanant_address}}</td>
+                                        
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>{{__('Complainant Temporary Address')}}:</td>
+                                        <td>{{$complaint->temporary_address}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{__('Complainant Content')}}:</td>
+                                        <td>{{$complaint->complaint_content}}</td>
                                     </tr>
                                     <tr>
                                         <td>{{__('Scanned Copy')}}:</td>
-                                        @if($letter->letter_scanned_copy)
-                                            <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('scanned_letters/' . $letter->letter_scanned_copy) }}" target="_blank">
+                                        @if($complaint->complaint_scanned_copy)
+                                            <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('scanned_complaints/' . $complaint->complaint_scanned_copy) }}" target="_blank">
                                                     <i class="material-icons">file_download</i>
                                                 </a> {{__('Click to view attached scanned copy')}}
                                             </td>
@@ -163,13 +177,13 @@
                                             <td>{{__('No Scanned copy was attached')}}</td>
                                         @endif    
                                     </tr>
+                                    <tr>
+                                        <td>{{__('Complainant Status')}}:</td>
+                                        <td>{{$complaint->status}}</td>
+                                    </tr>
                                 </tbody>    
                             </table>
                             <div>
-                                <a type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" href="{{route('letters.edit', [app()->getLocale(), $letter->id])}}">
-                                    <i class="material-icons">mode_edit</i>
-                                    <span>{{__('EDIT DETAILS')}}</span>
-                                </a>
                                 <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#createTask" aria-expanded="false" aria-controls="createTask">
                                     <i class="material-icons">add_to_photos</i>
                                     <span>{{__('CREATE TASK')}}</span>
@@ -178,140 +192,125 @@
                                     <i class="material-icons">access_time</i>
                                     <span>{{__('VIEW TASK HISTORY')}}</span>
                                 </button><br /><br />
-
-                                <form method="POST" action="{{ route('letters.destroy', [app()->getLocale(), $letter->id]) }}">
+                                @if(Gate::allows('sys_admin'))
+                                <form method="POST" action="{{ route('complaints.destroy', [app()->getLocale(), $complaint->id]) }}">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
 
                                     <button type="submit" class="btn btn-danger btn-xs waves-effect"  onclick="return confirm('Are you sure? You cannot revert this action.')">
                                         <i class="material-icons">delete</i>
-                                            <span>{{__('DELETE LETTER')}}</span>
+                                            <span>{{__('DELETE COMPLAINT')}}</span>
                                     </button>
-                                </form>                                                                                                     
-                                <!-- <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" href="{{route('letters.destroy', [$letter->id, app()->getLocale()])}}">
+                                </form>   
+                                @endif                                                                                                  
+                                <!-- <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" href="{{route('complaints.destroy', [$complaint->id, app()->getLocale()])}}">
                                     <i class="material-icons">delete</i>
                                     <span>DELETE LETTER</span>
                                 </a> -->
                                 <br />
                                 <div class="collapse" id="createTask" aria-expanded="false" style="height: 0px;">
                                     <div class="well">
-                                    <div class="card">
+                                        <div class="card">
                 
-                <div class="body">
-                    <form action="{{ route('tasks.store', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="tasks_add_form">
-                    @csrf
-                        <div class="row clearfix">
-                            <div class="col-md-6">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <select class="form-control letter_no_dropdown" style="width:100%;" id="letter_no" name="letter_no" value="{{ old('letter_no') }}">
-                                    <option value="{{$letter->id}}" selected>{{$letter->letter_no}} - <i>{{$letter->letter_title}}</i></option>
-                                    </select>
-                                    </div>
-                                    
-                                    @error('letter_no')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to[]">
-                                        <option value="" ></option>
-                                        @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}-<i>{{$user->designation}}</i> ({{$user->workplace}})</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-                                    
-                                    @error('assigned_to')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div> 
-                              
-                        </div>
-                        <div class="row clearfix">
-                        <div class="col-md-12">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <textarea rows="3" class="form-control no-resize" name="remarks">{{ old('remarks') }}</textarea>
-                                        <label class="form-label">{{__('Remarks')}}</label>
-                                    </div>
-                                    @error('remarks')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-                        
-                        </div>
+                                            <div class="body">
+                                                <form action="{{ route('tasks.store', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="tasks_add_form">
+                                                @csrf
+                                                    <div class="row clearfix">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group form-float">
+                                                                <div class="form-line">
+                                                                    <input type="hidden" name="complaint_id" value="{{$complaint->id}}">
+                                                                    <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to[]">
+                                                                    <option value="" ></option>
+                                                                    @foreach($users as $user)
+                                                                    <option value="{{$user->id}}">{{$user->name}}-<i>{{$user->designation}}</i> ({{$user->workplace}})</option>
+                                                                    @endforeach
+                                                                    </select>
+                                                                </div>
+                                                                
+                                                                @error('assigned_to')
+                                                                        <label class="error" role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </label>
+                                                                @enderror
+                                                            </div>
+                                                        </div> 
+                                                        
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                    <div class="col-md-12">
+                                                            <div class="form-group form-float">
+                                                                <div class="form-line">
+                                                                    <textarea rows="3" class="form-control no-resize" name="remarks">{{ old('remarks') }}</textarea>
+                                                                    <label class="form-label">{{__('Remarks')}}</label>
+                                                                </div>
+                                                                @error('remarks')
+                                                                        <label class="error" role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </label>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    
+                                                    </div>
 
-                        <div class="row clearfix">
-                            <div class="col-md-6">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="deadline" name="deadline" value="{{ old('deadline') }}">
-                                    <label class="form-label">{{__('Deadline')}}</label> 
-                                    </div>
-                                    @error('deadline')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>    
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-6">
-                                <div class="row clearfix">
-                                <div class="col-md-6">
-                                        <div class="form-group form-float">
-                                            
-                                            <input placeholder="" class="form-control" type="checkbox"  id="deadlinetf"   name="deadlinetf" value="{{ old('deadlinetf') }}" onchange="if(this.checked==true){document.getElementById('deadline').value='';document.getElementById('deadline').disabled=true;}else{document.getElementById('deadline').disabled=false;}">
-                                            <label class="form-label" for="deadlinetf">{{__('No Deadline Task')}}</label> 
+                                                    <div class="row clearfix">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group form-float">
+                                                                <div class="form-line">
+                                                                <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="deadline" name="deadline" value="{{ old('deadline') }}">
+                                                                <label class="form-label">{{__('Deadline')}}</label> 
+                                                                </div>
+                                                                @error('deadline')
+                                                                        <label class="error" role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </label>
+                                                                @enderror
+                                                            </div>    
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix">
+                                                        <div class="col-md-6">
+                                                            <div class="row clearfix">
+                                                            <div class="col-md-6">
+                                                                    <div class="form-group form-float">
+                                                                        
+                                                                        <input placeholder="" class="form-control" type="checkbox"  id="deadlinetf"   name="deadlinetf" value="{{ old('deadlinetf') }}" onchange="if(this.checked==true){document.getElementById('deadline').value='';document.getElementById('deadline').disabled=true;}else{document.getElementById('deadline').disabled=false;}">
+                                                                        <label class="form-label" for="deadlinetf">{{__('No Deadline Task')}}</label> 
+                                                                        </div>
+                                                                        @error('deadlinetf')
+                                                                                <label class="error" role="alert">
+                                                                                    <strong>{{ $message }}</strong>
+                                                                                </label>
+                                                                        @enderror
+                                                                    
+                                                                </div>
+                                                            </div>  
+                                                        
+                                                        </div>
+                                                    </div>
+                                                        
+                                                    
+
+                                                    
+                                                    
+                                                    <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
+                                                    <button type="submit" class="btn btn-primary waves-effect" name="task_from_complaint_button" value="task_from_complaint" style="margin-right:10px">
+                                                        <i class="material-icons">note_add</i>
+                                                        <span>{{__('CREATE')}}</span>
+                                                    </button>     
+                                                </form>
                                             </div>
-                                            @error('deadlinetf')
-                                                    <label class="error" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </label>
-                                            @enderror
-                                           
+                                        </div>
                                     </div>
-                                </div>  
-                             
-                            </div>
-                        </div>
-                            
-                        
-
-                        
-                        
-                        <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
-                        <button type="submit" class="btn btn-primary waves-effect" name="task_from_letter_button" value="task_from_letter" style="margin-right:10px">
-                            <i class="material-icons">note_add</i>
-                            <span>{{__('CREATE')}}</span>
-                        </button>
-                        
-
-                        
-                    </form>
-                </div>
-            </div>
-        </div>
-</div>
+                                </div>
                                 <br />
+                                
                                 <div class="collapse" id="taskHistory" aria-expanded="false" style="height: 0px;">
                                     <div class="well">
                                     <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
-                                    @if($letter->tasks)
-                                        @foreach($letter->tasks as $task)
+                                    @if($complaint->tasks)
+                                        @foreach($complaint->tasks as $task)
                                         <div class="panel panel-primary">
                                             <div class="panel-heading" role="tab" id="headingOne_{{$task->id}}">
                                                 <h4 class="panel-title">

@@ -59,6 +59,7 @@
     "Contact Us" : "எங்களை தொடர்பு கொள்ள",
     "Version:" : "பதிப்பு:",
     "NEW TASKS" : "புதிய பணிகள்",
+    "ON GOING TASKS" : "நடைபெறும் பணிகள்",
     "COMPLETED TASKS" : "முழுமையான பணிகள்",
     "TOTAL TASKS" : "மொத்த பணிகள்",
     "VIEW LETTERS" : "கடிதங்களைக் காண்க",
@@ -106,7 +107,12 @@
     "SUBMIT" : "சமர்ப்பிக்கவும்",
     "Task Report (Optional)" : "பணி அறிக்கை (விரும்பினால்)",
     "Task Assigned By" : "பணி இவரால் நியமிக்கப்பட்டது",
-    "Submit Your Complaint" : "உங்கள் புகாரைச் சமர்ப்பிக்கவும்",
-    "Select Officer to send complaint" : "நீங்கள் புகாரை அனுப்ப விரும்பும் அதிகாரியைத் தேர்ந்தெடுக்கவும்",
-    "Complaint content" : "புகாரின் உள்ளடக்கம்"
+    "Submit Your Complaint" : "உங்கள் முறைப்பாட்டை சமர்ப்பிக்கவும்",
+    "Select Officer to send complaint" : "நீங்கள் முறைப்பாட்டை அனுப்ப விரும்பும் அதிகாரியைத் தேர்ந்தெடுக்கவும்",
+    "Complaint content" : "முறைப்பாட்டின் உள்ளடக்கம்",
+    "Permanant Address": "நிரந்தர முகவரி",
+    "Temporary Address" : "தற்காலிக முகவரி",
+    "Complaint Scanned Copy (Optional)" : "முறைப்பாட்டின் ஸ்கேன் செய்யப்பட்ட நகல் (விருப்பத்துக்குரியது)",
+    "Select your DS Division" : "உங்கள் பிரதேச செயலாளர் பிரிவு",
+    "Select your GN Division" : "உங்கள் கிராமசேவகர் பிரிவு"
 }

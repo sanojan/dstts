@@ -51,6 +51,17 @@
                                     @endif
                         </ul>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    <li class="">
+                        <a href="#">
+                            <i class="material-icons">warning</i>
+                            <span>{{__('Complaints')}}</span>
+                            @if($new_complaints > 0)
+                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @endif
                     @if(Gate::allows('sys_admin'))
                     <li >
                         <a href="index.html">
@@ -106,16 +117,25 @@
             <div class="block-header">
                 <h2>{{__('VIEW LETTERS')}}</h2>
             </div>
+            @if(session()->has('message'))
+                <div class="alert alert-{{session()->get('alert-type')}}">
+                    {{ session()->get('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card">
                 <div class="body">
                     
-                    <table id="table_id" class="display ">
+                    <table id="export_table_id" class="display ">
                         <thead>
                             <tr>
                                 <th>{{__('Letter No.')}}</th>
                                 <th>{{__('Letter Title')}}</th>
                                 <th>{{__('Letter Date')}}</th>
                                 <th>{{__('Letter From')}}</th>
+                                <th>{{__('Created On')}}</th>
                                 <th>{{__('Action')}}</th>
                             </tr>
                         </thead>
@@ -127,6 +147,7 @@
                                     <td>{{$letter->letter_title}}</td>
                                     <td>{{$letter->letter_date}}</td>
                                     <td>{{$letter->letter_from}}</td>
+                                    <td>{{$letter->created_at}}</td>
                                     <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('letters.show', [app()->getLocale(), $letter->id]) }}">
                                             <i class="material-icons">pageview</i>
                                                 <span>{{__('VIEW')}}</span>

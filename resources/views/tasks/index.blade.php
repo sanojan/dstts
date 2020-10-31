@@ -51,6 +51,17 @@
                                     @endif
                         </ul>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    <li class="">
+                        <a href="{{route('complaints.index', app()->getLocale())}}">
+                            <i class="material-icons">warning</i>
+                            <span>{{__('Complaints')}}</span>
+                            @if($new_complaints > 0)
+                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @endif
                     @if(Gate::allows('sys_admin'))
                     <li >
                         <a href="index.html">
@@ -106,15 +117,23 @@
             <div class="block-header">
                 <h2>{{__('VIEW TASKS')}}</h2>
             </div>
+            @if(session()->has('message'))
+                <div class="alert alert-{{session()->get('alert-type')}}">
+                    {{ session()->get('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card">
                 <div class="body">
                     
-                    <table id="table_id" class="display">
+                    <table id="no_export_table_id" class="display">
                         <thead>
                             <tr>
-                                <th>{{__('Letter No.')}}</th>
-                                <th>{{__('Letter Title')}}</th>
-                                <th>{{__('Task Assigned To')}}</th>
+                                <th>{{__('Letter No.')}}/{{__('Complaint Ref.No')}}</th>
+                                <th>{{__('Letter Title')}}/{{__('Complainant Name')}}</th>
+                                <th>{{__('Task Assigned By')}}</th>
                                 <th>{{__('Task Assigned On')}}</th>
                                 <th>{{__('Current Status')}}</th>
                                 <th>{{__('Action')}}</th>
@@ -124,18 +143,24 @@
                             <tbody>
                                 @foreach($tasks as $task)
                                 <tr>
-                                        <td>{{$task->letter->letter_no}}</td>
-                                    <td>{{$task->letter->letter_title}}&nbsp;</td>
-                                    
-                                        
-                                        <td>{{$task->user->name}}</td>
+                                @if($task->letter)
+                                    <td>{{$task->letter->letter_no}}</td>
+                                    <td>{{$task->letter->letter_title}}</td>
+                                @else
+                                    <td>{{$task->complaint->ref_no}}</td>
+                                    <td>{{$task->complaint->name}}</td>
+                                @endif
+                                    @php 
+                                        $task_assigned_by = App\User::find($task->assigned_by)
+                                    @endphp
+                                    <td>{{$task_assigned_by->name}}</td>
                                         
                                     
                                     <td>{{$task->created_at}}</td>
                                     @if(count($task->histories) > 0)
                                             @foreach($task->histories as $history)
                                                 @if($history->current==true)
-                                                <td>{{$history->status}}&nbsp;</td>
+                                                <td>{{$history->status}}</td>
                                                 @endif
                                             @endforeach
                                     @else

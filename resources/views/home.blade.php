@@ -50,6 +50,17 @@
                                     @endif
                         </ul>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    <li class="">
+                        <a href="{{route('complaints.index', app()->getLocale())}}">
+                            <i class="material-icons">warning</i>
+                            <span>{{__('Complaints')}}</span>
+                            @if($new_complaints > 0)
+                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @endif
                     @if(Gate::allows('sys_admin'))
                     <li >
                         <a href="index.html">
@@ -104,9 +115,15 @@
         <div class="container-fluid">
             <div class="block-header">
             <h2>{{__('DASHBOARD')}}</h2>
-
-
             </div>
+            @if(session()->has('message'))
+                <div class="alert alert-{{session()->get('alert-type')}}">
+                    {{ session()->get('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box bg-red hover-expand-effect">
                     <div class="icon">
@@ -115,6 +132,18 @@
                     <div class="content">
                         <div class="text">{{__('NEW TASKS')}}</div>
                         <div class="number count-to task-number" data-from="0" data-to="{{$new_tasks}}" data-speed="1000" data-fresh-interval="20">125</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box bg-orange hover-expand-effect">
+                    <div class="icon">
+                        <i class="material-icons">play_arrow</i>
+                    </div>
+                    <div class="content">
+                        <div class="text">{{__('ON GOING TASKS')}}</div>
+                        <div class="number count-to task-number" data-from="0" data-to="{{$ongoing_tasks}}" data-speed="1000" data-fresh-interval="20">125</div>
                     </div>
                 </div>
             </div>

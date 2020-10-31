@@ -25,13 +25,19 @@ class LettersController extends Controller
                 $new_tasks += 1;
             }
         }
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
         if (Gate::allows('admin') || Gate::allows('div_sec')) {
         $letters = Auth::user()->letters;
-        return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks);
+        return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         } 
         elseif(Gate::allows('sys_admin')){
             $letters = Letter::all();
-            return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks);
+            return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         
         }else {
             $notification = array(
@@ -56,9 +62,15 @@ class LettersController extends Controller
                 $new_tasks += 1;
             }
         }
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
 
         if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
-            return view('letters.create')->with('new_tasks', $new_tasks);
+            return view('letters.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         
         }else{
             
@@ -85,10 +97,10 @@ class LettersController extends Controller
         $this->validate($request, [
             'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
             'letter_date' => 'before:tomorrow',
-            'letter_sender' => 'required|regex:/^[a-z .\'\/ - 0-9]+$/i|max:150',
+            'letter_sender' => 'required|regex:/^[a-z .\'\/ -, 0-9]+$/i|max:150',
             'letter_title' => 'required|max:150',
             'letter_content' => 'nullable|max:250',
-            'letter_scanned_copy' => 'max:1999|nullable|mimes:jpeg,jpg,pdf'
+            'letter_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
 
         ],
         ['letter_no.regex' => 'letter number cannot contain special characters',
@@ -151,8 +163,7 @@ class LettersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($lang, $id)
-    {
-        
+    { 
         
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
@@ -161,16 +172,26 @@ class LettersController extends Controller
             }
         }
 
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
+
         $letter = Letter::find($id);
-        if (Gate::allows('sys_admin') || Gate::allows('admin') ) {
+        if (Gate::allows('admin')) {
+            
+            $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
+            $orThose = ['designation' => 'Divisional Secretary'];
             
             
-            $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
+            $users = DB::table('users')->where($matchThese)->orWhere($orThose)->whereNotIn('id', array(Auth::user()->id))->get();
 
             if($letter->user->id == Auth::user()->id){
                 //Return letters show page
                 //dd($lang, $id, $letter);
-                return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks);
+                return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
             }else{
                 $notification = array(
                     'message' => 'You do not have permission to view this letter',
@@ -182,14 +203,18 @@ class LettersController extends Controller
         }
         elseif(Gate::allows('div_sec')){
 
-            $users = DB::table('users')->where([['workplace', '=', 'Ampara - District Secretariat'],['designation', '=', 'District Secretary'],])->orWhere('designation', 'Divisional Secretary')->whereNotIn('id', array(Auth::user()->id))->get();
+            $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
+            $orThose = ['designation' => 'District Secretary'];
+            $orThese = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+            $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->get();
             
             
 
             if($letter->user->id == Auth::user()->id){
                 //Return letters show page
-                return view('letters.show')->with('letter', $letter)->with('users', $users);
-            }else{
+                return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+            }
+            else{
                 $notification = array(
                     'message' => 'You do not have permission to view this letter',
                     'alert-type' => 'warning'
@@ -198,7 +223,15 @@ class LettersController extends Controller
             }
             
             
-        }else{
+        }
+        elseif(Gate::allows('sys_admin')){
+
+                
+                
+            $users = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
+            return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+        }
+        else{
             $notification = array(
                 'message' => 'You do not have permission to view letters',
                 'alert-type' => 'warning'
@@ -222,11 +255,18 @@ class LettersController extends Controller
             }
         }
 
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
+
         //Validation for edit fields
         if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
         $letter = Letter::find($id);
             if($letter->user->id == Auth::user()->id){
-                return view('letters.edit')->with('letter', $letter)->with('new_tasks', $new_tasks);
+                return view('letters.edit')->with('letter', $letter)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
             }else{
                 $notification = array(
                     'message' => 'You do not have permission to edit this letter',
@@ -258,9 +298,9 @@ class LettersController extends Controller
         if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
         //Update letter details
         $this->validate($request, [
-            'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
+            'letter_no' => 'bail|required|regex:/^[a-z ,.\'\/ - 0-9]+$/i',
             'letter_date' => 'before:tomorrow',
-            'letter_sender' => 'required|regex:/^[a-z .\'\/ - 0-9]+$/i|max:150',
+            'letter_sender' => 'required|regex:/^[a-z .,\'\/ - 0-9]+$/i|max:150',
             'letter_title' => 'required|max:150',
             'letter_content' => 'nullable|max:250',
             'letter_scanned_copy' => 'max:1999|nullable|mimes:jpeg,jpg,pdf'
@@ -337,8 +377,9 @@ class LettersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($lang, $id)
     {
+        
         if (Gate::allows('sys_admin')) {
         //Delete letter
         $letter = Letter::find($id);
@@ -357,7 +398,7 @@ class LettersController extends Controller
             'alert-type' => 'warning'
         );
 
-        return redirect(app()->getLocale() . '/letters' . $id)->with($notification);
+        return redirect(app()->getLocale() . '/letters/' . $id)->with($notification);
     }
     }
 }

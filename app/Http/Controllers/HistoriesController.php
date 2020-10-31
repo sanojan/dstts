@@ -142,7 +142,7 @@ class HistoriesController extends Controller
         //session()->put('success','Letter has been created successfully.');
 
        
-        return redirect('/' . app()->getLocale() . '/tasks/'. $request->task_id)->with($notification);
+        return redirect('/' . app()->getLocale() . '/tasks/')->with($notification);
     }
 
     /**
