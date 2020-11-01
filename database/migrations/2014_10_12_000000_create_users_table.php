@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('mobile_no', 10)->unique();
             $table->string('designation',50);
-            $table->string('service',50);
+            $table->string('service', 150);
             $table->char('class');
             $table->string('workplace',100);
             $table->string('branch',15)->nullable();

@@ -86,10 +86,10 @@ class ComplaintController extends Controller
             'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
             'dsdivision' => ['required'],
             'gndivision' => ['required'],
-            'permanant_address' => ['required', 'regex:/^[0-9a-zA-Z \/,\-]*$/', 'max:100'],
-            'temporary_address' => ['nullable', 'regex:/^[0-9a-zA-Z \/,\-]*$/', 'max:100'],
+            'permanant_address' => ['required', 'regex:/^[0-9a-zA-Z \/,.\-]*$/', 'max:100'],
+            'temporary_address' => ['nullable', 'regex:/^[0-9a-zA-Z \/,.\-]*$/', 'max:100'],
             'comp_officer' => ['required'],
-            'complaint_content' => ['required', 'regex:/^[a-zA-Z -.,]*$/', 'max:100'],
+            'complaint_content' => ['required', 'regex:/^[0-9 a-z A-Z \/,.\-]*$/', 'max:100'],
             'complaint_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
 
         ],
@@ -133,6 +133,7 @@ class ComplaintController extends Controller
         $complaint->user_id = $request->comp_officer;
         $complaint->complaint_content = $request->complaint_content;
         $complaint->complaint_scanned_copy = $fileNameToStore;
+        $complaint->status = "Unread";
         
         $complaint->save();
 
@@ -195,7 +196,7 @@ class ComplaintController extends Controller
             if($complaint->user->id == Auth::user()->id){
                 //Return letters show page
                 //dd($lang, $id, $letter);
-                if(!$complaint->status){
+                if($complaint->status == "Unread"){
                     $complaint->status = "Seen";
                     $complaint->save();
                 }
@@ -220,7 +221,7 @@ class ComplaintController extends Controller
 
             if($complaint->user->id == Auth::user()->id){
                 //Return letters show page
-                if(!$complaint->status){
+                if($complaint->status == "Unread"){
                 $complaint->status = "Seen";
                 $complaint->save();
                 }
@@ -237,7 +238,7 @@ class ComplaintController extends Controller
         }
         elseif(Gate::allows('sys_admin')){
             if($complaint->user->id == Auth::user()->id){
-                if(!$complaint->status){
+                if($complaint->status == "Unread"){
                     $complaint->status = "Seen";
                     $complaint->save();
                 }

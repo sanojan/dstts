@@ -123,8 +123,8 @@
                     <table id="no_export_table_id" class="display">
                         <thead>
                             <tr>
-                                <th>{{__('Name')}}</th>
-                                <th>{{__('NIC No.')}}</th>
+                                <th>{{__('Name with Initial')}}</th>
+                                <th>{{__('NIC NO')}}</th>
                                 <th>{{__('DS Division')}}</th>
                                 <th>{{__('GN Division')}}</th>
                                 <th>{{__('Created On')}}</th>

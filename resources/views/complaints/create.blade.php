@@ -286,7 +286,7 @@
                                         <select class="form-control comp_officer_dropdown" style="width:100%;" id="comp_officer" name="comp_officer" value="{{ old('comp_officer') }}">
                                         <option value="" @if(old('comp_officer')=='') selected disabled @endif>{{__('Select the officer you want to  send complaint')}}</option>
                                         @foreach($comp_officers as $comp_officer)
-                                        <option value="{{$comp_officer->id}}" @if(old('comp_officer')=='{{$comp_officer->id}}') selected @endif>{{$comp_officer->name}} - {{$comp_officer->designation}} ({{$comp_officer->workplace}})</option>
+                                        <option value="{{$comp_officer->id}}" {{ old('comp_officer') == $comp_officer->id ? "selected" :""}}>{{$comp_officer->name}} - {{$comp_officer->designation}} ({{$comp_officer->workplace}})</option>
                                         @endforeach
                                         </select>
                                     </div>

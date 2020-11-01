@@ -153,7 +153,7 @@
                                         
                                     </tr>
                                     <tr>
-                                        <td>{{__('Complainant Permanant Address')}}:</td>
+                                        <td>{{__('Complainant Permanent Address')}}:</td>
                                         <td>{{$complaint->permanant_address}}</td>
                                         
                                         
@@ -163,7 +163,7 @@
                                         <td>{{$complaint->temporary_address}}</td>
                                     </tr>
                                     <tr>
-                                        <td>{{__('Complainant Content')}}:</td>
+                                        <td>{{__('Complaint Content')}}:</td>
                                         <td>{{$complaint->complaint_content}}</td>
                                     </tr>
                                     <tr>
@@ -178,7 +178,7 @@
                                         @endif    
                                     </tr>
                                     <tr>
-                                        <td>{{__('Complainant Status')}}:</td>
+                                        <td>{{__('Complaint Status')}}:</td>
                                         <td>{{$complaint->status}}</td>
                                     </tr>
                                 </tbody>    

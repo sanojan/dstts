@@ -487,11 +487,11 @@ $('#no_export_table_id').DataTable({
 </script>
 <script type="text/javascript">
    $('.letter_no_dropdown').select2({
-  placeholder: 'Select the Letter NO',
+  placeholder: '{{__('Select the Letter NO')}}',
   width: 'resolve'
 });
 $('.assign_to_dropdown').select2({
-  placeholder: 'Select Officer to Assign',
+  placeholder: '{{__('Select Officer to Assign')}}',
   width: 'resolve',
   multiple:true
 });

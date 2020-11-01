@@ -117,7 +117,21 @@
     "Select your GN Division" : "ඔබගේ ග්රාම නිලධාරී වසම",
     "Complaints" : "පැමිණිලි",
     "VIEW COMPLAINTS" : "පැමිණිලි බලන්න",
-    "Created On" : "නිර්මාණය කරන ලදි"
-
+    "Created On" : "නිර්මාණය කරන ලදි",
+    "DS Division" : "ප්රාදේශීය ලේකම් කොට්ඨාශය",
+    "GN Division" : "ග්රාම නිලධාරී වසම",
+    "COMPLAINT DETAILS" : "පැමිණිලි විස්තර",
+    "Complainant Name" : "පැමිණිලිකරුගේ නම",
+    "Complainant NIC" : "පැමිණිලිකරු ජාතික හැඳුනුම්පත් අංකය",
+    "Complainant Date of Birth" : "පැමිණිලිකරු උපන් දිනය",
+    "Complainant Email & Phone No." : "පැමිණිලිකරු විද්‍යුත් තැපෑල සහ දුරකථන අංකය.",
+    "Complainant DS & GN Division" : "පැමිණිලිකරු DS සහ GN අංශය",
+    "Complainant Permanent Address" : "පැමිණිලිකරු ස්ථිර ලිපිනය",
+    "Complainant Temporary Address" : "පැමිණිලිකරු තාවකාලික ලිපිනය",
+    "Complaint Content" : "පැමිණිලි අන්තර්ගතය",
+    "Complaint Status" : "පැමිණිලි තත්ත්වය",
+    "DELETE COMPLAINT" : "පැමිණිලි මකන්න",
+    "Select Officer to Assign" : "පැවරීමට නිලධාරියා තෝරන්න",
+    "Select the Letter NO" : "ලිපි අංකය තෝරන්න"
     
 }
