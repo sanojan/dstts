@@ -97,7 +97,7 @@ class TasksController extends Controller
         return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }else{
             $notification = array(
-                'message' => 'You do not have permission to create Tasks',
+                'message' => __('You do not have permission to create Tasks'),
                 'alert-type' => 'warning'
             );
             
@@ -186,7 +186,7 @@ class TasksController extends Controller
             //session()->put('success','Letter has been created successfully.');
 
             $notification = array(
-                'message' => 'Task has been Forwaded successfully!', 
+                'message' => __('Task has been Forwarded successfully!'), 
                 'alert-type' => 'success'
             );
             return redirect('/tasks/'.$request->task_id)->with($notification);
@@ -226,7 +226,7 @@ class TasksController extends Controller
         }
 
         $notification = array(
-            'message' => 'Task has been created successfully!', 
+            'message' => __('Task has been created successfully!'), 
             'alert-type' => 'success'
         );
 
@@ -234,7 +234,7 @@ class TasksController extends Controller
     }
     else{
         $notification = array(
-            'message' => 'You do not have permission to create Tasks',
+            'message' => __('You do not have permission to create Tasks'),
             'alert-type' => 'warning'
         );
         

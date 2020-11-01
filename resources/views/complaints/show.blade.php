@@ -197,7 +197,7 @@
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
 
-                                    <button type="submit" class="btn btn-danger btn-xs waves-effect"  onclick="return confirm('Are you sure? You cannot revert this action.')">
+                                    <button type="submit" class="btn btn-danger btn-xs waves-effect"  onclick="return confirm('{{__('Are you sure? You cannot revert this action.')}}')">
                                         <i class="material-icons">delete</i>
                                             <span>{{__('DELETE COMPLAINT')}}</span>
                                     </button>

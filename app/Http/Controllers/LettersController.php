@@ -41,7 +41,7 @@ class LettersController extends Controller
         
         }else {
             $notification = array(
-                'message' => 'You do not have permission to view letters',
+                'message' => __("You do not have permission to view letters"),
                 'alert-type' => 'warning'
             );
             
@@ -75,7 +75,7 @@ class LettersController extends Controller
         }else{
             
             $notification = array(
-                'message' => 'You do not have permission to create letters',
+                'message' => __("You do not have permission to create letters"),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks);
@@ -105,7 +105,7 @@ class LettersController extends Controller
         ],
         ['letter_no.regex' => 'letter number cannot contain special characters',
         'letter_sender.regex' => 'letter sender name cannot contain special characters',
-        'letter_scanned_copy.max' => 'Document file size should be less than 2 MB',
+        'letter_scanned_copy.max' => 'Document file size should be less than 5 MB',
         'letter_scanned_copy.mimes' => 'Only PDF, JPEG & JPG formats are allowed']);
 
          //Handle File Upload
@@ -139,7 +139,7 @@ class LettersController extends Controller
         //session()->put('success','Letter has been created successfully.');
 
         $notification = array(
-            'message' => 'Letter has been created successfully!', 
+            'message' => __('Letter has been created successfully!'), 
             'alert-type' => 'success'
         );
 
@@ -147,7 +147,7 @@ class LettersController extends Controller
     }
     else{
         $notification = array(
-            'message' => 'You do not have permission to create letters',
+            'message' => __("You do not have permission to create letters"),
             'alert-type' => 'warning'
         );
         
@@ -194,7 +194,7 @@ class LettersController extends Controller
                 return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
             }else{
                 $notification = array(
-                    'message' => 'You do not have permission to view this letter',
+                    'message' => __('You do not have permission to view this letter'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale(). '/letters')->with($notification);
@@ -216,7 +216,7 @@ class LettersController extends Controller
             }
             else{
                 $notification = array(
-                    'message' => 'You do not have permission to view this letter',
+                    'message' => __('You do not have permission to view this letter'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale() . '/letters')->with($notification);
@@ -233,7 +233,7 @@ class LettersController extends Controller
         }
         else{
             $notification = array(
-                'message' => 'You do not have permission to view letters',
+                'message' => __('You do not have permission to view letters'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale(). '/letters')->with($notification);
@@ -269,7 +269,7 @@ class LettersController extends Controller
                 return view('letters.edit')->with('letter', $letter)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
             }else{
                 $notification = array(
-                    'message' => 'You do not have permission to edit this letter',
+                    'message' => __('You do not have permission to edit this letter'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale() . '/letters')->with($notification);
@@ -277,7 +277,7 @@ class LettersController extends Controller
         
         }else{
             $notification = array(
-                'message' => 'You do not have permission to edit letters',
+                'message' => __('You do not have permission to edit letters'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/letters')->with($notification);
@@ -349,13 +349,13 @@ class LettersController extends Controller
         $letter->save();
         }else{
             $notification = array(
-                'message' => 'You do not have permission to edit this letter',
+                'message' => __('You do not have permission to edit this letter'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/letters')->with($notification);
         }
         $notification = array(
-            'message' => 'Letter has been updated successfully!', 
+            'message' => __('Letter has been updated successfully!'), 
             'alert-type' => 'success'
         );
 
@@ -363,7 +363,7 @@ class LettersController extends Controller
     }
     else{
         $notification = array(
-            'message' => 'You do not have permission to edit letters',
+            'message' => __('You do not have permission to edit letters'),
             'alert-type' => 'warning'
         );
         return redirect(app()->getLocale() . '/letters')->with($notification);
@@ -386,7 +386,7 @@ class LettersController extends Controller
         $letter->delete();
         
         $notification = array(
-            'message' => 'Letter has been deleted sucessfully',
+            'message' => __('LLetter has been deleted successfully!'),
             'alert-type' => 'success'
         );
 
@@ -394,7 +394,7 @@ class LettersController extends Controller
     }
     else{
         $notification = array(
-            'message' => 'You do not have permission to delete this letter',
+            'message' => __('You do not have permission to delete this letter'),
             'alert-type' => 'warning'
         );
 

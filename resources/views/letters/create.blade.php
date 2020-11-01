@@ -52,7 +52,7 @@
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
                     <li class="">
-                        <a href="#">
+                        <a href="{{route('complaints.index', app()->getLocale())}}">
                             <i class="material-icons">warning</i>
                             <span>{{__('Complaints')}}</span>
                             @if($new_complaints > 0)

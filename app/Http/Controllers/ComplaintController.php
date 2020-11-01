@@ -93,13 +93,18 @@ class ComplaintController extends Controller
             'complaint_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
 
         ],
-        ['gender.required' => 'Please select your gender',
-        'dob.before' => 'You must be 16 Years or older',
-        'nic.before' => 'Please enter valid NIC Number',
-        'mobile_no.regex' => 'Please enter a valid Mobile Number',
-        'dsdivision.required' => 'Please select your DS Division',
-        'gndivision.required' => 'Please select your GN Division',
-        'comp_officer.required' => 'Please select the officer to send complaint',
+        ['gender.required' => __('Please select your gender'),
+        'dob.before' => __('You must be 16 Years or older'),
+        'nic.max' => __('Please enter valid NIC Number'),
+        'nic.min' => __('Please enter valid NIC Number'),
+        'mobile_no.regex' => __('Please enter a valid Mobile Number'),
+        'dsdivision.required' => __('Please select your DS Division'),
+        'gndivision.required' => __('Please select your GN Division'),
+        'permanant_address.required' => __('Permanent Address field is mandatory'),
+        'comp_officer.required' => __('Please select the officer to send complaint'),
+        'complaint_content.required' => __('Please enter your complaint content'),
+        'complaint_scanned_copy.max' => __('File size should not be more than 5 MB'),
+        'complaint_scanned_copy.mimes' => __('Only PDF, JPEG & JPG formats are allowed'),
         ]);
 
             //Handle File Upload
@@ -148,7 +153,7 @@ class ComplaintController extends Controller
         //session()->put('success','Letter has been created successfully.');
 
         $notification = array(
-            'message' => 'Your Complaint has been submitted successfully!. Your Reference Code is ' . $ref_no .'. Use this code to check the status of your complaint.', 
+            'message' => __('Your Complaint has been submitted successfully!. Your Reference Code is ') . $ref_no . __('. Use this code to check the status of your complaint.'), 
             'alert-type' => 'success'
         );
 
@@ -203,7 +208,7 @@ class ComplaintController extends Controller
                 return view('complaints.show')->with('complaint', $complaint)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
             }else{
                 $notification = array(
-                    'message' => 'You do not have permission to view this complaint',
+                    'message' => __('You do not have permission to view this complaint'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale(). '/complaints')->with($notification);
@@ -228,7 +233,7 @@ class ComplaintController extends Controller
                 return view('complaints.show')->with('complaint', $complaint)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
             }else{
                 $notification = array(
-                    'message' => 'You do not have permission to view this Complaint',
+                    'message' => __('You do not have permission to view this Complaint'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale() . '/complaints')->with($notification);
@@ -248,7 +253,7 @@ class ComplaintController extends Controller
             return view('complaints.show')->with('complaint', $complaint)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }else{
             $notification = array(
-                'message' => 'You do not have permission to view complaints',
+                'message' => __('You do not have permission to view complaints'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale(). '/complaints')->with($notification);
@@ -284,8 +289,28 @@ class ComplaintController extends Controller
      * @param  \App\Complaint  $complaint
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Complaint $complaint)
+    public function destroy($lang, $id)
     {
-        //
+        if (Gate::allows('sys_admin')) {
+            //Delete complaint
+            $complaint = Complaint::find($id);
+            $complaint->delete();
+            
+            $notification = array(
+                'message' => __('Complaint has been deleted successfully!'),
+                'alert-type' => 'success'
+            );
+    
+            return redirect(app()->getLocale() . '/complaints')->with($notification);
+        }
+        else{
+            $notification = array(
+                'message' => __('You do not have permission to delete this complaint'),
+                'alert-type' => 'warning'
+            );
+    
+            return redirect(app()->getLocale() . '/complaints/' . $id)->with($notification);
+        }
+        
     }
 }

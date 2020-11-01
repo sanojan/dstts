@@ -117,13 +117,21 @@
             <div class="block-header">
                 <h2>{{__('VIEW COMPLAINTS')}}</h2>
             </div>
+            @if(session()->has('message'))
+                <div class="alert alert-{{session()->get('alert-type')}}">
+                    {{ session()->get('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card">
                 <div class="body">
                     
                     <table id="no_export_table_id" class="display">
                         <thead>
                             <tr>
-                                <th>{{__('Name with Initial')}}</th>
+                                <th>{{__('Name')}}</th>
                                 <th>{{__('NIC NO')}}</th>
                                 <th>{{__('DS Division')}}</th>
                                 <th>{{__('GN Division')}}</th>
