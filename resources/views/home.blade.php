@@ -43,14 +43,14 @@
                                     <li>
                                         <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a> 
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
                                         <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
                                     </li>
                                     @endif
                         </ul>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li class="">
                         <a href="{{route('complaints.index', app()->getLocale())}}">
                             <i class="material-icons">warning</i>

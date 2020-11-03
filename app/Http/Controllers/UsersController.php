@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Gate;
 use App\User;
+use Auth;
+use DB;
 
 class UsersController extends Controller
 {
@@ -15,13 +17,26 @@ class UsersController extends Controller
      */
     public function index()
     {
+        $new_tasks = 0;
+        foreach(Auth::user()->tasks as $task){
+            if(!count($task->histories) > 0){
+                $new_tasks += 1;
+            }
+        }
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
+
         //Create History
         if (Gate::allows('sys_admin')) {
             //$letters = Letter::all();
             //$users = User::all();
             $users = User::all();
 
-            return view('users.index')->with('users', $users);
+            return view('users.index')->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);;
             }
             
             else{

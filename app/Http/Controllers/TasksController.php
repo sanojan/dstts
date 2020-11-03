@@ -35,7 +35,7 @@ class TasksController extends Controller
             }
         }
 
-        if (Gate::allows('admin') || Gate::allows('div_sec') || Gate::allows('user')) {
+        if (Gate::allows('admin') || Gate::allows('user') || Gate::allows('branch_head')) {
         //$letters = Letter::all();
         //$users = User::all();
         
@@ -74,22 +74,14 @@ class TasksController extends Controller
         $letters = Auth::user()->letters;
 
         $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
-        $orThose = ['designation' => 'Divisional Secretary'];
+        $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+        $orThese = [['designation', '=', 'District Secretary'], ['workplace', '!=', Auth::user()->workplace]];
             
             
-        $users = DB::table('users')->where($matchThese)->orWhere($orThose)->whereNotIn('id', array(Auth::user()->id))->get();
+        $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
         return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }
-        elseif(Gate::allows('div_sec') ){
-            $letters = Auth::user()->letters;
-
-            $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
-            $orThose = ['designation' => 'District Secretary'];
-            $orThese = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
-            $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->get();
-
-            return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-        }elseif(Gate::allows('sys_admin')){
+        elseif(Gate::allows('sys_admin')){
             $letters = Letter::all();
             
             
@@ -116,7 +108,7 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head') || Gate::allows('div_sec')) {
+        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head')) {
          //Create letters
          //dd($request);  
          
@@ -280,28 +272,39 @@ class TasksController extends Controller
             }
         }
 
-        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('user')) {
+        if (Gate::allows('sys_admin')) {
         
             //Return tasks show page
             
             $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
-
-        
 
         $assigned_by = User::find($task->assigned_by);
         //$conditions=['workplace' => Auth::user()->workplace, 'branch' => Auth::user()->branch];
         //$limited_users = DB::table('users')->where($conditions)->whereNotIn('id', array(Auth::user()->id))->get();//User::where('workplace','workplace1');
         return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
 
-        } elseif(Gate::allows('div_sec')){
+        } elseif(Gate::allows('admin')){
            
+            $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
+            $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+            $orThese = [['designation', '=', 'District Secretary'], ['workplace', '!=', Auth::user()->workplace]];
 
             
-            $users = DB::table('users')->where([['workplace', '=', Auth::user()->workplace],['designation', '<>', 'Divisional Secretary'],])->orWhere('workplace', 'Ampara - District Secretariat')->whereNotIn('id', array(Auth::user()->id))->get();
+            $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
             
             $assigned_by = User::find($task->assigned_by);
 
             return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+        
+        } elseif(Gate::allows('branch_head')){
+           
+            $matchThese = [['workplace', '=', Auth::user()->workplace], ['branch', '=', Auth::user()->branch], ['id', '!=', Auth::user()->id]];
+            
+            $users = DB::table('users')->where($matchThese)->whereNotIn('id', array(Auth::user()->id))->get();
+            
+            $assigned_by = User::find($task->assigned_by);
+
+            return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
         }
     }
 

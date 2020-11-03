@@ -42,10 +42,6 @@ class AuthServiceProvider extends ServiceProvider
              return $user->user_type == 'user';
          });
 
-         Gate::define('div_sec', function($user) {
-            return $user->user_type == 'div_sec';
-        });
-
          Gate::define('branch_head', function($user) {
             return $user->user_type == 'branch_head';
         });

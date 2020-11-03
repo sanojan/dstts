@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration
             $table->string('workplace',100);
             $table->string('branch',15)->nullable();
             $table->string('subject',30)->nullable();
-            $table->string('user_type',10)->default('user');
+            $table->string('user_type',15)->default('user');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

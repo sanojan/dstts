@@ -6,26 +6,26 @@
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
-                    <li class="header">MAIN NAVIGATION</li>
+                    <li class="header">{{__('MAIN NAVIGATION')}}</li>
                     <li >
-                        <a href="{{route('home')}}">
+                        <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
-                            <span>Dashboard</span>
+                            <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li >
+                    <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
-                            <span>Letters</span>
+                            <span>{{__('Letters')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
                                     <li class="active">
-                                        <a href="{{route('letters.index')}}">View Letter</a>
+                                        <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
                                     <li >
-                                        <a href="{{route('letters.create')}}">Add Letter</a>
+                                        <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
                                     </li>
                         </ul>
                     </li>
@@ -34,23 +34,26 @@
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
-                            <span>Tasks</span>
+                            <span>{{__('Tasks')}}</span>
+                            @if($new_tasks > 0)
+                            <span class="badge bg-red">{{$new_tasks}} {{__('New')}}</span>
+                            @endif
                         </a>
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="{{route('tasks.index')}}">View Task(s)</a>
+                                        <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                     </li>
                                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
-                                        <a href="{{route('tasks.create')}}">Assign Task</a>
+                                        <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
                                     </li>
                                     @endif
                         </ul>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li class="">
-                        <a href="#">
+                        <a href="{{route('complaints.index', app()->getLocale())}}">
                             <i class="material-icons">warning</i>
                             <span>{{__('Complaints')}}</span>
                             @if($new_complaints > 0)
@@ -63,44 +66,44 @@
                     <li class="active">
                         <a href="index.html">
                             <i class="material-icons">group</i>
-                            <span>Users</span>
+                            <span>{{__('Users')}}</span>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
-                            <span>System Data</span>
+                            <span>{{__('System Data')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="pages/widgets/cards/basic.html">Designation</a>
+                                        <a href="#">{{__('Designation')}}</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Work Place</a>
+                                        <a href="#">{{__('Work Place')}}</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Services</a>
+                                        <a href="#">{{__('Services')}}</a>
                                     </li>
                         </ul>
                     </li>
                     @endif
                     <li >
-                        <a href="index.html">
+                        <a href="#">
                             <i class="material-icons">help</i>
-                            <span>Help</span>
+                            <span>{{__('Help')}}</span>
                         </a>
                     </li>
                     <li >
-                        <a href="index.html">
+                        <a href="#">
                             <i class="material-icons">group</i>
-                            <span>About Us</span>
+                            <span>{{__('About Us')}}</span>
                         </a>
                     </li>
                     <li >
-                        <a href="index.html">
+                        <a href="#">
                             <i class="material-icons">contact_phone</i>
-                            <span>Contact Us</span>
+                            <span>{{__('Contact Us')}}</span>
                         </a>
                     </li>
                     
@@ -117,13 +120,14 @@
             <div class="card">
                 <div class="body">
                     
-                    <table id="table_id" class="display compact">
+                    <table id="no_export_table_id" class="display compact">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>NIC</th>
                                 <th>Designation & Workplace</th>
                                 <th>User Type</th>
+                                <th>Created On</th>
                                 <th>Account Status</th>
                                 <th>Action</th>
                             </tr>
@@ -135,13 +139,24 @@
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->nic}}</td>
                                     <td>{{$user->designation}} - {{$user->workplace}}</td>
-                                    <td>{{$user->user_type}}</td>
-                                    @if($user->workplace == 1)
-                                    <td>Enabled</td>
-                                    @else
-                                    <td>Disabled</td>
+                                    @if($user->user_type == "sys_admin")
+                                        <td>System Admin</td>
+                                    @elseif($user->user_type == "admin")
+                                        <td>Admin</td>
+                                    @elseif($user->user_type == "div_sec")
+                                        <td>Divisional Secretary</td>
+                                    @elseif($user->user_type == "branch_head")
+                                        <td>Branch Head</td>
+                                    @elseif($user->user_type == "user")
+                                        <td>Standard User</td>
                                     @endif
-                                    <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('users.show', $user->id) }}">
+                                    <td>{{$user->created_at}}</td>
+                                    @if($user->account_status)
+                                    <td class="font-bold col-green">Enabled</td>
+                                    @else
+                                    <td class="font-bold col-red">Disabled</td>
+                                    @endif
+                                    <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('users.show', [app()->getLocale(), $user->id]) }}">
                                             <i class="material-icons">pageview</i>
                                                 <span>VIEW</span>
                                         </a>

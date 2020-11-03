@@ -12,7 +12,7 @@
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -43,14 +43,14 @@
                                     <li class="active">
                                         <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
                                         <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
                                     </li>
                                     @endif
                         </ul>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li class="">
                         <a href="{{route('complaints.index', app()->getLocale())}}">
                             <i class="material-icons">warning</i>
@@ -290,44 +290,50 @@
                                                         <span>{{__('BACK')}}</span>
                                                     </a>
                                                     @if($task->user->id == Auth::user()->id)
-                                                    <button type="submit" style="margin-right:10px" name="subbutton" value="Accept" class="btn btn-success btn-xs waves-effect" >
-                                                        <i class="material-icons">check</i>
-                                                        <span>{{__('ACCEPT TASK')}}</span>
-                                                    </button>
-                                                    <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
-                                                        <i class="material-icons">close</i>
-                                                        <span>{{__('REJECT TASK')}}</span>
-                                                    </a>
+                                                        <button type="submit" style="margin-right:10px" name="subbutton" value="Accept" class="btn btn-success btn-xs waves-effect" >
+                                                            <i class="material-icons">check</i>
+                                                            <span>{{__('ACCEPT TASK')}}</span>
+                                                        </button>
+                                                            @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head')) 
+                                                            <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
+                                                                <i class="material-icons">fast_forward</i>
+                                                                <span>{{__('ACCEPT & FORWARD')}}</span>
+                                                            </button>
+                                                            @endif
+                                                        <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
+                                                            <i class="material-icons">close</i>
+                                                            <span>{{__('REJECT TASK')}}</span>
+                                                        </a>
                                                     @endif
                                                     @elseif($history->status == "Completed")
-                                                    <table class="table">
-                                                    <tr>
-                                                        <td >{{__('Actions Taken for the task')}}:</td>
-                                                        <td><input type="text" name="complete_remarks" class="form-control" value="{{$history->remarks}}" readonly> </td>
-                                                    </tr>
-                                                    @if($task->task_report)
-                                                    <tr>
-                                                    <td>{{__('Task completion report')}}</td>
-                                                    <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('task_reports/' . $task->task_report) }}" target="_blank">
-                                                    <i class="material-icons">file_download</i>
-                                                    </a>{{__('Click to view attached Task report')}}
-                                                    </td>
-                                                    </tr>
-                                                    @else
-                                                    <tr>
-                                                    <td>{{__('Task completion report')}}</td>
-                                                    <td>{{__('No Task report was attached')}}</td>
-                                                    </tr>
-                                                    @endif
-                                                    <tr>
+                                                        <table class="table">
+                                                        <tr>
+                                                            <td >{{__('Actions Taken for the task')}}:</td>
+                                                            <td><input type="text" name="complete_remarks" class="form-control" value="{{$history->remarks}}" readonly> </td>
+                                                        </tr>
+                                                        @if($task->task_report)
+                                                        <tr>
+                                                        <td>{{__('Task completion report')}}</td>
+                                                        <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('task_reports/' . $task->task_report) }}" target="_blank">
+                                                        <i class="material-icons">file_download</i>
+                                                        </a>{{__('Click to view attached Task report')}}
+                                                        </td>
+                                                        </tr>
+                                                        @else
+                                                        <tr>
+                                                        <td>{{__('Task completion report')}}</td>
+                                                        <td>{{__('No Task report was attached')}}</td>
+                                                        </tr>
+                                                        @endif
+                                                        <tr>
+                                                        
+                                                        </tr>
                                                     
-                                                    </tr>
-                                                
-                                                    </table>
-                                                    <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index', app()->getLocale())}}">
-                                                        <i class="material-icons">keyboard_backspace</i>
-                                                        <span>{{__('BACK')}}</span>
-                                                    </a>
+                                                        </table>
+                                                        <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index', app()->getLocale())}}">
+                                                            <i class="material-icons">keyboard_backspace</i>
+                                                            <span>{{__('BACK')}}</span>
+                                                        </a>
                                                     
                                                     
                                                     @endif
@@ -343,7 +349,7 @@
                                             <i class="material-icons">check</i>
                                             <span>{{__('ACCEPT TASK')}}</span>
                                         </button>
-                                            @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head') || Gate::allows('div_sec')) 
+                                            @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head')) 
                                             <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
                                                 <i class="material-icons">fast_forward</i>
                                                 <span>{{__('ACCEPT & FORWARD')}}</span>
