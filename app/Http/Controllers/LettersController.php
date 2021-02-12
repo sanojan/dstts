@@ -363,7 +363,7 @@ class LettersController extends Controller
         $letter->delete();
         
         $notification = array(
-            'message' => __('LLetter has been deleted successfully!'),
+            'message' => __('Letter has been deleted successfully!'),
             'alert-type' => 'success'
         );
 

@@ -110,12 +110,20 @@
             </div>
 @endsection
 
-@section('content')
+@section('content') 
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
                 <h2>{{__('LETTER DETAILS')}}</h2>
             </div>
+            @if(session()->has('message'))
+                <div class="alert alert-{{session()->get('alert-type')}}">
+                    {{ session()->get('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card">
                         <div class="body table-responsive">
                             <table class="table">

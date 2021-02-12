@@ -220,7 +220,7 @@
                         
                         
                         <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
-                        <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px">
+                        <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px" name="task_from_letter_button" value="task_from_letter">
                             <i class="material-icons">note_add</i>
                             <span>{{__('CREATE')}}</span>
                         </button>
