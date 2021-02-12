@@ -63,11 +63,20 @@
                     </li>
                     @endif
                     @if(Gate::allows('sys_admin'))
-                    <li class="active">
-                        <a href="index.html">
+                    <li >
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                                    </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -77,13 +86,13 @@
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="#">{{__('Designation')}}</a>
+                                        <a href="pages/widgets/cards/basic.html">Designation</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Work Place')}}</a>
+                                        <a href="pages/widgets/cards/colored.html">Work Place</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Services')}}</a>
+                                        <a href="pages/widgets/cards/colored.html">Services</a>
                                     </li>
                         </ul>
                     </li>

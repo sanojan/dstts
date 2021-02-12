@@ -86,6 +86,7 @@ class WorkplacetypeController extends Controller
 
     public function getWorkplaces(Request $request)
     {
+        echo "<script>alert('hi');</script>";
         $states = DB::table("workplaces")->where("workplace_type_id",$request->workplace_type_id)->pluck("name","id");
             return response()->json($states);
     }

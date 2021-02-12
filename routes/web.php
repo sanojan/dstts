@@ -40,6 +40,7 @@ Route::group(['prefix' => '{language}'], function () {
     Route::resource('histories', 'HistoriesController')->middleware('auth');
     Route::resource('complaints', 'ComplaintController');
     Route::get('get-workplaces-list','WorkplacetypeController@getWorkplaces');
+    Route::get('getWorkplaces','UsersController@getWorkplaces');
     Route::get('get-gndivision-list','GNDivisionController@getGNDivisions');
 
 
