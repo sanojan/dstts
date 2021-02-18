@@ -13,14 +13,14 @@
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li class="active">
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li class="active">
+                                    <li>
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
                                     <li >
@@ -62,7 +62,7 @@
                     </li>
                     @endif
                     @if(Gate::allows('sys_admin'))
-                    <li >
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
@@ -72,7 +72,7 @@
                                     <li>
                                         <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
                                     </li>
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
                                     </li>
                         </ul>
@@ -213,7 +213,12 @@
                                     </tr>
                                     <tr>
                                         <td>{{__('Account Status')}}:</td>
-                                        <td>{{$user->account_status}}</td>
+                                        @if($user->account_status)
+                                            <td class="font-bold col-green">ENABLED</td>
+                                        @else
+                                            <td class="font-bold col-red">DISABLED</td>
+                                        @endif
+                                    
                                         
                                     </tr>
                                 </tbody>    
@@ -223,14 +228,14 @@
                                     <i class="material-icons">mode_edit</i>
                                     <span>{{__('EDIT DETAILS')}}</span>
                                 </a>
-
+                            <br /><br />
                                 <form method="POST" action="{{ route('users.destroy', [app()->getLocale(), $user->id]) }}">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
 
                                     <button type="submit" class="btn btn-danger btn-xs waves-effect" onclick="return confirm('{{__('Are you sure? You cannot revert this action.')}}')">
                                         <i class="material-icons">delete</i>
-                                            <span>{{__('DELETE LETTER')}}</span>
+                                            <span>{{__('DELETE USER')}}</span>
                                     </button>
                                 </form>     
                                 

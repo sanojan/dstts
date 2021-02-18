@@ -427,7 +427,7 @@
                                     </div>
                                 </div>
                             </form>
-
+                            @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head')) 
                             <div class="collapse" id="acceptandforwardTask" aria-expanded="false" style="height: 0px;">
                                 <div class="well">
                                     <div class="card">
@@ -567,6 +567,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         </div>
                     </div>
         </div>

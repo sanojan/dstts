@@ -13,7 +13,7 @@
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li class="active">
+                    <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
@@ -23,7 +23,7 @@
                                     <li >
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
-                                    <li class="active">
+                                    <li >
                                         <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
                                     </li>
                         </ul>
@@ -62,14 +62,14 @@
                     </li>
                     @endif
                     @if(Gate::allows('sys_admin'))
-                    <li >
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
                                     </li>
                                     <li>

@@ -334,7 +334,7 @@ class UsersController extends Controller
     public function destroy($id)
     {
         if (Gate::allows('sys_admin')) {
-            //Delete letter
+            //Delete user
             $user = User::find($id);
             $user->delete();
             

@@ -21,7 +21,7 @@
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li class="active">
+                                    <li class="">
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
                                     <li >
@@ -63,7 +63,7 @@
                     </li>
                     @endif
                     @if(Gate::allows('sys_admin'))
-                    <li >
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
@@ -73,7 +73,7 @@
                                     <li>
                                         <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
                                     </li>
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
                                     </li>
                         </ul>
@@ -161,9 +161,9 @@
                                     @endif
                                     <td>{{$user->created_at}}</td>
                                     @if($user->account_status)
-                                    <td class="font-bold col-green">Enabled</td>
+                                    <td class="font-bold col-green">ENABLED</td>
                                     @else
-                                    <td class="font-bold col-red">Disabled</td>
+                                    <td class="font-bold col-red">DISABLED</td>
                                     @endif
                                     <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('users.show', [app()->getLocale(), $user->id]) }}">
                                             <i class="material-icons">pageview</i>

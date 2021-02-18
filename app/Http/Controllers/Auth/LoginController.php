@@ -35,7 +35,7 @@ class LoginController extends Controller
             app()->setLocale(config('app.locale'));    
         }
        
-        return  '/home'.app()->getLocale();
+        return  app()->getLocale() . '/home';
     }
     /**
      * Create a new controller instance.

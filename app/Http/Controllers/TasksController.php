@@ -305,6 +305,10 @@ class TasksController extends Controller
             $assigned_by = User::find($task->assigned_by);
 
             return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
+        
+        }elseif(Gate::allows('user')){
+            $assigned_by = User::find($task->assigned_by);
+            return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
         }
     }
 
