@@ -32,7 +32,7 @@ Route::group(['prefix' => '{language}'], function () {
 
 
 
-
+    Route::post('change-password', 'UsersController@changepassword')->name('change.password');
     Route::resource('users', 'UsersController')->middleware('auth');
 
     Route::resource('letters', 'LettersController')->middleware('auth');

@@ -53,6 +53,8 @@ class LoginController extends Controller
     }
 
     public function login(\Illuminate\Http\Request $request) {
+        $request->session()->invalidate();
+        $request->session()->regenerate();
         $this->validateLogin($request);
     
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -90,8 +92,11 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-    public function logout($lang) {
+    public function logout($lang, \Illuminate\Http\Request $request) {
         Auth::logout();
+        //$this->guard()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerate();
         return redirect('/');
     }
 }

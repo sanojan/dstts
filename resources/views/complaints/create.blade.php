@@ -20,7 +20,7 @@
     <link href="{{asset('plugins/node-waves/waves.css')}}" rel="stylesheet" />
     
     <!-- Toastr Css -->
-    @toastr_css
+    
 
     <!-- date time picker -->
     <link href="{{asset('plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet" />
@@ -354,7 +354,7 @@
     <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
 
     <!-- Toastr Plugin Js -->
-    @toastr_js
+    
 
     <!-- Waves Effect Plugin Js -->
     <script src="{{asset('plugins/node-waves/waves.js')}}"></script>

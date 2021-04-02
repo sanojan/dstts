@@ -126,6 +126,14 @@
             <div class="block-header">
                 <h2>VIEW USERS</h2>
             </div>
+            @if(session()->has('message'))
+                <div class="alert alert-{{session()->get('alert-type')}}">
+                    {{ session()->get('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card">
                 <div class="body">
                     

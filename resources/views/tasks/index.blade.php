@@ -143,6 +143,7 @@
                                 <th>{{__('Letter No.')}}/{{__('Complaint Ref.No')}}</th>
                                 <th>{{__('Letter Title')}}/{{__('Complainant Name')}}</th>
                                 <th>{{__('Task Assigned By')}}</th>
+                                <th>{{__('Task Assigned To')}}</th>
                                 <th>{{__('Task Assigned On')}}</th>
                                 <th>{{__('Current Status')}}</th>
                                 <th>{{__('Action')}}</th>
@@ -163,7 +164,7 @@
                                         $task_assigned_by = App\User::find($task->assigned_by)
                                     @endphp
                                     <td>{{$task_assigned_by->name}}</td>
-                                        
+                                    <td>{{$task->user->name}}({{$task->user->designation}})-{{$task->user->workplace}}</td>    
                                     
                                     <td>{{$task->created_at}}</td>
                                     @if(count($task->histories) > 0)

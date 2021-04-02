@@ -123,7 +123,7 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>{{__('CREATE USER')}}</h2>
+                <h2>{{__('EDIT USER')}}</h2>
             </div>
             <div class="card">
                 
@@ -148,11 +148,11 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                    <select class="form-control gender_dropdown" id="gender" name="gender">
-                                        <option value="" @if(old('gender' )== '') selected @elseif($user->gender='') selected @endif>{{_('Select the Gender')}}</option>
-                                        <option value="Male" @if(old('gender' )== 'Male') selected @elseif($user->gender='Male') selected @endif>{{__('Male')}}</option>
-                                        <option value="Female" @if(old('gender' )== 'Female') selected @elseif($user->gender='Female') selected @endif>{{__('Female')}}</option>
-                                    </select>
+                                    <select class="form-control gender_dropdown" id="gender" name="gender" value="{{ old('gender') }}">
+                                    <option value="" @if(old('gender' )== '') selected disabled @endif>{{_('Select your Gender')}}</option>
+                                    <option value="Male" @if(old('gender')== 'Male') selected @elseif($user->gender=='Male') selected @endif>Male</option>
+                                    <option value="Female" @if(old('gender')=='Female') selected @endif>{{__('Female')}}</option>
+                                </select>
                                     <label class="form-label">{{__('Select the Gender')}}</label> 
                                     </div>
                                     @error('gender')
@@ -299,7 +299,7 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <select class="form-control designation_dropdown" style="width:100%;" id="designation" name="designation" value="{{ old('designation') }}">
+                                        <select class="form-control designation_dropdown" style="width:100%;" id="designation" name="designation" >
                                         <option value="" @if(old('designation')== '') selected @elseif($user->designation=='') selected @endif>{{__('Select the Designation')}}</option>
                                         @foreach($designations as $designation)
                                         <option value="{{$designation->name}}" @if(old('designation')== '{{$designation->name}}') selected @elseif($user->designation==$designation->name) selected @endif>{{$designation->name}} </option>
@@ -343,103 +343,11 @@
                             </div>   
                         </div>
 
-                        <div class="row clearfix">
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-                                        <label class="form-label">{{__('Password')}}</label>
-                                    </div>
-                                    @error('password')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" >
-                                    <label class="form-label">{{__('Confirm Password')}}</label> 
-                                    </div>
-                                    @error('password_confirmation')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div> 
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <select class="form-control service_dropdown" id="user_type" name="user_type" >
-                                        <option value="" @if(old('user_type')== '') selected @elseif($user->user_type=='') selected @endif>{{__('Select User Type')}}</option>
-                                        <option value="user" @if(old('user_type')== 'user') selected @elseif($user->user_type=='user') selected @endif >{{__('Normal User')}}</option>
-                                        <option value="branch_head" @if(old('user_type')== 'branch_head') selected @elseif($user->user_type=='branch_head') selected @endif >{{__('Branch Head')}}</option>
-                                        <option value="div_sec" @if(old('user_type')== 'div_sec') selected @elseif($user->user_type=='div_sec') selected @endif>{{__('Divisional Secretary')}}</option>
-                                        <option value="admin" @if(old('user_type')== 'admin') selected @elseif($user->user_type=='admin') selected @endif>{{__('Admin')}}</option>
-                                        <option value="sys_admin" @if(old('user_type')== 'sys_admin') selected @elseif($user->user_type=='sys_admin') selected @endif>{{__('System Admin')}}</option>
-                                    </select>
-                                        <label class="form-label">{{__('Select User Type')}}</label>
-                                    </div>
-                                    @error('user_type')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>   
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <div class="form-line">
-                                    <select class="form-control service_dropdown" id="account_status" name="account_status" >
-                                        <option value="0" @if(old('account_status')== '0') selected @elseif($user->account_status=='1') selected @endif>{{__('Disable')}}</option>
-                                        <option value="1" @if(old('account_status')== '1') selected @elseif($user->account_status=='1') selected @endif >{{__('Enable')}}</option>
-                                    </select>
-                                    </div>
-                                        <label class="form-label">{{__('Select Account Status')}}</label>
-                                    </div>
-                                    @error('user_type')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    
-                                    <label class="form-label"></label> 
-                                    </div>
-                                    @error('')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div> 
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                   
-                                        <label class="form-label"></label>
-                                    </div>
-                                    @error('')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>   
-                        </div>
+                        
+                        
                         
                         <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
-                        <button type="submit" class="btn btn-warning waves-effect" style="margin-right:10px">
+                        <button type="submit" class="btn btn-warning waves-effect" style="margin-right:10px" name="user_details_button" value="edit_user">
                             <i class="material-icons">note_add</i>
                             <span>{{__('UPDATE')}}</span>
                         </button>

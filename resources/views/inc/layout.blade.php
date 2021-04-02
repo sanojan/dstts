@@ -24,7 +24,7 @@
     <link href="{{asset('plugins/animate-css/animate.css')}}" rel="stylesheet" />
     
     <!-- Toastr Css -->
-    @toastr_css
+    
     
     <!-- Datatables Css -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css"/>
@@ -86,7 +86,7 @@
                 <ul class="nav navbar-nav navbar-right">
                 
                     <!-- Call Search -->
-                    <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
+                    <li><a href="#" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
                     <!-- #END# Call Search -->
                     <!-- Language Switcher -->
                     <li class="dropdown">
@@ -224,11 +224,11 @@
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
+                            <li><a href="{{route('users.show', [app()->getLocale(), Auth::user()->id])}}"><i class="material-icons">person</i>My Profile</a></li>
+                            <!--
                             <li role="seperator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
+                            <li><a href="javascript:void(0);"><i class="material-icons">group</i>Test</a></li>
+                            -->
                             <li role="seperator" class="divider"></li>
                             <li><a href="{{ route('logout', app()->getLocale()) }}"
                                        onclick="event.preventDefault();
@@ -269,7 +269,6 @@
 
 
 <!-- Toastr Plugin Js -->
-@toastr_js
 
 <!-- Bootstrap Core Js -->
 <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
@@ -277,8 +276,6 @@
 <!-- Select Plugin Js
 <script src="{{asset('plugins/bootstrap-select/js/bootstrap-select.js')}}"></script> -->
 
-<!-- Slimscroll Plugin Js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js" integrity="sha512-cJMgI2OtiquRH4L9u+WQW+mz828vmdp9ljOcm/vKTQ7+ydQUktrPVewlykMgozPP+NUBbHdeifE6iJ6UVjNw5Q==" crossorigin="anonymous"></script>
 
 <!-- Waves Effect Plugin Js -->
 <script src="{{asset('plugins/node-waves/waves.js')}}"></script>

@@ -125,6 +125,14 @@
             <div class="block-header">
                 <h2>{{__('USER DETAILS')}}</h2>
             </div>
+            @if(session()->has('message'))
+                <div class="alert alert-{{session()->get('alert-type')}}">
+                    {{ session()->get('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card">
                         <div class="body table-responsive">
                             <table class="table">
@@ -224,11 +232,49 @@
                                 </tbody>    
                             </table>
                             <div>
-                                <a type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" href="{{route('users.edit', [app()->getLocale(), $user->id])}}">
-                                    <i class="material-icons">mode_edit</i>
-                                    <span>{{__('EDIT DETAILS')}}</span>
-                                </a>
-                            <br /><br />
+                            
+                              
+                            <form action="{{ route('users.update', [app()->getLocale(), $user->id] )}}" method="POST" enctype="multipart/form-data" id="user_type_form">
+                            {{ method_field('PUT') }}
+                            {{ csrf_field() }}
+                                    <a type="button" style="margin-right:10px" class="btn bg-purple btn-xs waves-effect" href="{{route('users.edit', [app()->getLocale(), $user->id])}}">
+                                        <i class="material-icons">mode_edit</i>
+                                        <span>{{__('EDIT DETAILS')}}</span>
+                                    </a>
+                                    @if(Auth::user()->id == $user->id)
+                                    <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#changePassword" aria-expanded="false" aria-controls="changeAccountType">
+                                        <i class="material-icons">add_to_photos</i>
+                                        <span>{{__('CHANGE PASSWORD')}}</span>
+                                    </button>
+                                    @endif
+                                    @if(Gate::allows('sys_admin'))
+                                    <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#changeAccountType" aria-expanded="false" aria-controls="changeAccountType">
+                                        <i class="material-icons">add_to_photos</i>
+                                        <span>{{__('CHANGE ACCOUNT TYPE')}}</span>
+                                    </button>
+                                    
+                                    @if($user->account_status)
+                                    
+                                    <button type="submit" style="margin-right:10px" class="btn bg-red btn-xs waves-effect" name="user_status_button" value="disable_user">
+                                        <i class="material-icons">close</i>
+                                        <span>
+                                            {{__('DISABLE USER')}}
+                                        </span>
+                                    </button>
+                                    @else
+                                    <button type="submit" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" name="user_status_button" value="enable_user">
+                                        <i class="material-icons">check</i>
+                                        <span>
+                                            {{__('ENABLE USER')}}
+                                        </span>
+                                    </button>
+                            </form>
+                                    @endif
+                                    @endif
+                                
+                                
+                                <br /><br />
+                                @if(Gate::allows('sys_admin'))
                                 <form method="POST" action="{{ route('users.destroy', [app()->getLocale(), $user->id]) }}">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
@@ -237,8 +283,136 @@
                                         <i class="material-icons">delete</i>
                                             <span>{{__('DELETE USER')}}</span>
                                     </button>
-                                </form>     
+                                </form>    
+                                @endif 
+                                <br />
+
                                 
+                                <div class="collapse" id="changeAccountType" aria-expanded="false" style="height: 0px;">
+                                    <div class="well">
+                                        <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+                                            <form action="{{ route('users.update', [app()->getLocale(), $user->id] )}}" method="POST" enctype="multipart/form-data" id="user_type_form">
+                                            {{ method_field('PUT') }}
+                                            {{ csrf_field() }}
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:200px"></th>
+                                                            <th style="width:200px"></th>
+                                                            <th style="width:50px"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                            <label class="form-label">{{__('Select the User Type')}}</label>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" style="width:100%;" id="user_type" name="user_type">
+                                                                @if($user->user_type == "sys_admin")
+                                                                <option value="{{$user->user_type}}" selected disabled>System Admin</option>
+                                                                @else
+                                                                <option value="sys_admin">System Admin</option>
+                                                                @endif
+
+                                                                @if($user->user_type == "branch_head")
+                                                                <option value="{{$user->user_type}}" selected disabled>Branch Head</option>
+                                                                @else
+                                                                <option value="branch_head">Branch Head</option>
+                                                                @endif
+
+                                                                @if($user->user_type == "admin")
+                                                                <option value="{{$user->user_type}}" selected disabled>Admin</option>
+                                                                @else
+                                                                <option value="admin">Admin</option>
+                                                                @endif
+
+                                                                @if($user->user_type == "user")
+                                                                <option value="{{$user->user_type}}" selected disabled>Standard User</option>
+                                                                @else
+                                                                <option value="user">Standard User</option>
+                                                                @endif 
+                                                                </select>
+                                                                
+                                                                    
+                                                            </td>  <td></td>     
+                                                            <td>
+                                                                <button type="submit" style="margin-right:10px" name="user_type_button" value="change_user_type" class="btn bg-green btn-xs waves-effect" >
+                                                                <i class="material-icons">check</i>
+                                                                <span>{{__('SUBMIT')}}</span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="collapse" id="changePassword" aria-expanded="false" style="height: 0px;">
+                                    <div class="well">
+                                        <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+                                            <form action="{{ route('change.password', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="change_password_form">
+                                            @csrf 
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:200px"></th>
+                                                            <th style="width:200px"></th>
+                                                            <th style="width:50px"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                            <label class="form-label">{{__('Enter Current Password')}}</label>
+                                                            </td>
+                                                            <td><input id="password" type="password" class="form-control" name="current_password" autocomplete="current-password">
+                                                            @error('current_password')
+                                                            <label class="error" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </label>
+                                                            @enderror
+                                                            </td> 
+                                                            </tr>
+                                                            <tr style="height:80px">
+                                                            <td><label class="form-label">{{__('Enter New Password')}}</label></td>
+                                                            <td><input id="new_password" type="password" class="form-control" name="new_password" autocomplete="current-password">
+                                                            @error('new_password')
+                                                            <label class="error" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </label>
+                                                            @enderror
+                                                            </td>    
+                                                            </tr>
+                                                            <tr>
+                                                            <td><label class="form-label">{{__('Re-enter New Password')}}</label></td>
+                                                            <td><input id="new_confirm_password" type="password" class="form-control" name="new_confirm_password" autocomplete="current-password">
+                                                            @error('new_confirm_password')
+                                                            <label class="error" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </label>
+                                                            @enderror
+                                                            </td>
+                                                            </tr>
+                                                            <tr style="height:80px">
+                                                            <td></td>
+                                                            <td>
+                                                                <button type="submit" style="margin-right:10px" name="change_password_button" value="change_password" class="btn bg-green btn-xs waves-effect" >
+                                                                <i class="material-icons">check</i>
+                                                                <span>{{__('SUBMIT')}}</span>
+                                                                </button>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 
                             </div>
                         </div>

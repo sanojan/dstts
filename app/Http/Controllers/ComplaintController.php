@@ -124,7 +124,7 @@ class ComplaintController extends Controller
         }
 
         
-        //Create an instance of letter model
+        //Create an instance of complaint model
         $complaint = new Complaint;
         $complaint->name = $request->name;
         $complaint->nic = $request->nic;

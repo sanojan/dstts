@@ -7,18 +7,14 @@ use Gate;
 use App\User;
 use Auth;
 use DB;
-use Carbon\Carbon;
 use App\Designation;
 use App\Workplace;
 use App\Workplacetype;
 use App\Service;
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Rules\MatchOldPassword;
 
 class UsersController extends Controller
 {
@@ -42,23 +38,22 @@ class UsersController extends Controller
             }
         }
 
-        //Create History
+        
         if (Gate::allows('sys_admin')) {
             //$letters = Letter::all();
             //$users = User::all();
             $users = User::all();
 
             return view('users.index')->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);;
-            }
+        }
             
-            else{
-                $notification = array(
-                    'message' => 'You do not have permission to view Users',
-                    'alert-type' => 'warning'
-                );
-                
-                return redirect('/home')->with($notification);
-            }
+        else{
+            $notification = array(
+                'message' => __("You do not have permission to view user profiles"),
+                'alert-type' => 'warning'
+            );
+            return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+        }
     }
 
     /**
@@ -81,7 +76,7 @@ class UsersController extends Controller
             }
         }
 
-        //Create History
+        
         if (Gate::allows('sys_admin')) {
             $users = User::all();
             $designations = Designation::all()->sortBy('name');
@@ -110,7 +105,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin')) {
             //Create New User
 
             $this->validate($request, [
@@ -146,7 +141,7 @@ class UsersController extends Controller
             $user->branch = $request->branch;
             $user->service = $request->service;
             $user->class = $request->class;
-            $user->workplace = $request->workplace;
+            $user->workplace = $request->workplace; 
             $user->user_type = $request->user_type;
             $user->account_status = $request->account_status;
             $user->password = Hash::make($request->password);            
@@ -179,6 +174,7 @@ class UsersController extends Controller
      */
     public function show($lang, $id)
     {
+        $current_user = User::find($id);
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
             if(!count($task->histories) > 0){
@@ -192,25 +188,22 @@ class UsersController extends Controller
             }
         }
 
-        //Create History
-        if (Gate::allows('sys_admin')) {
-            $user = User::find($id);
-            $designations = Designation::all()->sortBy('name');
-            $services = Service::all()->sortBy('name');
-            $workplacetypes = Workplacetype::all();
-            $workplaces = Workplace::all();
-
-            return view('users.show')->with('services', $services)->with('user', $user)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('workplaces', $workplaces)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);;
-            }
+        if (Gate::allows('sys_admin') || Auth::user()->id == $current_user->id){
             
-            else{
-                $notification = array(
-                    'message' => 'You do not have permission to create Users',
-                    'alert-type' => 'warning'
-                );
-                
-                return redirect('/home')->with($notification);
-            }
+
+            //dd("test");
+            return view('users.show')->with('user', $current_user)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+
+        }else{
+            
+        
+            $notification = array(
+                'message' => __("You do not have permission to view user profiles"),
+                'alert-type' => 'warning'
+            );
+            return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+        }
+        
     }
 
     /**
@@ -221,6 +214,7 @@ class UsersController extends Controller
      */
     public function edit($lang,$id)
     {
+        $user = User::find($id);
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
             if(!count($task->histories) > 0){
@@ -234,9 +228,9 @@ class UsersController extends Controller
             }
         }
 
-        //Create History
-        if (Gate::allows('sys_admin')) {
-            $user = User::find($id);
+       
+        if (Gate::allows('sys_admin') || Auth::user()->id == $user->id) {
+            
             $designations = Designation::all()->sortBy('name');
             $services = Service::all()->sortBy('name');
             $workplacetypes = Workplacetype::all();
@@ -247,7 +241,7 @@ class UsersController extends Controller
             
             else{
                 $notification = array(
-                    'message' => 'You do not have permission to create Users',
+                    'message' => 'You do not have permission to edit Users',
                     'alert-type' => 'warning'
                 );
                 
@@ -264,65 +258,111 @@ class UsersController extends Controller
      */
     public function update(Request $request, $lang, $id)
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
-            //Create New User
+        $user = User::find($id);
 
-            $this->validate($request, [
-                'name' => ['required', 'regex:/^[a-zA-Z .]*$/', 'max:100'],
-                'gender' => ['required'],
-                'dob' => ['required', 'date', 'before:-18 years', 'after:-60 years'],
-                'nic' => ['required', 'max:12', 'min:10'],
-                'email' => ['string', 'email', 'max:255', 'nullable'],
-                'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
-                'designation' => ['required'],
-                'branch' => ['required'],
-                'service' => ['required'],
-                'class' => ['required'],
-                'workplace' => ['required'],
-                'password' => ['required', 'string', 'min:8', 'confirmed']
-            ],
+        if($request->user_details_button == "edit_user"){
+            if (Gate::allows('sys_admin') || Auth::user()->id == $user->id) {
+                //Create New User
+
+                $this->validate($request, [
+                    'name' => ['required', 'regex:/^[a-zA-Z .]*$/', 'max:100'],
+                    'gender' => ['required'],
+                    'dob' => ['required', 'date', 'before:-18 years', 'after:-60 years'],
+                    'nic' => ['required', 'max:12', 'min:10'],
+                    'email' => ['string', 'email', 'max:255', 'nullable'],
+                    'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
+                    'designation' => ['required'],
+                    'branch' => ['required'],
+                    'service' => ['required'],
+                    'class' => ['required'],
+                    'workplace' => ['required']
+                ],
+            
+                ['gender.required' => 'Please select your gender',
+                'dob.before' => 'You must be 18 Years or older',
+                'dob.after' => 'You must be less than 60 years old'
+                ]);
         
-            ['gender.required' => 'Please select your gender',
-            'dob.before' => 'You must be 18 Years or older',
-            'dob.after' => 'You must be less than 60 years old'
-            ]);
-    
-            //Create an instance of letter model
-            $user = User::find($id);
-            $user->name = $request->name;
-            $user->gender = $request->gender;
-            $user->dob = $request->dob;
-            $user->nic = $request->nic;
-            $user->email = $request->email;
-            $user->mobile_no = $request->mobile_no;
-            $user->designation = $request->designation;
-            $user->branch = $request->branch;
-            $user->service = $request->service;
-            $user->class = $request->class;
-            $user->workplace = $request->workplace;
-            $user->user_type = $request->user_type;
-            $user->account_status = $request->account_status;
-            $user->password = Hash::make($request->password);            
-            $user->save();
-            //echo $id;
-    
-            //session()->put('success','Letter has been created successfully.');
-    
+                //Create an instance of letter model
+                
+                $user->name = $request->name;
+                $user->gender = $request->gender;
+                $user->dob = $request->dob;
+                $user->nic = $request->nic;
+                $user->email = $request->email;
+                $user->mobile_no = $request->mobile_no;
+                $user->designation = $request->designation;
+                $user->branch = $request->branch;
+                $user->service = $request->service;
+                $user->class = $request->class;
+                $user->workplace = $request->workplace;
+                $user->save();
+                //echo $id;
+        
+                
+        
             $notification = array(
-                'message' => __('User has been created successfully!'), 
+                'message' => __('User has been Updated successfully!'), 
                 'alert-type' => 'success'
             );
     
-            return redirect(app()->getLocale() . '/users')->with($notification);
-        }
-        else{
-            $notification = array(
-                'message' => __("You do not have permission to create User"),
-                'alert-type' => 'warning'
-            );
+            return redirect(app()->getLocale() . '/users/'. $user->id)->with($notification);
             
-            return redirect(app()->getLocale() .'/home')->with($notification);
+
+            }
+            else{
+                $notification = array(
+                    'message' => __("You do not have permission to Update User"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() .'/home')->with($notification);
+            }
         }
+
+        
+        if($request->user_status_button == "enable_user"){
+            if (Gate::allows('sys_admin')) {
+                $user->account_status = 1;
+                $user->save();
+
+                $notification = array(
+                    'message' => __('User profile has been Enabled successfully!'), 
+                    'alert-type' => 'success'
+                );
+                return redirect(app()->getLocale() . '/users/' . $user->id)->with($notification);
+            }
+            
+        }
+        if($request->user_status_button == "disable_user"){
+            if (Gate::allows('sys_admin')) {
+                $user->account_status = 0;
+                $user->save();
+
+                $notification = array(
+                    'message' => __('User profile has been Disabled successfully!'), 
+                    'alert-type' => 'success'
+                );
+                return redirect(app()->getLocale() . '/users/' . $user->id)->with($notification);
+            }
+            
+        }
+
+        if($request->user_type_button == "change_user_type"){
+            if (Gate::allows('sys_admin')) {
+                $user->user_type = $request->user_type;
+                $user->save();
+
+                $notification = array(
+                    'message' => __('User type has been changed successfully!'), 
+                    'alert-type' => 'success'
+                );
+                return redirect(app()->getLocale() . '/users/' . $user->id)->with($notification);
+            }
+        }
+        
+
+        
     }
 
     /**
@@ -366,5 +406,29 @@ class UsersController extends Controller
             $workplace = $workplace . "<option value='$state->name'>$state->name</option>";
         }
             return $workplace;
+    }
+
+    public function changepassword(Request $request)
+    {
+        
+        
+        $request->validate([
+            'current_password' => ['required', new MatchOldPassword],
+            'new_password' => ['required'],
+            'new_confirm_password' => ['same:new_password'],
+        ]);
+
+        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
+
+        $notification = array(
+            'message' => __('User account password has been changed successfully'),
+            'alert-type' => 'warning'
+        );
+        
+        //return redirect(app()->getLocale() . '/users/' . Auth::user()->id)->with($notification);
+        
+        $request->session()->invalidate();
+        $request->session()->regenerate();
+        return redirect('/' . app()->getLocale() . '/home');
     }
 }
