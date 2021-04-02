@@ -285,6 +285,7 @@
 
 <!-- Moment Plugin Js -->
 
+<!-- slimscroll -->
 
 <!-- Morris Plugin Js -->
 <script src="{{asset('plugins/raphael/raphael.min.js')}}"></script>

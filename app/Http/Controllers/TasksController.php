@@ -71,7 +71,10 @@ class TasksController extends Controller
         }
 
         if (Gate::allows('admin')) {
-        $letters = Auth::user()->letters;
+            $letters = DB::table('users')->join('letters', function ($join) {
+                $join->on('users.id', '=', 'letters.user_id')
+                 ->where('users.workplace', '=', Auth::user()->workplace);
+                })->get();
 
         $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
         $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];

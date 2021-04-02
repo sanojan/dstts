@@ -32,9 +32,18 @@ class LettersController extends Controller
             }
         }
         if (Gate::allows('admin')) {
-        $letters = Auth::user()->letters;
-        return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+
+            $letters = DB::table('users')->join('letters', function ($join) {
+                $join->on('users.id', '=', 'letters.user_id')
+                 ->where('users.workplace', '=', Auth::user()->workplace);
+                })->get();
+
+            //$letters = Auth::user()->letters;
+            return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+        
+    
         } 
+
         elseif(Gate::allows('sys_admin')){
             $letters = Letter::all();
             return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
@@ -188,7 +197,7 @@ class LettersController extends Controller
             
             $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
 
-            if($letter->user->id == Auth::user()->id){
+            if($letter->user->workplace == Auth::user()->workplace){
                 //Return letters show page
                 //dd($lang, $id, $letter);
                 return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
