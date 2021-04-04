@@ -371,7 +371,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($lang, $id)
     {
         if (Gate::allows('sys_admin')) {
             //Delete user

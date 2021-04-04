@@ -235,26 +235,25 @@
                             
                               
                             <form action="{{ route('users.update', [app()->getLocale(), $user->id] )}}" method="POST" enctype="multipart/form-data" id="user_type_form">
-                            {{ method_field('PUT') }}
-                            {{ csrf_field() }}
+                                {{ method_field('PUT') }}
+                                {{ csrf_field() }}
                                     <a type="button" style="margin-right:10px" class="btn bg-purple btn-xs waves-effect" href="{{route('users.edit', [app()->getLocale(), $user->id])}}">
                                         <i class="material-icons">mode_edit</i>
                                         <span>{{__('EDIT DETAILS')}}</span>
                                     </a>
                                     @if(Auth::user()->id == $user->id)
-                                    <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#changePassword" aria-expanded="false" aria-controls="changeAccountType">
+                                    <a type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#changePassword" aria-expanded="false" aria-controls="changeAccountType">
                                         <i class="material-icons">add_to_photos</i>
                                         <span>{{__('CHANGE PASSWORD')}}</span>
-                                    </button>
+                                    </a>
                                     @endif
                                     @if(Gate::allows('sys_admin'))
-                                    <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#changeAccountType" aria-expanded="false" aria-controls="changeAccountType">
+                                    <a type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#changeAccountType" aria-expanded="false" aria-controls="changeAccountType">
                                         <i class="material-icons">add_to_photos</i>
                                         <span>{{__('CHANGE ACCOUNT TYPE')}}</span>
-                                    </button>
-                                    
+                                    </a>
+                                    @endif
                                     @if($user->account_status)
-                                    
                                     <button type="submit" style="margin-right:10px" class="btn bg-red btn-xs waves-effect" name="user_status_button" value="disable_user">
                                         <i class="material-icons">close</i>
                                         <span>
@@ -268,9 +267,10 @@
                                             {{__('ENABLE USER')}}
                                         </span>
                                     </button>
+                                    @endif
                             </form>
-                                    @endif
-                                    @endif
+                                    
+                                   
                                 
                                 
                                 <br /><br />
