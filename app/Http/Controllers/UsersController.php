@@ -174,7 +174,7 @@ class UsersController extends Controller
      */
     public function show($lang, $id)
     {
-        $current_user = User::find($id);
+        
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
             if(!count($task->histories) > 0){
@@ -188,20 +188,29 @@ class UsersController extends Controller
             }
         }
 
-        if (Gate::allows('sys_admin') || Auth::user()->id == $current_user->id){
+        if($current_user = User::find($id)){
+
+            if (Gate::allows('sys_admin') || Auth::user()->id == $current_user->id){
+                
+
+                //dd("test");
+                return view('users.show')->with('user', $current_user)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+
+            }else{
+                
             
-
-            //dd("test");
-            return view('users.show')->with('user', $current_user)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-
+                $notification = array(
+                    'message' => __("You do not have permission to view user profiles"),
+                    'alert-type' => 'warning'
+                );
+                return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+            }
         }else{
-            
-        
             $notification = array(
-                'message' => __("You do not have permission to view user profiles"),
+                'message' => __("Requested User profile is not available"),
                 'alert-type' => 'warning'
             );
-            return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+            return redirect(app()->getLocale() . '/users')->with($notification)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }
         
     }

@@ -1,9 +1,9 @@
 @extends('inc.layout')
 
 @section('sidebar')
- 
-                <!-- Menu -->
-                <div class="menu">
+         
+            <!-- Menu -->
+            <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
                     <li >
@@ -13,14 +13,14 @@
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li >
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li >
+                                    <li>
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
                                     <li >
@@ -61,22 +61,26 @@
                         </a>
                     </li>
                     @endif
-                    @if(Gate::allows('sys_admin'))
+                    
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
+                        @if(Gate::allows('sys_admin'))
                         <ul class="ml-menu">
-                            
-                                    <li class="active">
+                                    
+                                    <li>
                                         <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
                                     </li>
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
                                     </li>
                         </ul>
+                        @endif
                     </li>
+                   
+                    @if(Gate::allows('sys_admin'))
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
@@ -96,7 +100,7 @@
                         </ul>
                     </li>
                     @endif
-                    <li >
+                    <li>
                         <a href="#">
                             <i class="material-icons">help</i>
                             <span>{{__('Help')}}</span>

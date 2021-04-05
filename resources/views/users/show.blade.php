@@ -61,14 +61,15 @@
                         </a>
                     </li>
                     @endif
-                    @if(Gate::allows('sys_admin'))
+                    
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
+                        @if(Gate::allows('sys_admin'))
                         <ul class="ml-menu">
-                            
+                                    
                                     <li>
                                         <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
                                     </li>
@@ -76,7 +77,10 @@
                                         <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
                                     </li>
                         </ul>
+                        @endif
                     </li>
+                   
+                    @if(Gate::allows('sys_admin'))
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
@@ -96,7 +100,7 @@
                         </ul>
                     </li>
                     @endif
-                    <li >
+                    <li>
                         <a href="#">
                             <i class="material-icons">help</i>
                             <span>{{__('Help')}}</span>
@@ -252,7 +256,7 @@
                                         <i class="material-icons">add_to_photos</i>
                                         <span>{{__('CHANGE ACCOUNT TYPE')}}</span>
                                     </a>
-                                    @endif
+                                    
                                     @if($user->account_status)
                                     <button type="submit" style="margin-right:10px" class="btn bg-red btn-xs waves-effect" name="user_status_button" value="disable_user">
                                         <i class="material-icons">close</i>
@@ -267,6 +271,7 @@
                                             {{__('ENABLE USER')}}
                                         </span>
                                     </button>
+                                    @endif
                                     @endif
                             </form>
                                     

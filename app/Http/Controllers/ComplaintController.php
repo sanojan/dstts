@@ -185,75 +185,82 @@ class ComplaintController extends Controller
         }
 
 
-        $complaint = Complaint::find($id);
+        if($complaint = Complaint::find($id)){
 
         
 
-        if (Gate::allows('admin')) {
-            
-            
-            $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
-            $orThose = ['designation' => 'Divisional Secretary'];
-            
-            
-            $users = DB::table('users')->where($matchThese)->orWhere($orThose)->whereNotIn('id', array(Auth::user()->id))->get();
+            if (Gate::allows('admin')) {
+                
+                
+                $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
+                $orThose = ['designation' => 'Divisional Secretary'];
+                
+                
+                $users = DB::table('users')->where($matchThese)->orWhere($orThose)->whereNotIn('id', array(Auth::user()->id))->get();
 
-            if($complaint->user->id == Auth::user()->id){
-                //Return letters show page
-                //dd($lang, $id, $letter);
-                if($complaint->status == "Unread"){
+                if($complaint->user->id == Auth::user()->id){
+                    //Return letters show page
+                    //dd($lang, $id, $letter);
+                    if($complaint->status == "Unread"){
+                        $complaint->status = "Seen";
+                        $complaint->save();
+                    }
+                    return view('complaints.show')->with('complaint', $complaint)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                }else{
+                    $notification = array(
+                        'message' => __('You do not have permission to view this complaint'),
+                        'alert-type' => 'warning'
+                    );
+                    return redirect(app()->getLocale(). '/complaints')->with($notification);
+                }
+            
+            }
+            elseif(Gate::allows('div_sec')){
+
+                $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
+                $orThose = ['designation' => 'District Secretary'];
+                $orThese = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+                $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->get();
+                            
+                
+
+                if($complaint->user->id == Auth::user()->id){
+                    //Return letters show page
+                    if($complaint->status == "Unread"){
                     $complaint->status = "Seen";
                     $complaint->save();
+                    }
+                    return view('complaints.show')->with('complaint', $complaint)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                }else{
+                    $notification = array(
+                        'message' => __('You do not have permission to view this Complaint'),
+                        'alert-type' => 'warning'
+                    );
+                    return redirect(app()->getLocale() . '/complaints')->with($notification);
                 }
+                
+                
+            }
+            elseif(Gate::allows('sys_admin')){
+                if($complaint->user->id == Auth::user()->id){
+                    if($complaint->status == "Unread"){
+                        $complaint->status = "Seen";
+                        $complaint->save();
+                    }
+                }
+                
+                $users = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
                 return view('complaints.show')->with('complaint', $complaint)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
             }else{
                 $notification = array(
-                    'message' => __('You do not have permission to view this complaint'),
+                    'message' => __('You do not have permission to view complaints'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale(). '/complaints')->with($notification);
             }
-        
-        }
-        elseif(Gate::allows('div_sec')){
-
-            $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
-            $orThose = ['designation' => 'District Secretary'];
-            $orThese = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
-            $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->get();
-                        
-            
-
-            if($complaint->user->id == Auth::user()->id){
-                //Return letters show page
-                if($complaint->status == "Unread"){
-                $complaint->status = "Seen";
-                $complaint->save();
-                }
-                return view('complaints.show')->with('complaint', $complaint)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-            }else{
-                $notification = array(
-                    'message' => __('You do not have permission to view this Complaint'),
-                    'alert-type' => 'warning'
-                );
-                return redirect(app()->getLocale() . '/complaints')->with($notification);
-            }
-            
-            
-        }
-        elseif(Gate::allows('sys_admin')){
-            if($complaint->user->id == Auth::user()->id){
-                if($complaint->status == "Unread"){
-                    $complaint->status = "Seen";
-                    $complaint->save();
-                }
-            }
-            
-            $users = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
-            return view('complaints.show')->with('complaint', $complaint)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }else{
             $notification = array(
-                'message' => __('You do not have permission to view complaints'),
+                'message' => __('Requested complain is not available'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale(). '/complaints')->with($notification);

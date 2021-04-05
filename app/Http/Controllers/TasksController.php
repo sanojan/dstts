@@ -261,57 +261,65 @@ class TasksController extends Controller
             }
         }
 
-        $task = Task::find($id);
-        $letters = $task->letter;
+        if($task = Task::find($id)){
+            $letters = $task->letter;
 
-        if($task->user->id == Auth::user()->id){
-            if(count($task->histories) < 1){
-            //create seen status for task
-            $history = new History;
-            $history->task_id = $id;
-            $history->status = "Seen";
-            $history->current = true;
-            $history->save();
+            if($task->user->id == Auth::user()->id){
+                if(count($task->histories) < 1){
+                //create seen status for task
+                $history = new History;
+                $history->task_id = $id;
+                $history->status = "Seen";
+                $history->current = true;
+                $history->save();
+                }
             }
-        }
 
-        if (Gate::allows('sys_admin')) {
-        
-            //Return tasks show page
+            if (Gate::allows('sys_admin')) {
             
-            $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
+                //Return tasks show page
+                
+                $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
 
-        $assigned_by = User::find($task->assigned_by);
-        //$conditions=['workplace' => Auth::user()->workplace, 'branch' => Auth::user()->branch];
-        //$limited_users = DB::table('users')->where($conditions)->whereNotIn('id', array(Auth::user()->id))->get();//User::where('workplace','workplace1');
-        return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-
-        } elseif(Gate::allows('admin')){
-           
-            $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
-            $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
-            $orThese = [['designation', '=', 'District Secretary'], ['workplace', '!=', Auth::user()->workplace]];
-
-            
-            $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
-            
             $assigned_by = User::find($task->assigned_by);
-
+            //$conditions=['workplace' => Auth::user()->workplace, 'branch' => Auth::user()->branch];
+            //$limited_users = DB::table('users')->where($conditions)->whereNotIn('id', array(Auth::user()->id))->get();//User::where('workplace','workplace1');
             return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-        
-        } elseif(Gate::allows('branch_head')){
-           
-            $matchThese = [['workplace', '=', Auth::user()->workplace], ['branch', '=', Auth::user()->branch], ['id', '!=', Auth::user()->id]];
-            
-            $users = DB::table('users')->where($matchThese)->whereNotIn('id', array(Auth::user()->id))->get();
-            
-            $assigned_by = User::find($task->assigned_by);
 
-            return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
-        
-        }elseif(Gate::allows('user')){
-            $assigned_by = User::find($task->assigned_by);
-            return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
+            } elseif(Gate::allows('admin')){
+            
+                $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
+                $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+                $orThese = [['designation', '=', 'District Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+
+                
+                $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
+                
+                $assigned_by = User::find($task->assigned_by);
+
+                return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+            
+            } elseif(Gate::allows('branch_head')){
+            
+                $matchThese = [['workplace', '=', Auth::user()->workplace], ['branch', '=', Auth::user()->branch], ['id', '!=', Auth::user()->id]];
+                
+                $users = DB::table('users')->where($matchThese)->whereNotIn('id', array(Auth::user()->id))->get();
+                
+                $assigned_by = User::find($task->assigned_by);
+
+                return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('users', $users)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
+            
+            }elseif(Gate::allows('user')){
+                $assigned_by = User::find($task->assigned_by);
+                return view('tasks.show')->with('task', $task)->with('letters', $letters)->with('assigned_by', $assigned_by)->with('new_tasks', $new_tasks);
+            }
+        }else{
+            $notification = array(
+                'message' => __('Requested Task is not available'),
+                'alert-type' => 'warning'
+            );
+            
+            return redirect('/' . app()->getLocale() . '/tasks')->with($notification);
         }
     }
 

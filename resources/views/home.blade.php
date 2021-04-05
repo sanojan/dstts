@@ -1,23 +1,22 @@
 @extends('inc.layout')
 
 @section('sidebar')
- 
-            
+         
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li class="active">
+                    <li >
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
-                            <span>{{__('DASHBOARD')}}</span>
+                            <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
-                    <li >
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
-                            <span>{{ __("Letters") }}</span>
+                            <span>{{__('Letters')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
@@ -30,6 +29,7 @@
                         </ul>
                     </li>
                     @endif
+                    
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -41,7 +41,7 @@
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a> 
+                                        <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                     </li>
                                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
@@ -61,22 +61,26 @@
                         </a>
                     </li>
                     @endif
-                    @if(Gate::allows('sys_admin'))
-                    <li >
+                    
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
+                        @if(Gate::allows('sys_admin'))
                         <ul class="ml-menu">
-                            
+                                    
                                     <li>
                                         <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
                                     </li>
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
                                     </li>
                         </ul>
+                        @endif
                     </li>
+                   
+                    @if(Gate::allows('sys_admin'))
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
@@ -96,20 +100,20 @@
                         </ul>
                     </li>
                     @endif
-                    <li >
-                        <a href="index.html">
+                    <li>
+                        <a href="#">
                             <i class="material-icons">help</i>
                             <span>{{__('Help')}}</span>
                         </a>
                     </li>
                     <li >
-                        <a href="index.html">
+                        <a href="#">
                             <i class="material-icons">group</i>
                             <span>{{__('About Us')}}</span>
                         </a>
                     </li>
                     <li >
-                        <a href="index.html">
+                        <a href="#">
                             <i class="material-icons">contact_phone</i>
                             <span>{{__('Contact Us')}}</span>
                         </a>

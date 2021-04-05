@@ -188,38 +188,46 @@ class LettersController extends Controller
             }
         }
 
-        $letter = Letter::find($id);
-        if (Gate::allows('admin')) {
-            
-            $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
-            $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
-            $orThese = [['designation', '=', 'District Secretary'], ['workplace', '!=', Auth::user()->workplace]];
-            
-            $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
+        if($letter = Letter::find($id)){
 
-            if($letter->user->workplace == Auth::user()->workplace){
-                //Return letters show page
-                //dd($lang, $id, $letter);
+            if (Gate::allows('admin')) {
+                
+                $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
+                $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+                $orThese = [['designation', '=', 'District Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+                
+                $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
+
+                if($letter->user->workplace == Auth::user()->workplace){
+                    //Return letters show page
+                    //dd($lang, $id, $letter);
+                    return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                }else{
+                    $notification = array(
+                        'message' => __('You do not have permission to view this letter'),
+                        'alert-type' => 'warning'
+                    );
+                    return redirect(app()->getLocale(). '/letters')->with($notification);
+                }
+            
+            }
+            elseif(Gate::allows('sys_admin')){
+
+                    
+                    
+                $users = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
                 return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-            }else{
+            }
+            else{
                 $notification = array(
-                    'message' => __('You do not have permission to view this letter'),
+                    'message' => __('You do not have permission to view letters'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale(). '/letters')->with($notification);
             }
-        
-        }
-        elseif(Gate::allows('sys_admin')){
-
-                
-                
-            $users = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
-            return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-        }
-        else{
+        }else{
             $notification = array(
-                'message' => __('You do not have permission to view letters'),
+                'message' => __('Requested letter is not avaialble'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale(). '/letters')->with($notification);
@@ -250,17 +258,25 @@ class LettersController extends Controller
 
         //Validation for edit fields
         if (Gate::allows('sys_admin') || Gate::allows('admin')) {
-        $letter = Letter::find($id);
-            if($letter->user->id == Auth::user()->id){
-                return view('letters.edit')->with('letter', $letter)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+
+            if($letter = Letter::find($id)){
+                if($letter->user->id == Auth::user()->id){
+                    return view('letters.edit')->with('letter', $letter)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                }else{
+                    $notification = array(
+                        'message' => __('You do not have permission to edit this letter'),
+                        'alert-type' => 'warning'
+                    );
+                    return redirect(app()->getLocale() . '/letters')->with($notification);
+                }
+            
             }else{
                 $notification = array(
-                    'message' => __('You do not have permission to edit this letter'),
+                    'message' => __('Requested letter is not avaialble'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale() . '/letters')->with($notification);
             }
-        
         }else{
             $notification = array(
                 'message' => __('You do not have permission to edit letters'),
@@ -268,6 +284,7 @@ class LettersController extends Controller
             );
             return redirect(app()->getLocale() . '/letters')->with($notification);
         }
+        
     }
 
     /**

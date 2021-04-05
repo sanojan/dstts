@@ -1,8 +1,7 @@
 @extends('inc.layout')
 
 @section('sidebar')
- 
-               
+         
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
@@ -13,15 +12,15 @@
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
-                    <li >
-                        <a href="#" class="menu-toggle">
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li >
+                                    <li>
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
                                     <li >
@@ -31,8 +30,8 @@
                     </li>
                     @endif
                     
-                    <li class="">
-                        <a href="#" class="menu-toggle">
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>{{__('Tasks')}}</span>
                             @if($new_tasks > 0)
@@ -41,18 +40,18 @@
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li class="">
+                                    <li>
                                         <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
                                         <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
                                     </li>
                                     @endif
                         </ul>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
-                    <li class="active">
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    <li class="">
                         <a href="{{route('complaints.index', app()->getLocale())}}">
                             <i class="material-icons">warning</i>
                             <span>{{__('Complaints')}}</span>
@@ -62,42 +61,46 @@
                         </a>
                     </li>
                     @endif
-                    @if(Gate::allows('sys_admin'))
-                    <li >
+                    
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
+                        @if(Gate::allows('sys_admin'))
                         <ul class="ml-menu">
-                            
+                                    
                                     <li>
                                         <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
                                     </li>
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
                                     </li>
                         </ul>
+                        @endif
                     </li>
+                   
+                    @if(Gate::allows('sys_admin'))
                     <li>
-                        <a href="#" class="menu-toggle">
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
                             <span>{{__('System Data')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="#">{{__('Designation')}}</a>
+                                        <a href="pages/widgets/cards/basic.html">Designation</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Work Place')}}</a>
+                                        <a href="pages/widgets/cards/colored.html">Work Place</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Services')}}</a>
+                                        <a href="pages/widgets/cards/colored.html">Services</a>
                                     </li>
                         </ul>
                     </li>
                     @endif
-                    <li >
+                    <li>
                         <a href="#">
                             <i class="material-icons">help</i>
                             <span>{{__('Help')}}</span>
