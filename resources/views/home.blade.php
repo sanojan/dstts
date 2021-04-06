@@ -6,7 +6,7 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li >
+                    <li class="active">
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
                             <span>{{__('Dashboard')}}</span>
@@ -61,24 +61,23 @@
                         </a>
                     </li>
                     @endif
-                    
-                    <li class="active">
+                    @if(Gate::allows('sys_admin'))
+                    <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
-                        @if(Gate::allows('sys_admin'))
                         <ul class="ml-menu">
                                     
-                                    <li>
-                                        <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
-                                    </li>
-                                    <li class="active">
-                                        <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
-                                    </li>
+                            <li>
+                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                            </li>
+                            <li class="">
+                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                            </li>
                         </ul>
-                        @endif
                     </li>
+                    @endif
                    
                     @if(Gate::allows('sys_admin'))
                     <li>
@@ -89,13 +88,13 @@
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="pages/widgets/cards/basic.html">Designation</a>
+                                        <a href="#">Designation</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Work Place</a>
+                                        <a href="#">Work Place</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Services</a>
+                                        <a href="#">Services</a>
                                     </li>
                         </ul>
                     </li>

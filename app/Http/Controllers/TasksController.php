@@ -184,7 +184,7 @@ class TasksController extends Controller
                 'message' => __('Task has been Forwarded successfully!'), 
                 'alert-type' => 'success'
             );
-            return redirect('/tasks/'.$request->task_id)->with($notification);
+            return redirect(app()->getLocale() . '/tasks/' . $request->task_id)->with($notification);
         }
 
         if($request->task_from_complaint_button == "task_from_complaint"){
