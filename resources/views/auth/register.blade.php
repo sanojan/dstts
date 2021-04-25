@@ -178,7 +178,11 @@
                                     <div class="form-line">
                                         <select class="form-control workplace_dropdown" style="width:100%;" id="workplace" name="workplace">
                                         @if(old('workplace'))
-                                        <option value="{{ old('workplace') }}" selected>{{ old('workplace')}}</option>
+
+                                        @php
+                                        $workplace = \App\Workplace::find(old('workplace'));
+                                        @endphp
+                                        <option value="{{ old('workplace') }}" selected>{{ $workplace->name}}</option>
                                         @else
                                         <option value="" selected>Select your workplace</option>
                                         @endif
@@ -427,7 +431,7 @@ $('.service_dropdown').select2({
         $("#workplace").empty();
         $("#workplace").append('<option>{{__('Select Your Work Place')}}</option>');
         $.each(res,function(key,value){
-          $("#workplace").append('<option value="'+value+'">'+value+'</option>');
+          $("#workplace").append('<option value="'+key+'">'+value+'</option>');
         });
       
       }else{

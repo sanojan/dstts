@@ -13,7 +13,7 @@
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li>
+                    <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
@@ -23,13 +23,14 @@
                                     <li>
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
-                                    <li>
+                                    <li class="">
                                         <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
                                     </li>
                         </ul>
                     </li>
                     @endif
-                    <li>
+                    
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">folder</i>
                             <span>{{__('Files')}}</span>
@@ -37,7 +38,7 @@
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
                                     </li>
                                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
@@ -48,9 +49,7 @@
                         </ul>
                     </li>
 
-
-                                        
-                    <li class="active">
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>{{__('Tasks')}}</span>
@@ -64,7 +63,7 @@
                                         <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                     </li>
                                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                                    <li class="active">
+                                    <li >
                                         <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
                                     </li>
                                     @endif
@@ -146,120 +145,99 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>{{__('CREATE TASK')}}</h2>
+                <h2>{{__('CREATE FILE')}}</h2>
             </div>
             <div class="card">
                 
                 <div class="body">
-                    <form action="{{ route('tasks.store', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="tasks_add_form">
-                    @csrf
+                    <form action="{{ route('files.update', [app()->getLocale(), $file->id]) }}" method="POST" enctype="multipart/form-data" id="file_edit_form">
+                    {{ csrf_field() }}
+                    {{ method_field('PATCH') }} 
+                    
                         <div class="row clearfix">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                    <select class="form-control letter_no_dropdown" style="width:100%;" id="letter_no" name="letter_no" value="{{old('letter_no')}}">
-                                    <option value="" ></option>
-                                    @foreach($letters as $letter)
-                                    <option value="{{$letter->id}}">{{$letter->letter_no}} - <i>{{$letter->letter_title}}</i></option>
-                                    @endforeach
+                                        <input type="text" id="file_no" class="form-control" name="file_no" value="{{ $file->file_no }}">
+                                        <label class="form-label">{{__('File No.')}}</label>
+                                    </div>
+                                    @error('file_no')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div>
+                            @if(Gate::denies('branch_head'))
+                            <div class="col-md-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                    <select class="form-control file_branch_dropdown" style="width:100%;" id="file_branch" name="file_branch" value="{{ old('file_branch') }}">
+                                    <option value=""></option>
+                                    <option value="Administration" @if(old('file_branch')=='Administration') selected @elseif($file->file_branch=='Administration') selected @endif>{{__('Administration Division')}}</option>
+                                    <option value="Accounts" @if(old('file_branch')=='Accounts') selected @elseif($file->file_branch=='Accounts') selected @endif>{{__('Accounts Division')}}</option>
+                                    <option value="Engineering" @if(old('file_branch')=='Engineering') selected @elseif($file->file_branch=='Engineering') selected @endif>{{__('Engineering Division')}}</option>
+                                    <option value="Field Branch" @if(old('file_branch')=='Field Branch') selected @elseif($file->file_branch=='Field Branch') selected @endif>{{__('Field Division')}}</option>
+                                    <option value="Internal Audit" @if(old('file_branch')=='Internal Audit') selected @elseif($file->file_branch=='Internal Audit') selected @endif>{{__('Internal Audit Division')}}</option>
+                                    <option value="Land" @if(old('file_branch')=='Land') selected @elseif($file->file_branch=='Land') selected @endif>{{__('Land Division')}}</option>
+                                    <option value="NIC Branch" @if(old('file_branch')=='NIC Branch') selected @elseif($file->file_branch=='NIC Branch') selected @endif>{{__('NIC Division')}}</option>
+                                    <option value="Planning" @if(old('file_branch')=='Planning') selected @elseif($file->file_branch=='Planning') selected @endif>{{__('Planning Division')}}</option> 
+                                    <option value="Registrar" @if(old('file_branch')=='Registrar') selected @elseif($file->file_branch=='Registrar') selected @endif>{{__('Registrar Division')}}</option>
+                                    <option value="Samurdhy" @if(old('file_branch')=='Samurdhy') selected @elseif($file->file_branch=='Samurdhy') selected @endif>{{__('Samurdhy Division')}}</option>
+                                    <option value="Social Service" @if(old('file_branch')=='Social Service') selected  @elseif($file->file_branch=='Social Service') selected @endif>{{__('Social Service Division')}}</option>
+                                    
                                     </select>
                                     </div>
-                                    
-                                    @error('letter_no')
+                                    @error('file_branch')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </label>
                                     @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to[]">
-                                        <option value="" ></option>
-
-                                        @foreach($users as $user)
-                                        @php
-                                        $user_workplace = \App\Workplace::find($user->workplace_id);
-                                        @endphp
-                                        <option value="{{$user->id}}">{{$user->name}}-<i>{{$user->designation}}</i>({{$user_workplace->name}})</option>
-                                        @endforeach
-                                        </select>
-                                    </div>
-                                    @error('assigned_to')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                    
                                 </div>
                             </div> 
-                              
+                            @endif   
                         </div>
+                        
                         <div class="row clearfix">
-                        <div class="col-md-12">
+                            <div class="col-md-12">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <textarea rows="3" class="form-control no-resize" name="remarks">{{ old('remarks') }}</textarea>
-                                        <label class="form-label">{{__('Remarks')}}</label>
+                                    <input type="text" id="file_name" class="form-control" name="file_name" value="{{ $file->file_name }}">
+                                    <label class="form-label">{{__('File name')}}</label> 
                                     </div>
-                                    @error('remarks')
+                                    @error('file_name')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </label>
                                     @enderror
                                 </div>
                             </div>
-                        
                         </div>
-
+                        
                         <div class="row clearfix">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                    <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="deadline" name="deadline" value="{{ old('deadline') }}">
-                                    <label class="form-label">{{__('Deadline')}}</label> 
+                                        <textarea rows="2" class="form-control no-resize" name="file_desc">{{ $file->file_desc }}</textarea>
+                                        <label class="form-label">{{__('File Description')}}</label>
                                     </div>
-                                    @error('deadline')
+                                    @error('file_desc')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </label>
                                     @enderror
-                                </div>    
+                                </div>
                             </div>
                         </div>
-                        <div class="row clearfix">
-                            <div class="col-md-6">
-                                <div class="row clearfix">
-                                <div class="col-md-6">
-                                        <div class="form-group form-float">
-                                            
-                                            <input placeholder="" class="form-control" type="checkbox"  id="deadlinetf"   name="deadlinetf" value="{{ old('deadlinetf') }}" onchange="if(this.checked==true){document.getElementById('deadline').value='';document.getElementById('deadline').disabled=true;}else{document.getElementById('deadline').disabled=false;}">
-                                            <label class="form-label" for="deadlinetf">{{__('No Deadline Task')}}</label> 
-                                            </div>
-                                            @error('deadlinetf')
-                                                    <label class="error" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </label>
-                                            @enderror
-                                           
-                                    </div>
-                                </div>  
-                             
-                            </div>
-                        </div>
-                            
-                        
 
                         
-                        
                         <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
-                        <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px" name="task_from_letter_button" value="task_from_letter">
+                        <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px">
                             <i class="material-icons">note_add</i>
-                            <span>{{__('CREATE')}}</span>
+                            <span>{{__('SAVE CHANGES')}}</span>
                         </button>
                         
-                        <a class="btn bg-grey waves-effect" style="margin-right:10px" href="{{route('letters.index', app()->getLocale())}}">
+                        <a class="btn bg-grey waves-effect" style="margin-right:10px" href="{{route('files.index', app()->getLocale())}}">
                             <i class="material-icons">keyboard_backspace</i>
                             <span>{{__('BACK')}}</span>
                         </a>
@@ -269,7 +247,8 @@
                 </div>
             </div>
         </div>
-
 </section>
+
+
 @endsection
 

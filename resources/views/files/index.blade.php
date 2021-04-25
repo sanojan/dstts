@@ -6,21 +6,21 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li >
+                    <li class="">
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li>
+                    <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li>
+                                    <li class="">
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
                                     <li >
@@ -30,7 +30,7 @@
                     </li>
                     @endif
                     
-                    <li>
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">folder</i>
                             <span>{{__('Files')}}</span>
@@ -38,7 +38,7 @@
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li>
+                                    <li class="active">
                                         <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
                                     </li>
                                     @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
@@ -48,7 +48,7 @@
                                     @endif
                         </ul>
                     </li>
-                    
+
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -80,24 +80,23 @@
                         </a>
                     </li>
                     @endif
-                    
-                    <li class="active">
+                    @if(Gate::allows('sys_admin'))
+                    <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
-                        @if(Gate::allows('sys_admin'))
                         <ul class="ml-menu">
                                     
-                                    <li>
-                                        <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
-                                    </li>
-                                    <li class="active">
-                                        <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
-                                    </li>
+                            <li>
+                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                            </li>
+                            <li class="">
+                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                            </li>
                         </ul>
-                        @endif
                     </li>
+                    @endif
                    
                     @if(Gate::allows('sys_admin'))
                     <li>
@@ -108,13 +107,13 @@
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="pages/widgets/cards/basic.html">Designation</a>
+                                        <a href="#">Designation</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Work Place</a>
+                                        <a href="#">Work Place</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Services</a>
+                                        <a href="#">Services</a>
                                     </li>
                         </ul>
                     </li>
@@ -146,7 +145,7 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>VIEW USERS</h2>
+                <h2>{{__('VIEW FILES')}}</h2>
             </div>
             @if(session()->has('message'))
                 <div class="alert alert-{{session()->get('alert-type')}}">
@@ -159,53 +158,39 @@
             <div class="card">
                 <div class="body">
                     
-                    <table id="no_export_table_id" class="display compact">
+                    <table id="no_export_table_id" class="display ">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>NIC</th>
-                                <th>Designation & Workplace</th>
-                                <th>User Type</th>
-                                <th>Created On</th>
-                                <th>Account Status</th>
-                                <th>Action</th>
+                                <th>{{__('File No.')}}</th>
+                                <th>{{__('File Name')}}</th>
+                                <th>{{__('File Location')}}</th>
+                                <th>{{__('File Branch')}}</th>
+                                <th>{{__('File Owner')}}</th>
+                                <th>{{__('Action')}}</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if(count($users) > 0)
-                                @foreach($users as $user)
+                            @if(count($files) > 0)
+                            <tbody>
+                                @foreach($files as $file)
+                                @php
+                                $current_file = App\File::find($file->id)
+                                @endphp
                                 <tr>
-                                    <td>{{$user->name}}</td>
-                                    <td>{{$user->nic}}</td>
-                                    <td>{{$user->designation}} - {{$user->workplace->name}}</td>
-                                    @if($user->user_type == "sys_admin")
-                                        <td>System Admin</td>
-                                    @elseif($user->user_type == "admin")
-                                        <td>Admin</td>
-                                    @elseif($user->user_type == "div_sec")
-                                        <td>Divisional Secretary</td>
-                                    @elseif($user->user_type == "branch_head")
-                                        <td>Branch Head</td>
-                                    @elseif($user->user_type == "user")
-                                        <td>Standard User</td>
-                                    @endif
-                                    <td>{{$user->created_at}}</td>
-                                    @if($user->account_status)
-                                    <td class="font-bold col-green">ENABLED</td>
-                                    @else
-                                    <td class="font-bold col-red">DISABLED</td>
-                                    @endif
-                                    <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('users.show', [app()->getLocale(), $user->id]) }}">
+                                    <td>{{$current_file->file_no}}</td>
+                                    <td>{{$current_file->file_name}}</td>
+                                    <td>{{$current_file->workplace->name}}</td>
+                                    <td>{{$current_file->file_branch}}</td>
+                                    <td>{{$current_file->user->name}} - {{$current_file->user->designation}}</td>
+                                    <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('files.show', [app()->getLocale(), $current_file->id]) }}">
                                             <i class="material-icons">pageview</i>
-                                                <span>VIEW</span>
+                                                <span>{{__('VIEW')}}</span>
                                         </a>
                                     </td>
                                 </tr>
                                 @endforeach
-                            @else
-                                <tr>No records found</tr>
+                            </tbody>
                             @endif
-                        </tbody>
+                        
                     </table>
                 </div>
             </div>

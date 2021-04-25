@@ -35,7 +35,7 @@ class LettersController extends Controller
 
             $letters = DB::table('users')->join('letters', function ($join) {
                 $join->on('users.id', '=', 'letters.user_id')
-                 ->where('users.workplace', '=', Auth::user()->workplace);
+                 ->where('users.workplace_id', '=', Auth::user()->workplace->id);
                 })->get();
 
             //$letters = Auth::user()->letters;
@@ -105,7 +105,9 @@ class LettersController extends Controller
         //Create letters
         $this->validate($request, [
             'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
+            'letter_type' => 'required',
             'letter_date' => 'before:tomorrow',
+            'letter_receive_date' => 'before:tomorrow',
             'letter_sender' => 'required|regex:/^[a-z .\'\/ -, 0-9]+$/i|max:150',
             'letter_title' => 'required|max:150',
             'letter_content' => 'nullable|max:250',
@@ -137,6 +139,9 @@ class LettersController extends Controller
         $letter = new Letter;
         $letter->letter_no = $request->letter_no;
         $letter->letter_date = $request->letter_date;
+        $letter->letter_type = $request->letter_type;
+        $letter->letter_received_on = $request->letter_receive_date;
+        $letter->letter_reg_no = $request->reg_no;
         $letter->letter_from = $request->letter_sender;
         $letter->letter_title = $request->letter_title;
         $letter->letter_content = $request->letter_content;
@@ -192,12 +197,12 @@ class LettersController extends Controller
 
             if (Gate::allows('admin')) {
                 
-                $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
-                $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
-                $orThese = [['designation', '=', 'District Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+                $matchThese = [['workplace_id', '=', Auth::user()->workplace->id], ['id', '!=', Auth::user()->id]];
+                $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace_id', '!=', Auth::user()->workplace->id]];
+                $orThese = [['designation', '=', 'District Secretary'], ['workplace_id', '!=', Auth::user()->workplace->id]];
                 
                 $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
-
+                
                 if($letter->user->workplace == Auth::user()->workplace){
                     //Return letters show page
                     //dd($lang, $id, $letter);
@@ -394,14 +399,14 @@ class LettersController extends Controller
         );
 
         return redirect(app()->getLocale() . '/letters')->with($notification);
-    }
-    else{
+        }
+        else{
         $notification = array(
             'message' => __('You do not have permission to delete this letter'),
             'alert-type' => 'warning'
         );
 
         return redirect(app()->getLocale() . '/letters/' . $id)->with($notification);
-    }
+        }
     }
 }

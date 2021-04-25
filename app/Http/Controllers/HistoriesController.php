@@ -70,11 +70,16 @@ class HistoriesController extends Controller
         $history->task_id = $request->task_id;
 
         if($request->subbutton == "Accept"){
-            $status= "Accepted";
+            $status = "Accepted";
             
             $history->status = $status;
             $history->current = true;
             $history->save();
+
+            $letter = Letter::find($task->letter->id);
+
+            $letter->file_id = $request->file_name;
+            $letter->save();
             
             $notification = array(
                 'message' => 'Task has been Accepted successfully!', 

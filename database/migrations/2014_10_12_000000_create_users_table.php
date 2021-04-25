@@ -15,6 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('workplace_id')->nullable();
             $table->string('name',100);
             $table->string('gender',6)->nullable();
             $table->date('dob')->nullable();
@@ -24,13 +25,14 @@ class CreateUsersTable extends Migration
             $table->string('designation',50);
             $table->string('service', 150);
             $table->char('class');
-            $table->string('workplace',100);
             $table->string('branch',15)->nullable();
             $table->string('subject',30)->nullable();
             $table->string('user_type',15)->default('user');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('workplace_id')->references('id')->on('workplaces')->onDelete('set null');
         });
     }
 

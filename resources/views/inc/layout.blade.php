@@ -452,11 +452,12 @@ if(locale == "en"){
         $('#export_table_id').DataTable({
             retrieve: true,
             dom: 'Blfrtip',
+            autoWidth: false,
             buttons: [
                 {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: ':visible'
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7]
                 },
                 title: 'Daily summary of Letters-' + date,
                 messageTop: 'Letters details report generated from DS-TTS',
@@ -464,6 +465,16 @@ if(locale == "en"){
                 },
                 'colvis'
             ],
+            "columnDefs": [
+            {
+                "targets": [ 3 ],
+                "visible": false,
+            },
+            {
+                "targets": [ 6 ],
+                "visible": false
+            }
+        ]
             
     } );
 
@@ -491,16 +502,38 @@ $('#no_export_table_id').DataTable({
   placeholder: '{{__('Select the Letter NO')}}',
   width: 'resolve'
 });
+
 $('.assign_to_dropdown').select2({
   placeholder: '{{__('Select Officer to Assign')}}',
   width: 'resolve',
   multiple:true
+});
+
+$('.file_owner_dropdown').select2({
+  placeholder: '{{__('Select the File Owner')}}',
+  width: 'resolve'
+});
+
+$('.file_branch_dropdown').select2({
+  placeholder: '{{__('Select the File Branch')}}',
+  width: 'resolve'
 });
 </script>
 <script type="text/javascript">
   $('.task-number').countTo();
 </script>
 
+<script type="text/javascript">
+function change_regno_textbox()
+{
+    if (document.getElementById("letter_type").value === "reg_post") {
+        document.getElementById("reg_no").disabled = '';
+    } else {
+        document.getElementById("reg_no").value="";
+        document.getElementById("reg_no").disabled = 'true';
+    }
+}
+</script>
 
 </body>
 

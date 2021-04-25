@@ -32,6 +32,24 @@
                     
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{__('Files')}}</span>
+                            
+                        </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                    </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
+                                    <li >
+                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                    </li>
+                                    @endif
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>{{__('Tasks')}}</span>
                             @if($new_tasks > 0)
@@ -139,7 +157,7 @@
             <div class="card">
                 <div class="body">
                     
-                    <table id="export_table_id" class="display ">
+                    <table id="no_export_table_id" class="display ">
                         <thead>
                             <tr>
                                 <th>{{__('Letter No.')}}</th>

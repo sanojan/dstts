@@ -73,15 +73,16 @@ class TasksController extends Controller
         if (Gate::allows('admin')) {
             $letters = DB::table('users')->join('letters', function ($join) {
                 $join->on('users.id', '=', 'letters.user_id')
-                 ->where('users.workplace', '=', Auth::user()->workplace);
+                 ->where('users.workplace_id', '=', Auth::user()->workplace->id);
                 })->get();
 
-        $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
-        $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
-        $orThese = [['designation', '=', 'District Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+        $matchThese = [['workplace_id', '=', Auth::user()->workplace->id], ['id', '!=', Auth::user()->id]];
+        $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace_id', '!=', Auth::user()->workplace->id]];
+        $orThese = [['designation', '=', 'District Secretary'], ['workplace_id', '!=', Auth::user()->workplace->id]];
             
             
         $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
+
         return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         }
         elseif(Gate::allows('sys_admin')){
@@ -261,6 +262,8 @@ class TasksController extends Controller
             }
         }
 
+        
+
         if($task = Task::find($id)){
             $letters = $task->letter;
 
@@ -288,9 +291,9 @@ class TasksController extends Controller
 
             } elseif(Gate::allows('admin')){
             
-                $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
-                $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace', '!=', Auth::user()->workplace]];
-                $orThese = [['designation', '=', 'District Secretary'], ['workplace', '!=', Auth::user()->workplace]];
+                $matchThese = [['workplace_id', '=', Auth::user()->workplace->id], ['id', '!=', Auth::user()->id]];
+                $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace_id', '!=', Auth::user()->workplace->id]];
+                $orThese = [['designation', '=', 'District Secretary'], ['workplace_id', '!=', Auth::user()->workplace->id]];
 
                 
                 $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
@@ -301,7 +304,7 @@ class TasksController extends Controller
             
             } elseif(Gate::allows('branch_head')){
             
-                $matchThese = [['workplace', '=', Auth::user()->workplace], ['branch', '=', Auth::user()->branch], ['id', '!=', Auth::user()->id]];
+                $matchThese = [['workplace_id', '=', Auth::user()->workplace->id], ['branch', '=', Auth::user()->branch], ['id', '!=', Auth::user()->id]];
                 
                 $users = DB::table('users')->where($matchThese)->whereNotIn('id', array(Auth::user()->id))->get();
                 

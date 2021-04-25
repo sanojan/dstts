@@ -141,7 +141,7 @@ class UsersController extends Controller
             $user->branch = $request->branch;
             $user->service = $request->service;
             $user->class = $request->class;
-            $user->workplace = $request->workplace; 
+            $user->workplace_id = $request->workplace; 
             $user->user_type = $request->user_type;
             $user->account_status = $request->account_status;
             $user->password = Hash::make($request->password);            
@@ -304,7 +304,7 @@ class UsersController extends Controller
                 $user->branch = $request->branch;
                 $user->service = $request->service;
                 $user->class = $request->class;
-                $user->workplace = $request->workplace;
+                $user->workplace_id = $request->workplace;
                 $user->save();
                 //echo $id;
         

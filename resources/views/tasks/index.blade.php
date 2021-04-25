@@ -30,6 +30,24 @@
                     </li>
                     @endif
                     
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{__('Files')}}</span>
+                            
+                        </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                    </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
+                                    <li >
+                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                    </li>
+                                    @endif
+                        </ul>
+                    </li>
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -139,14 +157,16 @@
             <div class="card">
                 <div class="body">
                     
-                    <table id="no_export_table_id" class="display">
+                    <table id="export_table_id" class="display">
                         <thead>
                             <tr>
                                 <th>{{__('Letter No.')}}/{{__('Complaint Ref.No')}}</th>
                                 <th>{{__('Letter Title')}}/{{__('Complainant Name')}}</th>
-                                <th>{{__('Task Assigned By')}}</th>
+                                <th>{{__('Letter Type')}}</th>
+                                <th>{{__('Receieved Date')}}</th>
                                 <th>{{__('Task Assigned To')}}</th>
                                 <th>{{__('Task Assigned On')}}</th>
+                                <th>{{__('Curent File No.')}}</th>
                                 <th>{{__('Current Status')}}</th>
                                 <th>{{__('Action')}}</th>
                             </tr>
@@ -158,17 +178,47 @@
                                 @if($task->letter)
                                     <td>{{$task->letter->letter_no}}</td>
                                     <td>{{$task->letter->letter_title}}</td>
+
+                                    @if ($task->letter->letter_type == 'reg_post')
+                                    <td>{{__('Registered Post')}} ({{$task->letter->letter_reg_no}})</td>
+                                    @elseif ($task->letter->letter_type == 'norm_post')
+                                    <td>{{__('Normal Post')}}</td>
+                                    @elseif ($task->letter->letter_type == 'fax')
+                                    <td>{{__('Fax')}}</td>
+                                    @elseif ($task->letter->letter_type == 'email')
+                                    <td>{{__('Email')}}</td>
+                                    @elseif ($task->letter->letter_type == 'from_ga')
+                                    <td>{{__('From GA')}}</td>
+                                    @elseif ($task->letter->letter_type == 'from_ds')
+                                    <td>{{__('From DS')}}</td>
+                                    @endif
+                                    
+
+
+
+                                    <td>{{$task->letter->letter_received_on}}</td>
                                 @else
                                     <td>{{$task->complaint->ref_no}}</td>
                                     <td>{{$task->complaint->name}}</td>
+                                    <td>{{__('Not Applicable')}}</td>
+                                    <td>{{$task->complaint->created_at}}</td>
                                 @endif
                                     @php 
                                         $task_assigned_by = App\User::find($task->assigned_by)
                                     @endphp
-                                    <td>{{$task_assigned_by->name}}</td>
-                                    <td>{{$task->user->name}}({{$task->user->designation}})-{{$task->user->workplace}}</td>    
+                                    <td>{{$task->user->name}}({{$task->user->designation}})-{{$task->user->workplace->name}} ({{$task->user->branch}} Branch)</td>    
                                     
                                     <td>{{$task->created_at}}</td>
+                                    @if($task->letter)
+                                        @if($task->letter->file)
+                                        <td>{{$task->letter->file->file_no}}</td>
+                                        @else
+                                        <td>{{__('Not in File')}}</td>
+                                        @endif
+                                    @else
+                                    <td>{{__('Not Applicable')}}</td>
+                                    @endif
+                                    
                                     @if(count($task->histories) > 0)
                                             @foreach($task->histories as $history)
                                                 @if($history->current==true)

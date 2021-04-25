@@ -32,6 +32,24 @@
                     
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{__('Files')}}</span>
+                            
+                        </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                    </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
+                                    <li >
+                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                    </li>
+                                    @endif
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>{{__('Tasks')}}</span>
                             @if($new_tasks > 0)
@@ -242,7 +260,10 @@
                                         <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to[]">
                                         <option value="" ></option>
                                         @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}-<i>{{$user->designation}}</i> ({{$user->workplace}})</option>
+                                        @php
+                                        $user_workplace = \App\Workplace::find($user->workplace_id);
+                                        @endphp
+                                        <option value="{{$user->id}}">{{$user->name}}-<i>{{$user->designation}}</i> ({{$user_workplace->name}})</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -336,7 +357,7 @@
                                             <div class="panel-heading" role="tab" id="headingOne_{{$task->id}}">
                                                 <h4 class="panel-title">
                                                     <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_{{$task->id}}" aria-expanded="true" aria-controls="collapseOne_{{$task->id}}" class="">
-                                                        New Task Assigned To {{$task->user->name}} - {{$task->user->designation}} ({{$task->user->workplace}}) On {{$task->created_at}} 
+                                                        New Task Assigned To {{$task->user->name}} - {{$task->user->designation}} ({{$task->user->workplace->name}}) On {{$task->created_at}} 
                                                     </a>
                                                 </h4>
                                             </div>

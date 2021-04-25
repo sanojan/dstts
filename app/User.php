@@ -37,6 +37,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function workplace(){
+        return $this->belongsTo('App\Workplace');
+     }
     
     public function tasks(){
         return $this->hasMany('App\Task');
@@ -48,5 +52,9 @@ class User extends Authenticatable
 
     public function complaints(){
         return $this->hasMany('App\Complaint');
+    }
+
+    public function files(){
+        return $this->hasMany('App\File');
     }
 }

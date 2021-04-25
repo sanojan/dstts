@@ -29,6 +29,25 @@
                         </ul>
                     </li>
                     @endif
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{__('Files')}}</span>
+                            
+                        </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                    </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
+                                    <li >
+                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                    </li>
+                                    @endif
+                        </ul>
+                    </li>
                     
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -248,7 +267,7 @@
                                         @if(old('workplace'))
                                         <option value="{{ old('workplace') }}" selected>{{ old('workplace')}}</option>
                                         @else
-                                        <option value="{{$user->workplace}}" >{{$user->workplace}}</option>
+                                        <option value="{{$user->workplace->id}}" >{{$user->workplace->name}}</option>
                                         @endif
                                         </select>
                                     <label class="form-label">{{__('Select the workplace')}}</label> 

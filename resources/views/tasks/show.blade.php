@@ -29,6 +29,25 @@
                         </ul>
                     </li>
                     @endif
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{__('Files')}}</span>
+                            
+                        </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                    </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
+                                    <li >
+                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                    </li>
+                                    @endif
+                        </ul>
+                    </li>
                     
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -302,10 +321,10 @@
                                                         <span>{{__('BACK')}}</span>
                                                     </a>
                                                     @if($task->user->id == Auth::user()->id)
-                                                        <button type="submit" style="margin-right:10px" name="subbutton" value="Accept" class="btn btn-success btn-xs waves-effect" >
-                                                            <i class="material-icons">check</i>
-                                                            <span>{{__('ACCEPT TASK')}}</span>
-                                                        </button>
+                                                            <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptTask" aria-expanded="false" aria-controls="acceptTask">
+                                                                <i class="material-icons">done</i>
+                                                                <span>{{__('ACCEPT TASK')}}</span>
+                                                            </button>
                                                             @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head')) 
                                                             <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
                                                                 <i class="material-icons">fast_forward</i>
@@ -357,10 +376,10 @@
                                         <span>{{__('BACK')}}</span>
                                     </a>
                                     @if($task->user->id == Auth::user()->id)
-                                        <button type="submit" style="margin-right:10px" name="subbutton" value="Accept" class="btn btn-success btn-xs waves-effect" >
-                                            <i class="material-icons">check</i>
-                                            <span>{{__('ACCEPT TASK')}}</span>
-                                        </button>
+                                            <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptTask" aria-expanded="false" aria-controls="acceptTask">
+                                                <i class="material-icons">done</i>
+                                                <span>{{__('ACCEPT TASK')}}</span>
+                                            </button>
                                             @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head')) 
                                             <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
                                                 <i class="material-icons">fast_forward</i>
@@ -376,6 +395,32 @@
                                 
                             </div>
                             <br>
+                                <div class="collapse" id="acceptTask" aria-expanded="false" style="height: 0px;">
+                                        <div class="well" style="background:#03A9F4;"><table class="table">
+                                            <tr>
+                                            <td style="color:white;">{{__('Select File to place Letter')}}:</td>
+                                                <td>
+                                                    <select class="form-control" style="width:100%;" id="file_name" name="file_name">
+                                                        <option value="" @if(old('file_name')=="") selected disabled @endif>{{__('Select File No.')}}</option>
+                                                        
+                                                       @foreach($task->user->files as $files)
+                                                        <option value="{{$files->id}}" @if(old('file_name')=="{{$files->id}}") selected @endif>{{$files->file_no}} - {{$files->file_name}}</option>
+                                                       @endforeach
+                                                    </select> 
+                                                </td>
+                                                    
+                                                <td>
+                                            <button type="submit" style="margin-right:10px" name="subbutton" value="Accept" class="btn btn-danger btn-xs waves-effect" >
+                                            <i class="material-icons">check</i>
+                                            <span>{{__('SUBMIT')}}</span>
+                                            </button>
+                                            </td>
+                                            </tr>
+                                        
+                                            </table>
+                                        </div>
+                                </div>
+
                                 <div class="collapse" id="rejectTask" aria-expanded="false" style="height: 0px;">
                                     <div class="well" style="background:#a35d6a;"><table class="table">
                                         <tr>
@@ -471,7 +516,10 @@
                                                                 <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to" value="{{ old('assigned_to') }}">
                                                                 <option value="" ></option>
                                                                 @foreach($users as $user)
-                                                                <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i>({{$user->workplace}})</option>
+                                                                @php
+                                                                $user_workplace = \App\Workplace::find($user->workplace_id);
+                                                                @endphp
+                                                                <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i>({{$user_workplace->name}})</option>
                                                                 @endforeach
                                                                 </select>
                                                             </div>

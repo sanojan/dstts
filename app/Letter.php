@@ -27,4 +27,8 @@ class Letter extends Model
     public function complaint(){
         return $this->belongsTo('App\Complaint');
     }
+
+    public function file(){
+        return $this->belongsTo('App\File');
+    }
 }

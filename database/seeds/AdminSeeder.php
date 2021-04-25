@@ -21,7 +21,7 @@ class AdminSeeder extends Seeder
             'designation' => 'ICT Officer',
             'service' => 'SLICTS',
             'class' => '2',
-            'workplace' => 'Ampara-District Secretariat',
+            'workplace_id' => null,
             'user_type' => 'sys_admin',
             'password' => Hash::make('11111111'),
             'account_status' => true

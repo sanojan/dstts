@@ -37,6 +37,7 @@ Route::group(['prefix' => '{language}'], function () {
 
     Route::resource('letters', 'LettersController')->middleware('auth');
     Route::resource('tasks', 'TasksController')->middleware('auth');
+    Route::resource('files', 'FileController')->middleware('auth');
     Route::resource('histories', 'HistoriesController')->middleware('auth');
     Route::resource('complaints', 'ComplaintController');
     Route::get('get-workplaces-list','WorkplacetypeController@getWorkplaces');
