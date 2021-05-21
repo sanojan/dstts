@@ -243,8 +243,8 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <select class="form-control workplace_type_dropdown" style="width:100%;" id="workplace_type" onchange="getworkplace();" name="workplace_type" value="{{ old('workplace_type') }}">
-                                        <option value="" @if(old('workplace_type')=='') selected disabled @endif >Select the Work Place Type</option>
+                                    <select class="form-control" style="width:100%;" id="workplace_type" name="workplace_type" value="{{ old('workplace_type') }}">
+                                        <option value="" @if(old('workplace_type')=='') selected disabled @endif>Select Your Work Place Type</option>
                                         @foreach($workplacetypes as $workplacetype)
                                         <option value="{{$workplacetype->id}}" {{ old('workplace_type') == $workplacetype->id ? "selected" :""}}>{{$workplacetype->name}} </option>
                                         @endforeach
@@ -261,9 +261,13 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                    <select class="form-control workplace_dropdown" style="width:100%;" id="workplace" name="workplace">
+                                    <select class="form-control" style="width:100%;" id="workplace" name="workplace">
                                         @if(old('workplace'))
-                                        <option value="{{ old('workplace') }}" selected>{{ old('workplace')}}</option>
+
+                                        @php
+                                        $workplace = \App\Workplace::find(old('workplace'));
+                                        @endphp
+                                        <option value="{{ old('workplace') }}" selected>{{ $workplace->name}}</option>
                                         @else
                                         <option value="" selected></option>
                                         @endif
@@ -469,37 +473,36 @@
                 </div>
             </div>
         </div>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript">
+    $('#workplace_type').change(function(){
+        var workplaceid = $(this).val();  
+        if(workplaceid){
+            $.ajax({
+            type:"GET",
+            url:"{{url('app()->getLocale()/get-workplaces-list')}}?workplace_type_id="+workplaceid,
+            success:function(res){        
+            if(res){
+                $("#workplace").empty();
+                $("#workplace").append('<option>{{__('Select Your Work Place')}}</option>');
+                $.each(res,function(key,value){
+                $("#workplace").append('<option value="'+key+'">'+value+'</option>');
+                });
+            
+            }else{
+                $("#workplace").empty();
+            }
+            }
+            });
+        }else{
+            $("#workplace").empty();
+        }   
+    });
 
+</script>
 </section>
 
-<script>
-    function getworkplace(){
-       
-        workplaceid1 = document.getElementById('workplace_type');
-  var workplaceid =workplaceid1.value;  
-  if(workplaceid){
-    
-    if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
-        } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.timeout = 1800;
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById('workplace').innerHTML=this.responseText;
-            }
-            else{
-                document.getElementById('workplace').innerHTML="<option value='' disabled >{{__('Select Your Work Place')}}</option>";
-            }
-        };
-        xmlhttp.open("GET","{{url('app()->getLocale()/getWorkplaces')}}?wplaceid="+workplaceid,true);
-        xmlhttp.send();   
-  }
-    }
-</script>
+
 
 @endsection
 
