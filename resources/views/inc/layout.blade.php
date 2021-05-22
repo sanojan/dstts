@@ -290,6 +290,9 @@
 <!-- slimscroll -->
 <script src="{{asset('plugins/jquery-slimscroll/jquery.slimscroll.js')}}"></script>
 
+<!-- Notify -->
+<script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+
 <!-- Morris Plugin Js -->
 <script src="{{asset('plugins/raphael/raphael.min.js')}}"></script>
 <script src="{{asset('plugins/morrisjs/morris.js')}}"></script>

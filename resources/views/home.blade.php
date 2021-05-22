@@ -147,14 +147,9 @@
             <div class="block-header">
             <h2>{{__('DASHBOARD')}}</h2>
             </div>
-            @if(session()->has('message'))
-                <div class="alert alert-{{session()->get('alert-type')}}">
-                    {{ session()->get('message') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            @endif
+           
+            
+            
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box bg-red hover-expand-effect">
                     <div class="icon">
@@ -204,5 +199,20 @@
             </div>
             
         </div>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+        <script >
+        @if(session()->has('message'))
+            $.notify({
+                title: '<strong>Heads up!</strong>',
+                message: '{{ session()->get('message') }}'
+            },{
+                type: '{{session()->get('alert-type')}}',
+                delay: 5000,
+                offset: {x: 50, y:100}
+            },
+            );
+        @endif
+        </script>
 </section>
 @endsection
