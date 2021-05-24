@@ -632,9 +632,8 @@ class TravelPassController extends Controller
         
 
         // Because I is for preview for browser.
-        //$pdf->Output("D", $travelpass->travelpass_no . ".pdf");
+        $pdf->Output("D", $travelpass->travelpass_no . ".pdf");
 
-        $pdf->Output();
         
     }
 
