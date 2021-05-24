@@ -354,7 +354,7 @@ class TravelPassController extends Controller
                 //Get extension only
                 $extension = $request->travelpass_scanned_copy->extension();
                 //Filename to store
-                $fileNameToStore = $travelpass->travelpass_no . '.' . $extension;
+                $fileNameToStore = pathinfo($request->travelpass_scanned_copy->getClientOriginalName(), PATHINFO_FILENAME) .  "_certified" . "." . $extension;
                 //UploadFile
                 $path = $request->travelpass_scanned_copy->storeAs('public/scanned_travelpasses', $fileNameToStore);
             }else{
