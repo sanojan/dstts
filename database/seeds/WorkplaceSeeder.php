@@ -92,7 +92,7 @@ class WorkplaceSeeder extends Seeder
             ),
             array(
                 'workplace_type_id' => '2',
-                'name' => 'Kalmunai(Muslim)-Divisional Secretariat'
+                'name' => 'Kalmunai-Divisional Secretariat'
             ),
             array(
                 'workplace_type_id' => '2',

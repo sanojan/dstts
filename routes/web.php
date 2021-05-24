@@ -39,7 +39,12 @@ Route::group(['prefix' => '{language}'], function () {
     Route::resource('tasks', 'TasksController')->middleware('auth');
     Route::resource('files', 'FileController')->middleware('auth');
     Route::resource('histories', 'HistoriesController')->middleware('auth');
+    Route::resource('travelpasses', 'TravelPassController')->middleware('auth');
     Route::resource('complaints', 'ComplaintController');
+
+    Route::get('/travelpasses/{id}/pdf','TravelPassController@newPDF')->name('travelpass.pdf');
+    //Route::get('/travelpasses/downloadPDF/{id}','TravelPassController@downloadPDF');
+    
     Route::get('get-workplaces-list','WorkplacetypeController@getWorkplaces');
     Route::get('getWorkplaces','UsersController@getWorkplaces');
     Route::get('get-gndivision-list','GNDivisionController@getGNDivisions');

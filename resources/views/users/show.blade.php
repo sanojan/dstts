@@ -161,8 +161,8 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th style="width:200px"></th>
-                                        <th style="width:20px"></th>
+                                        <th ></th>
+                                        <th ></th>
                                         
                                     </tr>
                                 </thead>

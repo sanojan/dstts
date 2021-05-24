@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Task;
 use Auth;
+use App\TravelPass;
 
 class HomeController extends Controller
 {
@@ -30,6 +31,7 @@ class HomeController extends Controller
         $new_tasks = 0;
         $new_complaints = 0;
         $ongoing_tasks = 0;
+        $new_travelpasses = 0;
 
         foreach(Auth::user()->tasks as $task){
             if(count($task->histories) > 0){
@@ -54,9 +56,15 @@ class HomeController extends Controller
             }
         }
 
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "SUBMITTED"){
+                $new_travelpasses += 1;
+            }
+        }
+
         
 
-        return view('home')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints);
+        return view('home')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
     }
     
 }

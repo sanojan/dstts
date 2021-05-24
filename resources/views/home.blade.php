@@ -80,6 +80,26 @@
                         </a>
                     </li>
                     @endif
+                    <li class="">
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">transfer_within_a_station</i>
+                            <span>{{__('Travel Pass')}}</span>
+                            @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                            @if($new_travelpasses > 0)
+                            <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
+                            @endif
+                            @endif
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
+                            </li>
+                            
+                            <li >
+                                <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
+                            </li>    
+                        </ul>
+                    </li>
                     @if(Gate::allows('sys_admin'))
                     <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -204,7 +224,6 @@
         <script >
         @if(session()->has('message'))
             $.notify({
-                title: '<strong>Heads up!</strong>',
                 message: '{{ session()->get('message') }}'
             },{
                 type: '{{session()->get('alert-type')}}',

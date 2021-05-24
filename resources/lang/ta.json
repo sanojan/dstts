@@ -162,5 +162,6 @@
     "Please enter your complaint content" : "முறைப்பாட்டின் உள்ளடக்கத்தை உள்ளீடு செய்யவும்",
     "File size should not be more than 5 MB" : "கோப்பு அளவு 5 எம்பிக்கு மேல் இருக்கக்கூடாது",
     "Only PDF, JPEG & JPG formats are allowed" : "PDF, JPEG மற்றும் JPG வடிவங்கள் மட்டுமே அனுமதிக்கப்படுகின்றன",
-    "Permanent Address field is mandatory" : "நிரந்தர முகவரி புலம் கட்டாயமாகும்"
+    "Permanent Address field is mandatory" : "நிரந்தர முகவரி புலம் கட்டாயமாகும்",
+    "Applicant Name" : "விண்ணப்பதாரியின் பெயர்"
 }
