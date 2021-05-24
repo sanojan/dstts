@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\TravelPass;
+use App\Workplace;
 use Illuminate\Http\Request;
 use Auth;
 use Gate;
@@ -97,7 +98,7 @@ class TravelPassController extends Controller
             'travelpass_type' => ['required'],
             'applicant_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
             'applicant_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:150'],
-            'business_reg_no' => ['nullable', 'regex:/^[a-zA-Z .,\'\/ -, 0-9]+$/i', 'max:20'],
+            'business_reg_no' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:20'],
             'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
             'nic_no' => ['required', 'max:12', 'min:10'],
             'vehicle_no' => ['required', 'max:12'],
@@ -106,16 +107,16 @@ class TravelPassController extends Controller
             'travel_date' => ['required', 'after:today'],
             'comeback_date' => ['nullable', 'after:today'],
             'reason_for_not_return' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
-            'passengers_info' => ['required', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
+            'passengers_info' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:350'],
             'travel_from' => ['required', 'max:50'],
             'travel_to' => ['required', 'max:50'],
             'travel_path' => ['required', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:250'],
             'comeback_from' => ['nullable', 'max:50'],
             'comeback_to' => ['nullable', 'max:50'],
             'comeback_path' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:250'],
-            'travel_goods_info' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
-            'comeback_goods_info' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
-            'prev_goods_info' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
+            'travel_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:350'],
+            'comeback_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:350'],
+            'prev_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:350'],
             'business_city' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:50'],
             'application_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
 
@@ -131,7 +132,16 @@ class TravelPassController extends Controller
         //Create an instance of letter model
         $travelpass_application = new TravelPass;
         $travelpass_application->workplace_id = Auth::user()->workplace->id;
-        $travelpass_application->travelpass_no = strtoupper(substr(Auth::user()->workplace->name, 0, 3) . date('ynjHis'));
+        $travelpass_no = strtoupper("AM/" . Auth::user()->workplace->short_code . "/");
+
+        if($request->travelpass_type == "foods_goods"){
+            $travelpass_no .= "01/";
+        }elseif($request->travelpass_type == "private_trans"){
+            $travelpass_no .= "02/";
+        }
+        $travelpass_no .= sprintf("%04d", Auth::user()->workplace->travelpass_count + 1);
+
+        $travelpass_application->travelpass_no = $travelpass_no;
         $travelpass_application->travelpass_type = $request->travelpass_type;
         $travelpass_application->applicant_name = $request->applicant_name;
         $travelpass_application->applicant_address = $request->applicant_address;
@@ -157,9 +167,13 @@ class TravelPassController extends Controller
         $travelpass_application->business_city = $request->business_city;
         $travelpass_application->prev_travel_items = $request->prev_goods_info;
         $travelpass_application->travelpass_status = "SUBMITTED";
-
+        
 
         $travelpass_application->save();
+
+        $workplace_travelpass_count = Workplace::find(Auth::user()->workplace->id);
+        $workplace_travelpass_count->travelpass_count = $workplace_travelpass_count->travelpass_count + 1;
+        $workplace_travelpass_count->save();
 
         //session()->put('success','Letter has been created successfully.');
 
@@ -476,7 +490,7 @@ class TravelPassController extends Controller
         // Below is the path of pdf in which you going to print details.
         //  Right now i had blank pdf
         if($travelpass->travelpass_type == "foods_goods"){
-        $path = public_path("final001.pdf");
+        $path = public_path("form1.pdf");
         // Set path
         $pdf->setSourceFile($path);
 
@@ -487,92 +501,69 @@ class TravelPassController extends Controller
         // Now this details we are going to print in pdf.
         // Horizontal and veritcal setXY
 
-        $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(65, 13); // set the position of the box 
+        $pdf->SetFontSize('14'); // set font size
+        $pdf->SetXY(35, 90); // set the position of the box 
         $pdf->Cell(0, 0, strtoupper(substr($travelpass->workplace->name, 0, strpos($travelpass->workplace->name, '-'))), 0, 0, 'L');
 
-        $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(137, 12); // set the position of the box
+        $pdf->SetFontSize('14'); // set font size
+        $pdf->SetXY(145, 90); // set the position of the box
         $pdf->Cell(0, 0, $travelpass->travelpass_no, 0, 0, 'L');
 
         $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(80, 39); // set the position of the box
+        $pdf->SetXY(100, 116); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->applicant_name), 0, 0, 'L'); // add the text, align to Center of cell
-        
-        $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(55, 51); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->applicant_address), 0, 0, 'L');
 
         $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(80, 60); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->business_reg_no), 0, 0, 'L');
-
-        $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(80, 68); // set the position of the box
-        $pdf->Cell(0, 0, $travelpass->mobile_no, 0, 0, 'L');
-
-        $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(125, 76); // set the position of the box
+        $pdf->SetXY(150, 116); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->nic_no), 0, 0, 'L');
 
+        $pdf->SetFontSize('9'); // set font size
+        $pdf->SetXY(99, 122); // set the position of the box
+        $pdf->Cell(0, 0, strtoupper($travelpass->passengers_details), 0, 0, 'L');
+
+        
+
         $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(70, 85); // set the position of the box
+        $pdf->SetXY(117, 140); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->vehicle_no), 0, 0, 'L');
 
         $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(80, 95); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->travel_date), 0, 0, 'L');
+        $pdf->SetXY(145, 140); // set the position of the box
+        $pdf->Cell(0, 0, strtoupper("(" . $travelpass->vehicle_type . ")"), 0, 0, 'L');
 
         $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(162, 95); // set the position of the box
+        $pdf->SetXY(117, 178); // set the position of the box
+        $pdf->Cell(0, 0, strtoupper($travelpass->travel_date . "     -"), 0, 0, 'L');
+
+        $pdf->SetFontSize('11'); // set font size
+        $pdf->SetXY(150, 178); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
 
-        $pdf->SetFontSize('9'); // set font size
-        $pdf->SetXY(30, 112); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->passengers_details), 0, 0, 'L');
 
-        $pdf->SetFontSize('10'); // set font size
-        $pdf->SetXY(70, 136); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->travel_from), 0, 0, 'L');
+        $pdf->SetFontSize('11'); // set font size
+        $pdf->SetXY(117, 165); // set the position of the box
+        $pdf->Cell(0, 0, strtoupper($travelpass->travel_from . "   -"), 0, 0, 'L');
 
-        $pdf->SetFontSize('10'); // set font size
-        $pdf->SetXY(100, 136); // set the position of the box
+        $pdf->SetFontSize('11'); // set font size
+        $pdf->SetXY(147, 165); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->travel_to), 0, 0, 'L');
 
-        $pdf->SetFontSize('7'); // set font size
-        $pdf->SetXY(124, 136); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->travel_path), 0, 0, 'L');
-
-        $pdf->SetFontSize('10'); // set font size
-        $pdf->SetXY(70, 143); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->comeback_from), 0, 0, 'L');
-
-        $pdf->SetFontSize('10'); // set font size
-        $pdf->SetXY(100, 143); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->comeback_to), 0, 0, 'L');
-
-        $pdf->SetFontSize('7'); // set font size
-        $pdf->SetXY(124, 143); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->comeback_path), 0, 0, 'L');
-
         $pdf->SetFontSize('8'); // set font size
-        $pdf->SetXY(25, 174); // set the position of the box
+        $pdf->SetXY(117, 150); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->travel_items), 0, 0, 'L');
-
-        $pdf->SetFontSize('8'); // set font size
-        $pdf->SetXY(103, 174); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->comeback_items), 0, 0, 'L');
 
         $pdf->SetFontSize('8'); // set font size
         $pdf->SetXY(25, 190); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->prev_travel_items  ), 0, 0, 'L');
 
         $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(148, 200); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->business_city  ), 0, 0, 'L');
+        $pdf->SetXY(122, 233); // set the position of the box
+        $pdf->Cell(0, 0, strtoupper(Auth::user()->mobile_no), 0, 0, 'L');
+
+      
         }
         else if($travelpass->travelpass_type == "private_trans"){
-            $path = public_path("final002.pdf");
+            $path = public_path("form2.pdf");
             // Set path
             $pdf->setSourceFile($path);
 
@@ -580,91 +571,70 @@ class TravelPassController extends Controller
             // use the imported page and place it at point 10,10 with a width of 100 mm
             $pdf->useTemplate($tplId);
 
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(65, 13); // set the position of the box 
+            $pdf->SetFontSize('14'); // set font size
+            $pdf->SetXY(35, 90); // set the position of the box 
             $pdf->Cell(0, 0, strtoupper(substr($travelpass->workplace->name, 0, strpos($travelpass->workplace->name, '-'))), 0, 0, 'L');
     
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(135, 12); // set the position of the box
+            $pdf->SetFontSize('14'); // set font size
+            $pdf->SetXY(145, 90); // set the position of the box
             $pdf->Cell(0, 0, $travelpass->travelpass_no, 0, 0, 'L');
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(80, 50); // set the position of the box
+            $pdf->SetXY(100, 112); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->applicant_name), 0, 0, 'L'); // add the text, align to Center of cell
-            
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(55, 60); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->applicant_address), 0, 0, 'L');
 
+            $pdf->SetFontSize('11'); // set font size
+            $pdf->SetXY(150, 112); // set the position of the box
+            $pdf->Cell(0, 0, strtoupper($travelpass->nic_no), 0, 0, 'L');
+
+            $pdf->SetFontSize('9'); // set font size
+            $pdf->SetXY(100, 120); // set the position of the box
+            $pdf->Cell(0, 0, strtoupper($travelpass->passengers_details), 0, 0, 'L');
+            
             $pdf->SetFontSize('11'); // set font size
             $pdf->SetXY(80, 70); // set the position of the box
             $pdf->Cell(0, 0, $travelpass->mobile_no, 0, 0, 'L');
 
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(125, 80); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->nic_no), 0, 0, 'L');
-
             $pdf->SetFontSize('9'); // set font size
-            $pdf->SetXY(35, 98); // set the position of the box
+            $pdf->SetXY(115, 155); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->reason_for_travel), 0, 0, 'L');
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(80, 110); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->travel_date), 0, 0, 'L');
+            $pdf->SetXY(117, 183); // set the position of the box
+            $pdf->Cell(0, 0, strtoupper($travelpass->travel_date . "     -"), 0, 0, 'L');
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(162, 110); // set the position of the box
+            $pdf->SetXY(150, 183); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
 
-            $pdf->SetFontSize('10'); // set font size
-            $pdf->SetXY(37, 128); // set the position of the box
-            if($travelpass->remarks_if_not_return)
-            $pdf->Cell(0, 0, strtoupper($travelpass->remarks_if_not_return), 0, 0, 'L');
-            else
-            $pdf->Cell(0, 0, strtoupper("not applicable"), 0, 0, 'L');
+            $pdf->SetFontSize('11'); // set font size
+            $pdf->SetXY(145, 146); // set the position of the box
+            $pdf->Cell(0, 0, strtoupper("(" . $travelpass->vehicle_type . ")"), 0, 0, 'L');
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(68, 148); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->vehicle_type), 0, 0, 'L');
-
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(70, 158); // set the position of the box
+            $pdf->SetXY(117, 146); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->vehicle_no), 0, 0, 'L');
 
-            $pdf->SetFontSize('9'); // set font size
-            $pdf->SetXY(30, 172); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->passengers_details), 0, 0, 'L');
+            $pdf->SetFontSize('11'); // set font size
+            $pdf->SetXY(120, 170); // set the position of the box
+            $pdf->Cell(0, 0, strtoupper($travelpass->travel_from . "   -"), 0, 0, 'L');
 
-            $pdf->SetFontSize('10'); // set font size
-            $pdf->SetXY(70, 205); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->travel_from), 0, 0, 'L');
-
-            $pdf->SetFontSize('10'); // set font size
-            $pdf->SetXY(93, 205); // set the position of the box
+            $pdf->SetFontSize('11'); // set font size
+            $pdf->SetXY(150, 170); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->travel_to), 0, 0, 'L');
 
-            $pdf->SetFontSize('7'); // set font size
-            $pdf->SetXY(115, 205); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->travel_path), 0, 0, 'L');
-
-            $pdf->SetFontSize('10'); // set font size
-            $pdf->SetXY(70, 213); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->comeback_from), 0, 0, 'L');
-
-            $pdf->SetFontSize('10'); // set font size
-            $pdf->SetXY(93, 213); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->comeback_to), 0, 0, 'L');
-
-            $pdf->SetFontSize('7'); // set font size
-            $pdf->SetXY(115, 213); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->comeback_path), 0, 0, 'L');
+            $pdf->SetFontSize('11'); // set font size
+            $pdf->SetXY(108, 245); // set the position of the box
+            $pdf->Cell(0, 0, strtoupper(Auth::user()->mobile_no), 0, 0, 'L');
 
         }
         
         
 
         // Because I is for preview for browser.
-        $pdf->Output("D", $travelpass->travelpass_no . ".pdf");
+        //$pdf->Output("D", $travelpass->travelpass_no . ".pdf");
+
+        $pdf->Output();
         
     }
 
