@@ -160,7 +160,7 @@ class TravelPassController extends Controller
             'alert-type' => 'success'
         );
 
-        return redirect(app()->getLocale() . '/travelpasses')->with($notification);
+        return redirect(app()->getLocale() . '/travelpasses/' . $travelpass_application->id)->with($notification);
     }
 
     /**
