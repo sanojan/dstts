@@ -544,47 +544,15 @@ function change_regno_textbox()
             if (document.getElementById("travelpass_type").value === "foods_goods") {
                 document.getElementById("reason_for_travel").value = "";
                 document.getElementById("reason_for_travel").disabled = true;
-                document.getElementById("business_reg_no").disabled= false;
                 document.getElementById("travel_goods_info").disabled= false;
-                document.getElementById("comeback_goods_info").disabled= false;
-                document.getElementById("prev_goods_info").disabled= false;
-                document.getElementById("business_city").disabled= false;
 
             } 
             if(document.getElementById("travelpass_type").value === "private_trans") {
-                document.getElementById("business_reg_no").disabled= true;
                 document.getElementById("reason_for_travel").disabled= false;
                 document.getElementById("travel_goods_info").disabled= true;
                 document.getElementById("travel_goods_info").value = "";
-                document.getElementById("comeback_goods_info").disabled= true;
-                document.getElementById("comeback_goods_info").value = "";
-                document.getElementById("prev_goods_info").disabled= true;
-                document.getElementById("prev_goods_info").value = "";
-                document.getElementById("business_city").disabled= true;
-                document.getElementById("business_city").value = "";
             }
             
-        }
-
-        function change_no_return()
-        {
-            if(document.getElementById("no_return").checked==true){
-                document.getElementById('comeback_date').value='';
-                document.getElementById('comeback_date').disabled=true;
-                document.getElementById('reason_for_not_return').disabled=false;
-                document.getElementById('comeback_from').disabled=true;
-                document.getElementById('comeback_to').disabled=true;
-                document.getElementById('comeback_path').disabled=true;
-                document.getElementById('comeback_goods_info').disabled=true;
-                document.getElementById('comeback_goods_info').value="";
-            }else{
-                document.getElementById('comeback_date').disabled=false;
-                document.getElementById('reason_for_not_return').disabled=true;
-                document.getElementById('comeback_from').disabled=false;
-                document.getElementById('comeback_to').disabled=false;
-                document.getElementById('comeback_path').disabled=false;
-                document.getElementById('comeback_goods_info').disabled=false;
-            }
         }
 
 </script>

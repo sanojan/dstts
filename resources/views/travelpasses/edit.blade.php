@@ -172,11 +172,11 @@
                     <form action="{{ route('travelpasses.update', [app()->getLocale(), $travelpass->id]) }}" method="POST" enctype="multipart/form-data" id="travelpass_add_form">
                     {{ csrf_field() }}
                     {{ method_field('PATCH') }} 
-                        <div class="row clearfix">
-                            <div class="col-md-3">
+                    <div class="row clearfix">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <div class="form-line">
-                                        <select class="form-control travelpass_type_dropdown" style="width:100%;" id="travelpass_type" name="travelpass_type" onChange="change_travelpass_type();">
+                                    <select class="form-control travelpass_type_dropdown" style="width:100%;" id="travelpass_type" name="travelpass_type" onChange="change_travelpass_type();">
                                         <option value="" @if(old('travelpass_type')=="") disabled selected @endif>{{__('Select Travel Pass Type')}}</option>
                                         <option value="foods_goods" @if(old('travelpass_type')=="foods_goods") selected @elseif($travelpass->travelpass_type=='foods_goods') selected @endif>{{__('For transporting essential goods and foods')}}</option>
                                         <option value="private_trans" @if(old('travelpass_type')=="private_trans") selected @elseif($travelpass->travelpass_type=='private_trans') selected @endif>{{__('For private travel')}}</option>
@@ -191,10 +191,10 @@
                                 </div>
                                      
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="applicant_name" class="form-control" name="applicant_name" value="{{ $travelpass->applicant_name }}">
+                                        <input type="text" id="applicant_name" class="form-control" name="applicant_name" value="{{ $travelpass->applicant_name }}">    
                                         <label class="form-label">{{__('Applicant Name')}}</label>
                                     </div>
                                     @error('applicant_name')
@@ -204,7 +204,7 @@
                                     @enderror
                                 </div>
                             </div> 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <input type="text" id="applicant_address" class="form-control" name="applicant_address" value="{{ $travelpass->applicant_address }}">
@@ -217,37 +217,11 @@
                                     @enderror
                                 </div>
                             </div>   
-
-                            <div class="col-md-3">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="business_reg_no" class="form-control" name="business_reg_no" value="{{ $travelpass->business_reg_no }}">
-                                        <label class="form-label">{{__('Business Reg.No')}}</label>
-                                    </div>
-                                    @error('business_reg_no')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>   
                         </div>
                     
                         <div class="row clearfix">
-                            <div class="col-md-3">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="mobile_no" class="form-control" name="mobile_no" value="{{ $travelpass->mobile_no }}">
-                                        <label class="form-label">{{__('Mobile No')}}</label>
-                                    </div>
-                                    @error('mobile_no')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-3">
+                            
+                            <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <input type="text" id="nic_no" class="form-control" name="nic_no" value="{{ $travelpass->nic_no }}">
@@ -260,7 +234,7 @@
                                     @enderror
                                 </div>
                             </div> 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <input type="text" id="vehicle_no" class="form-control" name="vehicle_no" value="{{ $travelpass->vehicle_no }}">
@@ -274,7 +248,7 @@
                                 </div>
                             </div>   
                         
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <div class="form-line">
                                         <select class="form-control vehicle_type_dropdown" style="width:100%;" id="vehicle_type" name="vehicle_type" onChange="change_regno_textbox();">
@@ -296,24 +270,9 @@
                             </div>
                         </div>
                         
+                        
                         <div class="row clearfix">
-                            <div class="col-md-12">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <textarea rows="3" class="form-control no-resize" id="reason_for_travel" name="reason_for_travel">{{ $travelpass->reason_for_travel }}</textarea>
-                                        <label class="form-label">{{__('Reason for Travel')}}</label>
-                                    </div>
-                                    @error('reason_for_travel')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row clearfix">
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                     <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="travel_date" name="travel_date" value="{{ $travelpass->travel_date }}">
@@ -327,7 +286,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                     <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="comeback_date" name="comeback_date" value="{{ $travelpass->comeback_date }}">
@@ -341,33 +300,20 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
-                                
-                                <div class="form-group form-float">
-                                    <input placeholder="" class="form-control" type="checkbox"  id="no_return"   name="no_return" value="{{ old('no_return') }}" onchange="change_no_return();">
-                                    <label class="form-label" for="no_return">{{__('Applicant will not return back')}}</label> 
-                                </div>
-                                @error('no_return')
-                                        <label class="error" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </label>
-                                @enderror
-                                       
-                            </div>
-
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="reason_for_not_return" class="form-control no-resize" name="reason_for_not_return" disabled value="{{ $travelpass->remarks_if_not_return }}">
-                                        <label class="form-label">{{__('Reason for Not return back')}}</label>
+                                        <input type="text" class="form-control no-resize" id="reason_for_travel" name="reason_for_travel" value="{{ $travelpass->reason_for_travel }}">
+                                        <label class="form-label">{{__('Reason for Travel')}}</label>
                                     </div>
-                                    @error('reason_for_not_return')
+                                    @error('reason_for_travel')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </label>
                                     @enderror
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="row clearfix">
@@ -387,35 +333,8 @@
                         </div>
 
                         <div class="row clearfix">
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <input type="text" id="travel_from" class="form-control" name="travel_from" value="{{ $travelpass->travel_from }}">
-                                    <label class="form-label">{{__('Travel From')}}</label>
-                                    </div>
-                                    @error('travel_from')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <input type="text" id="travel_to" class="form-control" name="travel_to" value="{{ $travelpass->travel_to }}">
-                                    <label class="form-label">{{__('Travel To')}}</label>
-                                    </div>
-                                    @error('travel_to')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 
                                 <div class="form-group form-float">
                                     <div class="form-line">
@@ -430,51 +349,7 @@
                                 </div>
                                         
                             </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <input type="text" id="comeback_from" class="form-control" name="comeback_from" value="{{ $travelpass->comeback_from }}">
-                                    <label class="form-label">{{__('Return From')}}</label>
-                                    </div>
-                                    @error('comeback_from')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
 
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <input type="text" id="comeback_to" class="form-control" name="comeback_to" value="{{ $travelpass->comeback_to }}">
-                                    <label class="form-label">{{__('Return To')}}</label>
-                                    </div>
-                                    @error('comeback_to')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <input type="text" id="comeback_path" class="form-control" name="comeback_path" value="{{ $travelpass->comeback_path }}">
-                                    <label class="form-label">{{__('Return Path')}}</label>
-                                    </div>
-                                    @error('comeback_path')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                                        
-                            </div>
                         </div>
 
                         <div class="row clearfix">
@@ -493,54 +368,6 @@
                             </div>
                         </div>
 
-                        <div class="row clearfix">
-                            <div class="col-md-12">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <textarea rows="5" id="comeback_goods_info" class="form-control no-resize" name="comeback_goods_info">{{ $travelpass->comeback_items }}</textarea>
-                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when travel | i.e: Category-Quantity,Category-Quantity')}}</label>
-                                    </div>
-                                    @error('comeback_goods_info')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row clearfix">
-                            <div class="col-md-8">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <textarea rows="5" id="prev_goods_info" class="form-control no-resize" name="prev_goods_info">{{ $travelpass->prev_travel_items }}</textarea>
-                                        <label class="form-label">{{__('If applicant transported items using Travel Pass before, Provide details of Essential Food Items & Goods | i.e: Category-Quantity,Category-Quantity')}}</label>
-                                    </div>
-                                    @error('prev_goods_info')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                    <input type="text" id="business_city" class="form-control" name="business_city" value="{{ $travelpass->business_city }}">
-                                    <label class="form-label">{{__('Place where applicant expect to sell items')}}</label>
-                                    </div>
-                                    @error('business_city')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        
                         <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
                         <button type="submit" class="btn btn-primary waves-effect" name="subbutton" value="edit" style="margin-right:10px">
                             <i class="material-icons">note_add</i>

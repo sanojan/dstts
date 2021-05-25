@@ -484,7 +484,7 @@
             success:function(res){        
             if(res){
                 $("#workplace").empty();
-                $("#workplace").append('<option>{{__('Select Your Work Place')}}</option>');
+                $("#workplace").append('<option disabled selected>{{__('Select Your Work Place')}}</option>');
                 $.each(res,function(key,value){
                 $("#workplace").append('<option value="'+key+'">'+value+'</option>');
                 });

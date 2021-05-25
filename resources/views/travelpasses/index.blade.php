@@ -176,7 +176,7 @@
                                 <th>{{__('Ref No.')}}</th>
                                 <th>{{__('Applicant Name')}}</th>
                                 <th>{{__('Travel Date')}}</th>
-                                <th>{{__('Travel To')}}</th>
+                                <th>{{__('Travel Path')}}</th>
                                 <th>{{__('Status')}}</th>
                                 <th>{{__('Action')}}</th>
                             </tr>
@@ -188,8 +188,8 @@
                                     <td>{{$travelpass->travelpass_no}}</td>
                                     <td>{{$travelpass->applicant_name}}</td>
                                     <td>{{$travelpass->travel_date}}</td>
-                                    <td>{{$travelpass->travel_to}}</td>
-                                    @if(($travelpass->travelpass_status == "SUBMITTED") || ($travelpass->travelpass_status == "EDITED"))
+                                    <td>{{$travelpass->travel_path}}</td>
+                                    @if(($travelpass->travelpass_status == "PENDING") || ($travelpass->travelpass_status == "SUBMITTED"))
                                     <td class="font-bold col-blue">{{$travelpass->travelpass_status}}</td>
                                     @elseif($travelpass->travelpass_status == "ACCEPTED")
                                     <td class="font-bold col-deep-orange">{{$travelpass->travelpass_status}}</td>

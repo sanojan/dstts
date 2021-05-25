@@ -196,28 +196,16 @@
                                         
                                     </tr>
                                     <tr>
-                                        <td>{{__('Applicant Address & Mobile No.')}}:</td>
-                                        <td>{{$travelpass->applicant_address}} - {{$travelpass->mobile_no}}</td>
+                                        <td>{{__('Applicant Address')}}:</td>
+                                        <td>{{$travelpass->applicant_address}}</td>
                                         
                                         
                                     </tr>
                                     
                                     @if($travelpass->travelpass_type == "foods_goods")
                                     <tr>
-                                        <td>{{__('Business Reg.No')}}:</td>
-                                        <td>{{$travelpass->business_reg_no}}</td>
-                                    </tr>
-                                    <tr>
                                         <td>{{__('Details of Foods & Essential Items during travel')}}:</td>
                                         <td>{{$travelpass->travel_items}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Details of Foods & Essential Items during return')}}:</td>
-                                        <td>{{$travelpass->comeback_items}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Details of Foods & Essential Items carried before')}}:</td>
-                                        <td>{{$travelpass->prev_travel_items}}</td>
                                     </tr>
                                     @endif
                                     
@@ -243,42 +231,13 @@
                                         <td>{{$travelpass->travel_date}} - @if($travelpass->comeback_date) {{$travelpass->comeback_date}} @else {{__('Applicant will not return')}}@endif</td>
                                         
                                     </tr>
-                                    <tr>
-                                        <td>{{__('Travel From')}}:</td>
-                                        <td>{{$travelpass->travel_from}}</td>
-    
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Travel To')}}:</td>
-                                        <td>{{$travelpass->travel_to}}</td>
-    
-                                    </tr>
                                    
                                     <tr>
                                         <td>{{__('Travel Path')}}:</td>
                                         <td>{{$travelpass->travel_path}}</td>
     
                                     </tr>
-                                    @if(!$travelpass->comeback_date)
-                                    <tr>
-                                        <td>{{__('Remarks for not return back')}}:</td>
-                                        <td>{{$travelpass->remarks_if_not_return}}</td>
-    
-                                    </tr>
-                                    @else
-                                    <tr>
-                                        <td>{{__('Return From')}}:</td>
-                                        <td>{{$travelpass->comeback_from}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Return To')}}:</td>
-                                        <td>{{$travelpass->comeback_to}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{__('Return Path')}}:</td>
-                                        <td>{{$travelpass->comeback_path}}</td>
-                                    </tr>
-                                    @endif
+                                   
                                     <tr>
                                         <td>{{__('Passengers Details')}}:</td>
                                         <td>{{$travelpass->passengers_details}}</td>
@@ -286,7 +245,7 @@
                                     </tr>
                                     <tr>
                                         <td>{{__('Travel Pass Status')}}:</td>
-                                        @if(($travelpass->travelpass_status == "SUBMITTED") || ($travelpass->travelpass_status == "EDITED"))
+                                        @if(($travelpass->travelpass_status == "PENDING") || ($travelpass->travelpass_status == "SUBMITTED"))
                                         <td class="font-bold col-blue">{{$travelpass->travelpass_status}}</td>
                                         @elseif($travelpass->travelpass_status == "ACCEPTED")
                                         <td class="font-bold col-deep-orange">{{$travelpass->travelpass_status}}</td>
@@ -306,14 +265,18 @@
                                     <i class="material-icons">keyboard_backspace</i>
                                     <span>{{__('BACK')}}</span>
                                 </a>
-                                @if($travelpass->workplace == \Auth::user()->workplace)
+                                @if(($travelpass->workplace == \Auth::user()->workplace) && ($travelpass->travelpass_status == "PENDING"))
                                 <a type="button" style="margin-right:10px" class="btn bg-purple btn-xs waves-effect" href="{{route('travelpasses.edit', [app()->getLocale(), $travelpass->id])}}">
                                     <i class="material-icons">mode_edit</i>
                                     <span>{{__('EDIT DETAILS')}}</span>
                                 </a>
+                                <button type="submit" style="margin-right:10px" class="btn bg-blue btn-xs waves-effect" name="subbutton" value="submit">
+                                    <i class="material-icons">check</i>
+                                    <span>{{__('SUBMIT APPLICATION')}}</span>
+                                </button>
                                 @endif
                                 @if(Gate::allows('admin'))
-                                @if(($travelpass->travelpass_status == "SUBMITTED") || ($travelpass->travelpass_status == "EDITED"))
+                                @if($travelpass->travelpass_status == "SUBMITTED")
                                 
                                     {{ method_field('PUT') }}
                                     {{ csrf_field() }}

@@ -35,13 +35,14 @@ class TravelPassController extends Controller
         }
         $new_travelpasses = 0;
         foreach(TravelPass::all() as $travelpass){
-            if(($travelpass->travelpass_status == "SUBMITTED") || ($travelpass->travelpass_status == "EDITED")){
+            if($travelpass->travelpass_status == "SUBMITTED"){
                 $new_travelpasses += 1;
             }
         }
         if (Gate::allows('admin') || Gate::allows('sys_admin')) {
 
-            $travelpasses = TravelPass::all();
+            $travelpasses = DB::table('travelpass')->where('travelpass_status', '=', 'SUBMITTED')->get();
+            //dd($travelpass);
 
             //$letters = Auth::user()->letters;
             return view('travelpasses.index')->with('travelpasses', $travelpasses)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
@@ -76,7 +77,7 @@ class TravelPassController extends Controller
         }
         $new_travelpasses = 0;
         foreach(TravelPass::all() as $travelpass){
-            if(($travelpass->travelpass_status == "SUBMITTED") || ($travelpass->travelpass_status == "EDITED")){
+            if($travelpass->travelpass_status == "SUBMITTED"){
                 $new_travelpasses += 1;
             }
         }
@@ -95,29 +96,18 @@ class TravelPassController extends Controller
         //Save records to TravelPass table
 
         $this->validate($request, [
-            'travelpass_type' => ['required'],
+                'travelpass_type' => ['required'],
                 'applicant_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
                 'applicant_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:150'],
-                'business_reg_no' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:20'],
-                'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
                 'nic_no' => ['required', 'max:12', 'min:10'],
                 'vehicle_no' => ['required', 'max:12'],
                 'vehicle_type' => ['nullable'],
-                'reason_for_travel' => ['nullable', 'max:350'],
                 'travel_date' => ['required', 'after:today'],
                 'comeback_date' => ['nullable', 'after:today'],
-                'reason_for_not_return' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'reason_for_travel' => ['nullable', 'max:350'],
                 'passengers_info' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
-                'travel_from' => ['required', 'max:50'],
-                'travel_to' => ['required', 'max:50'],
                 'travel_path' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:250'],
-                'comeback_from' => ['nullable', 'max:50'],
-                'comeback_to' => ['nullable', 'max:50'],
-                'comeback_path' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:250'],
                 'travel_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
-                'comeback_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
-                'prev_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
-                'business_city' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:50'],
                 'application_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
 
 
@@ -145,28 +135,16 @@ class TravelPassController extends Controller
         $travelpass_application->travelpass_type = $request->travelpass_type;
         $travelpass_application->applicant_name = $request->applicant_name;
         $travelpass_application->applicant_address = $request->applicant_address;
-        $travelpass_application->business_reg_no = $request->business_reg_no;
-        $travelpass_application->mobile_no = $request->mobile_no;
         $travelpass_application->nic_no = $request->nic_no;
         $travelpass_application->vehicle_no = strtoupper($request->vehicle_no);
         $travelpass_application->vehicle_type = $request->vehicle_type;
-        $travelpass_application->reason_for_travel = $request->reason_for_travel;
         $travelpass_application->travel_date = $request->travel_date;
         $travelpass_application->comeback_date = $request->comeback_date;
-        $travelpass_application->remarks_if_not_return = $request->reason_for_not_return;
+        $travelpass_application->reason_for_travel = $request->reason_for_travel;
         $travelpass_application->passengers_details = $request->passengers_info;
-        $travelpass_application->travel_from = $request->travel_from;
-        $travelpass_application->travel_to = $request->travel_to;
         $travelpass_application->travel_path = $request->travel_path;
-        $travelpass_application->comeback_from = $request->comeback_from;
-        $travelpass_application->comeback_to = $request->comeback_to;
-        $travelpass_application->comeback_path = $request->comeback_path;
         $travelpass_application->travel_items = $request->travel_goods_info;
-        $travelpass_application->comeback_items = $request->comeback_goods_info;
-        $travelpass_application->prev_travel_items = $request->prev_goods_info;
-        $travelpass_application->business_city = $request->business_city;
-        $travelpass_application->prev_travel_items = $request->prev_goods_info;
-        $travelpass_application->travelpass_status = "SUBMITTED";
+        $travelpass_application->travelpass_status = "PENDING";
         
 
         $travelpass_application->save();
@@ -178,7 +156,7 @@ class TravelPassController extends Controller
         //session()->put('success','Letter has been created successfully.');
 
         $notification = array(
-            'message' => __('Travelpass Application has been submitted successfully!'), 
+            'message' => __('Travelpass Application has been created successfully!'), 
             'alert-type' => 'success'
         );
 
@@ -209,7 +187,7 @@ class TravelPassController extends Controller
         }
         $new_travelpasses = 0;
         foreach(TravelPass::all() as $travelpass){
-            if(($travelpass->travelpass_status == "SUBMITTED") || ($travelpass->travelpass_status == "EDITED")){
+            if($travelpass->travelpass_status == "SUBMITTED"){
                 $new_travelpasses += 1;
             }
         }
@@ -264,7 +242,7 @@ class TravelPassController extends Controller
         }
         $new_travelpasses = 0;
         foreach(TravelPass::all() as $travelpass){
-            if(($travelpass->travelpass_status == "SUBMITTED") || ($travelpass->travelpass_status == "EDITED")){
+            if($travelpass->travelpass_status == "SUBMITTED"){
                 $new_travelpasses += 1;
             }
         }
@@ -373,6 +351,21 @@ class TravelPassController extends Controller
             return redirect(app()->getLocale() . '/travelpasses/' . $id)->with($notification);
         }
 
+        if($request->subbutton == "submit"){
+
+            $travelpass = TravelPass::find($id);
+            
+            $travelpass->travelpass_status = "SUBMITTED";
+            $travelpass->save();
+
+            $notification = array(
+                'message' => __('Travelpass Application has been submitted successfully!'), 
+                'alert-type' => 'success'
+            );
+    
+            return redirect(app()->getLocale() . '/travelpasses/' . $id)->with($notification);
+        }
+
         if($request->subbutton == "edit"){
 
 
@@ -382,26 +375,15 @@ class TravelPassController extends Controller
                 'travelpass_type' => ['required'],
                 'applicant_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
                 'applicant_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:150'],
-                'business_reg_no' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:20'],
-                'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
                 'nic_no' => ['required', 'max:12', 'min:10'],
                 'vehicle_no' => ['required', 'max:12'],
                 'vehicle_type' => ['nullable'],
-                'reason_for_travel' => ['nullable', 'max:350'],
                 'travel_date' => ['required', 'after:today'],
                 'comeback_date' => ['nullable', 'after:today'],
-                'reason_for_not_return' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'reason_for_travel' => ['nullable', 'max:350'],
                 'passengers_info' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
-                'travel_from' => ['required', 'max:50'],
-                'travel_to' => ['required', 'max:50'],
                 'travel_path' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:250'],
-                'comeback_from' => ['nullable', 'max:50'],
-                'comeback_to' => ['nullable', 'max:50'],
-                'comeback_path' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:250'],
                 'travel_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
-                'comeback_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
-                'prev_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
-                'business_city' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:50'],
                 'application_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
     
     
@@ -413,36 +395,21 @@ class TravelPassController extends Controller
     
              
     
-            //Create an instance of letter model
+            //Create an instance of travelpass model
           
             $travelpass->travelpass_type = $request->travelpass_type;
             $travelpass->applicant_name = $request->applicant_name;
             $travelpass->applicant_address = $request->applicant_address;
-            $travelpass->business_reg_no = $request->business_reg_no;
-            $travelpass->mobile_no = $request->mobile_no;
             $travelpass->nic_no = $request->nic_no;
             $travelpass->vehicle_no = strtoupper($request->vehicle_no);
             $travelpass->vehicle_type = $request->vehicle_type;
-            $travelpass->reason_for_travel = $request->reason_for_travel;
             $travelpass->travel_date = $request->travel_date;
             $travelpass->comeback_date = $request->comeback_date;
-            $travelpass->remarks_if_not_return = $request->reason_for_not_return;
+            $travelpass->reason_for_travel = $request->reason_for_travel;
             $travelpass->passengers_details = $request->passengers_info;
-            $travelpass->travel_from = $request->travel_from;
-            $travelpass->travel_to = $request->travel_to;
             $travelpass->travel_path = $request->travel_path;
-            $travelpass->comeback_from = $request->comeback_from;
-            $travelpass->comeback_to = $request->comeback_to;
-            $travelpass->comeback_path = $request->comeback_path;
             $travelpass->travel_items = $request->travel_goods_info;
-            $travelpass->comeback_items = $request->comeback_goods_info;
-            $travelpass->prev_travel_items = $request->prev_goods_info;
-            $travelpass->business_city = $request->business_city;
-            $travelpass->prev_travel_items = $request->prev_goods_info;
-            
-            if(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "ACCEPTED") || ($travelpass->travelpass_status == "REJECTED")){
-                $travelpass->travelpass_status = "EDITED";
-            }
+    
             
             
             $travelpass->save();
@@ -573,13 +540,6 @@ class TravelPassController extends Controller
         $pdf->SetXY(117, 150); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->travel_items), 0, 0, 'L');
 
-        $pdf->SetFontSize('8'); // set font size
-        $pdf->SetXY(25, 190); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->prev_travel_items  ), 0, 0, 'L');
-
-        $pdf->SetFontSize('11'); // set font size
-        $pdf->SetXY(122, 233); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper(Auth::user()->mobile_no), 0, 0, 'L');
 
       
         }
@@ -630,17 +590,12 @@ class TravelPassController extends Controller
                     $i += "2";
                 }
                 
-                
-
-                
             }
             
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(80, 70); // set the position of the box
-            $pdf->Cell(0, 0, $travelpass->mobile_no, 0, 0, 'L');
+          
 
             $pdf->SetFontSize('9'); // set font size
-            $pdf->SetXY(115, 155); // set the position of the box
+            $pdf->SetXY(115, 160); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->reason_for_travel), 0, 0, 'L');
 
             $pdf->SetFontSize('11'); // set font size
@@ -659,13 +614,10 @@ class TravelPassController extends Controller
             $pdf->SetXY(117, 146); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->vehicle_no), 0, 0, 'L');
 
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(120, 170); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->travel_from . "   -"), 0, 0, 'L');
+            $pdf->SetFontSize('8'); // set font size
+            $pdf->SetXY(115, 172); // set the position of the box
+            $pdf->Cell(0, 0, strtoupper($travelpass->travel_path), 0, 0, 'L');
 
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(150, 170); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->travel_to), 0, 0, 'L');
 
             $pdf->SetFontSize('11'); // set font size
             $pdf->SetXY(108, 245); // set the position of the box
@@ -676,8 +628,8 @@ class TravelPassController extends Controller
         
 
         // Because I is for preview for browser.
-        $pdf->Output("D", $travelpass->travelpass_no . ".pdf");
-        //$pdf->Output();
+        //$pdf->Output("D", $travelpass->travelpass_no . ".pdf");
+        $pdf->Output();
 
         
     }
