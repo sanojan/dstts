@@ -145,13 +145,13 @@
                         </a>
                     </li>
                     <li >
-                        <a href="#">
+                        <a href="{{route('about', app()->getLocale())}}">
                             <i class="material-icons">group</i>
                             <span>{{__('About Us')}}</span>
                         </a>
                     </li>
                     <li >
-                        <a href="#">
+                        <a href="{{route('contact', app()->getLocale())}}">
                             <i class="material-icons">contact_phone</i>
                             <span>{{__('Contact Us')}}</span>
                         </a>

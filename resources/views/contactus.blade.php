@@ -6,14 +6,14 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li class="">
+                    <li >
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li >
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
@@ -48,6 +48,7 @@
                                     @endif
                         </ul>
                     </li>
+
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -79,7 +80,7 @@
                         </a>
                     </li>
                     @endif
-                    <li class="active">
+                    <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">transfer_within_a_station</i>
                             <span>{{__('Travel Pass')}}</span>
@@ -90,7 +91,7 @@
                             @endif
                         </a>
                         <ul class="ml-menu">
-                            <li class="active">
+                            <li>
                                 <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
                             </li>
                             
@@ -149,7 +150,7 @@
                             <span>{{__('About Us')}}</span>
                         </a>
                     </li>
-                    <li >
+                    <li class="active">
                         <a href="{{route('contact', app()->getLocale())}}">
                             <i class="material-icons">contact_phone</i>
                             <span>{{__('Contact Us')}}</span>
@@ -164,53 +165,41 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>{{__('VIEW TRAVEL PASSES')}}</h2>
+            <h2>{{__('CONTACT US')}}</h2>
             </div>
-            
+           
             <div class="card">
+                
                 <div class="body">
+                    <h3><u>CONTACT INFORMATION</u></h3>
+                    <br />
+                    <br />
+                    <p><b>Please send us your valuable feedback and suggestions to us.</b><br /><br />
+                    <button type="button" class="btn btn-default waves-effect">
+                        <i class="material-icons">drafts</i>
+                        <b>Email: help@dsems.net</b>
+                    </button></p>
+                    <br />
+                    <p><b>Please contact for Technical Assistance:</b><br /><br />
+                    <button type="button" class="btn btn-default waves-effect">
+                        <i class="material-icons">phone</i>
+                        <b>Call: +94 76 331 2306</b>
+                    </button>
+                    OR 
+                    <button type="button" class="btn btn-default waves-effect">
+                        <i class="material-icons">phone</i>
+                        <b>Call: +94 75 757 2116</b>
+                    </button>
+                    </p>
                     
-                    <table id="no_export_table_id" class="display ">
-                        <thead>
-                            <tr>
-                                <th>{{__('Ref No.')}}</th>
-                                <th>{{__('Applicant Name')}}</th>
-                                <th>{{__('Travel Date')}}</th>
-                                <th>{{__('Travel Path')}}</th>
-                                <th>{{__('Status')}}</th>
-                                <th>{{__('Action')}}</th>
-                            </tr>
-                        </thead>
-                            @if(count($travelpasses) > 0)
-                            <tbody>
-                                @foreach($travelpasses as $travelpass)
-                                <tr>
-                                    <td>{{$travelpass->travelpass_no}}</td>
-                                    <td>{{$travelpass->applicant_name}}</td>
-                                    <td>{{$travelpass->travel_date}}</td>
-                                    <td>{{$travelpass->travel_path}}</td>
-                                    @if(($travelpass->travelpass_status == "PENDING") || ($travelpass->travelpass_status == "SUBMITTED"))
-                                    <td class="font-bold col-blue">{{$travelpass->travelpass_status}}</td>
-                                    @elseif($travelpass->travelpass_status == "ACCEPTED")
-                                    <td class="font-bold col-deep-orange">{{$travelpass->travelpass_status}}</td>
-                                    @elseif($travelpass->travelpass_status == "TRAVEL PASS ISSUED")
-                                    <td class="font-bold col-green">{{$travelpass->travelpass_status}}</td>
-                                    @elseif($travelpass->travelpass_status == "REJECTED")
-                                    <td class="font-bold col-red">{{$travelpass->travelpass_status}}</td>
-                                    @endif
-                                    <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('travelpasses.show', [app()->getLocale(), $travelpass->id]) }}">
-                                            <i class="material-icons">pageview</i>
-                                                <span>{{__('VIEW')}}</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                            @endif
-                        
-                    </table>
+                    
+                    <br />
+
+
+                    <p><b>All rights reserved &copy; 2020/21District Secretariat, Ampara</b></p>
                 </div>
             </div>
+            
         </div>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
