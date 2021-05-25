@@ -339,7 +339,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                     <input type="text" id="travel_path" class="form-control" name="travel_path" value="{{ $travelpass->travel_path }}">
-                                    <label class="form-label">{{__('Travel Path | i.e: Kalmunai,Batticaloa,Colombo')}}</label>
+                                    <label class="form-label">{{__('Travel Path | i.e: Kalmunai;Batticaloa;Colombo')}}</label>
                                     </div>
                                     @error('travel_path')
                                             <label class="error" role="alert">
@@ -357,7 +357,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <textarea rows="5" id="travel_goods_info" class="form-control no-resize" name="travel_goods_info">{{ $travelpass->travel_items }}</textarea>
-                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when travel | i.e: Category-Quantity,Category-Quantity')}}</label>
+                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when travel | i.e: Category-Quantity;Category-Quantity')}}</label>
                                     </div>
                                     @error('travel_goods_info')
                                             <label class="error" role="alert">
