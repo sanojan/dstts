@@ -96,29 +96,29 @@ class TravelPassController extends Controller
 
         $this->validate($request, [
             'travelpass_type' => ['required'],
-            'applicant_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
-            'applicant_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:150'],
-            'business_reg_no' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:20'],
-            'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
-            'nic_no' => ['required', 'max:12', 'min:10'],
-            'vehicle_no' => ['required', 'max:12'],
-            'vehicle_type' => ['nullable'],
-            'reason_for_travel' => ['nullable', 'max:350'],
-            'travel_date' => ['required', 'after:today'],
-            'comeback_date' => ['nullable', 'after:today'],
-            'reason_for_not_return' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
-            'passengers_info' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:350'],
-            'travel_from' => ['required', 'max:50'],
-            'travel_to' => ['required', 'max:50'],
-            'travel_path' => ['required', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:250'],
-            'comeback_from' => ['nullable', 'max:50'],
-            'comeback_to' => ['nullable', 'max:50'],
-            'comeback_path' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:250'],
-            'travel_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:350'],
-            'comeback_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:350'],
-            'prev_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:350'],
-            'business_city' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:50'],
-            'application_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
+                'applicant_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
+                'applicant_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:150'],
+                'business_reg_no' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:20'],
+                'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
+                'nic_no' => ['required', 'max:12', 'min:10'],
+                'vehicle_no' => ['required', 'max:12'],
+                'vehicle_type' => ['nullable'],
+                'reason_for_travel' => ['nullable', 'max:350'],
+                'travel_date' => ['required', 'after:today'],
+                'comeback_date' => ['nullable', 'after:today'],
+                'reason_for_not_return' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'passengers_info' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'travel_from' => ['required', 'max:50'],
+                'travel_to' => ['required', 'max:50'],
+                'travel_path' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:250'],
+                'comeback_from' => ['nullable', 'max:50'],
+                'comeback_to' => ['nullable', 'max:50'],
+                'comeback_path' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:250'],
+                'travel_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'comeback_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'prev_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'business_city' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:50'],
+                'application_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
 
 
         ],
@@ -288,7 +288,7 @@ class TravelPassController extends Controller
             }
         }else{
             $notification = array(
-                'message' => __('Requested travelpass application is not avaialble'),
+                'message' => __('Requested Travel Pass is not available'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/travelpasses')->with($notification);
@@ -381,8 +381,8 @@ class TravelPassController extends Controller
             $this->validate($request, [
                 'travelpass_type' => ['required'],
                 'applicant_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
-                'applicant_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s,-]+$/', 'max:150'],
-                'business_reg_no' => ['nullable', 'regex:/^[a-zA-Z .,\'\/ -, 0-9]+$/i', 'max:20'],
+                'applicant_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:150'],
+                'business_reg_no' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:20'],
                 'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
                 'nic_no' => ['required', 'max:12', 'min:10'],
                 'vehicle_no' => ['required', 'max:12'],
@@ -390,18 +390,18 @@ class TravelPassController extends Controller
                 'reason_for_travel' => ['nullable', 'max:350'],
                 'travel_date' => ['required', 'after:today'],
                 'comeback_date' => ['nullable', 'after:today'],
-                'reason_for_not_return' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
-                'passengers_info' => ['required', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
+                'reason_for_not_return' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'passengers_info' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
                 'travel_from' => ['required', 'max:50'],
                 'travel_to' => ['required', 'max:50'],
-                'travel_path' => ['required', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:250'],
+                'travel_path' => ['required', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:250'],
                 'comeback_from' => ['nullable', 'max:50'],
                 'comeback_to' => ['nullable', 'max:50'],
-                'comeback_path' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:250'],
-                'travel_goods_info' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
-                'comeback_goods_info' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
-                'prev_goods_info' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:350'],
-                'business_city' => ['nullable', 'regex:/^[a-z .\'\/ -, 0-9]+$/i', 'max:50'],
+                'comeback_path' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:250'],
+                'travel_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'comeback_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'prev_goods_info' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:350'],
+                'business_city' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:50'],
                 'application_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
     
     
@@ -517,11 +517,32 @@ class TravelPassController extends Controller
         $pdf->SetXY(150, 116); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->nic_no), 0, 0, 'L');
 
-        $pdf->SetFontSize('9'); // set font size
-        $pdf->SetXY(99, 122); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->passengers_details), 0, 0, 'L');
-
+        $passengers = explode(";", $travelpass->passengers_details);
         
+        $nameY = "116";
+        $nicY = "116";
+        $i = "0";
+
+        foreach($passengers as $key =>$passenger){
+            if($key == $i){
+                $nameY += "7";
+                $pdf->SetFontSize('11'); // set font size
+                $pdf->SetXY(100, $nameY); // set the position of the box
+                $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
+                
+            }
+            else{
+                $nicY += "7";
+                $pdf->SetFontSize('11'); // set font size
+                $pdf->SetXY(150, $nicY); // set the position of the box
+                $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
+                $i += "2";
+            }
+            
+            
+
+            
+        }
 
         $pdf->SetFontSize('11'); // set font size
         $pdf->SetXY(117, 140); // set the position of the box
@@ -587,9 +608,32 @@ class TravelPassController extends Controller
             $pdf->SetXY(150, 112); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->nic_no), 0, 0, 'L');
 
-            $pdf->SetFontSize('9'); // set font size
-            $pdf->SetXY(100, 120); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->passengers_details), 0, 0, 'L');
+            $passengers = explode(";", $travelpass->passengers_details);
+        
+            $nameY = "112";
+            $nicY = "112";
+            $i = "0";
+
+            foreach($passengers as $key =>$passenger){
+                if($key == $i){
+                    $nameY += "7";
+                    $pdf->SetFontSize('11'); // set font size
+                    $pdf->SetXY(100, $nameY); // set the position of the box
+                    $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
+                    
+                }
+                else{
+                    $nicY += "7";
+                    $pdf->SetFontSize('11'); // set font size
+                    $pdf->SetXY(150, $nicY); // set the position of the box
+                    $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
+                    $i += "2";
+                }
+                
+                
+
+                
+            }
             
             $pdf->SetFontSize('11'); // set font size
             $pdf->SetXY(80, 70); // set the position of the box
@@ -633,6 +677,7 @@ class TravelPassController extends Controller
 
         // Because I is for preview for browser.
         $pdf->Output("D", $travelpass->travelpass_no . ".pdf");
+        //$pdf->Output();
 
         
     }

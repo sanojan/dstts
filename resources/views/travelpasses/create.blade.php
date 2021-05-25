@@ -177,8 +177,8 @@
                                     <div class="form-line">
                                         <select class="form-control travelpass_type_dropdown" style="width:100%;" id="travelpass_type" name="travelpass_type" onChange="change_travelpass_type();">
                                         <option value="" @if(old('travelpass_type')=="") disabled selected @endif>{{__('Select Travel Pass Type')}}</option>
-                                        <option value="foods_goods" @if(old('travelpass_type')=="foods_goods") selected @endif>For transporting essential goods and foods</option>
-                                        <option value="private_trans" @if(old('travelpass_type')=="private_trans") selected @endif>For private travel</option>
+                                        <option value="foods_goods" @if(old('travelpass_type')=="foods_goods") selected @endif>{{__('For transporting essential goods and foods')}}</option>
+                                        <option value="private_trans" @if(old('travelpass_type')=="private_trans") selected @endif>{{__('For private travel')}}</option>
                                         </select>
                                     </div>
                                         
@@ -237,7 +237,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <input type="text" id="mobile_no" class="form-control" name="mobile_no" value="{{ old('mobile_no') }}">
-                                        <label class="form-label">{{__('Mobile No.')}}</label>
+                                        <label class="form-label">{{__('Mobile No')}}</label>
                                     </div>
                                     @error('mobile_no')
                                             <label class="error" role="alert">
@@ -250,7 +250,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <input type="text" id="nic_no" class="form-control" name="nic_no" value="{{ old('nic_no') }}">
-                                        <label class="form-label">{{__('NIC No.')}}</label>
+                                        <label class="form-label">{{__('NIC No')}}</label>
                                     </div>
                                     @error('nic_no')
                                             <label class="error" role="alert">
@@ -278,12 +278,12 @@
                                     <div class="form-line">
                                         <select class="form-control vehicle_type_dropdown" style="width:100%;" id="vehicle_type" name="vehicle_type" onChange="change_regno_textbox();">
                                             <option value="" @if(old('vehicle_type')=="") selected disabled @endif>{{__('Select Vehicle Type')}}</option>
-                                            <option value="Motor Bike" @if(old('vehicle_type')=="Motor Bike") selected @endif>Motor Bike</option>
-                                            <option value="Three Wheeler" @if(old('vehicle_type')=="Three Wheeler") selected @endif>Three Wheeler</option>
-                                            <option value="Car" @if(old('vehicle_type')=="Car") selected @endif>Car</option>
-                                            <option value="Public Transport" @if(old('vehicle_type')=="Public Transport") selected @endif>Public Transport</option>
-                                            <option value="Small Lorry" @if(old('vehicle_type')=="Small Lorry") selected @endif>Small Lorry</option>
-                                            <option value="Other" @if(old('vehicle_type')=="Other") selected @endif>Other</option>
+                                            <option value="Motor Bike" @if(old('vehicle_type')=="Motor Bike") selected @endif>{{__('Motor Bike')}}</option>
+                                            <option value="Three Wheeler" @if(old('vehicle_type')=="Three Wheeler") selected @endif>{{__('Three Wheeler')}}</option>
+                                            <option value="Car" @if(old('vehicle_type')=="Car") selected @endif>{{__('Car')}}</option>
+                                            <option value="Public Transport" @if(old('vehicle_type')=="Public Transport") selected @endif>{{__('Public Transport')}}</option>
+                                            <option value="Small Lorry" @if(old('vehicle_type')=="Small Lorry") selected @endif>{{__('Small Lorry')}}</option>
+                                            <option value="Other" @if(old('vehicle_type')=="Other") selected @endif>{{__('Other')}}</option>
                                         </select>
                                     </div>
                                     @error('vehicle_type')
@@ -374,7 +374,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <textarea rows="5" class="form-control no-resize" name="passengers_info">{{ old('passengers_info') }}</textarea>
-                                        <label class="form-label">{{__('Details of Passengers | i.e: Name - Role(Driver/Assistant,etc.) - NIC - Mobile.No')}}</label>
+                                        <label class="form-label">{{__('Details of Passengers | i.e: name;NIC;name;NIC')}}</label>
                                     </div>
                                     @error('passengers_info')
                                             <label class="error" role="alert">
@@ -419,7 +419,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                     <input type="text" id="travel_path" class="form-control" name="travel_path" value="{{ old('travel_path') }}">
-                                    <label class="form-label">{{__('Travel Path')}}</label>
+                                    <label class="form-label">{{__('Travel Path | i.e: Kalmunai,Batticaloa,Colombo')}}</label>
                                     </div>
                                     @error('travel_path')
                                             <label class="error" role="alert">
@@ -464,7 +464,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                     <input type="text" id="comeback_path" class="form-control" name="comeback_path" value="{{ old('comeback_path') }}">
-                                    <label class="form-label">{{__('Return Path')}}</label>
+                                    <label class="form-label">{{__('Return Path | i.e: Colombo, Batticaloa, Kalmunai')}}</label>
                                     </div>
                                     @error('comeback_path')
                                             <label class="error" role="alert">
@@ -481,7 +481,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <textarea rows="5" id="travel_goods_info" class="form-control no-resize" name="travel_goods_info">{{ old('travel_goods_info') }}</textarea>
-                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when travel | i.e: Category - Quantity')}}</label>
+                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when travel | i.e: Category-Quantity,Category-Quantity')}}</label>
                                     </div>
                                     @error('travel_goods_info')
                                             <label class="error" role="alert">
@@ -497,7 +497,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <textarea rows="5" id="comeback_goods_info" class="form-control no-resize" name="comeback_goods_info">{{ old('comeback_goods_info') }}</textarea>
-                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when Return | i.e: Category - Quantity')}}</label>
+                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when Return | i.e: Category-Quantity,Category-Quantity')}}</label>
                                     </div>
                                     @error('comeback_goods_info')
                                             <label class="error" role="alert">
@@ -514,7 +514,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <textarea rows="5" id="prev_goods_info" class="form-control no-resize" name="prev_goods_info">{{ old('prev_goods_info') }}</textarea>
-                                        <label class="form-label">{{__('If applicant transported items using Travel Pass before, Provide details of Essential Food Items & Goods | i.e: Date - Category - Quantity')}}</label>
+                                        <label class="form-label">{{__('If applicant transported items using Travel Pass before, Provide details of Essential Food Items & Goods | i.e: Category-Quantity,Category-Quantity')}}</label>
                                     </div>
                                     @error('prev_goods_info')
                                             <label class="error" role="alert">

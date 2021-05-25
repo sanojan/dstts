@@ -185,9 +185,9 @@
                                     <tr>
                                         <td>{{__('Travel Pass Type')}}:</td>
                                         @if($travelpass->travelpass_type == "private_trans")
-                                        <td>{{__('For Private Transport')}}</td>
+                                        <td>{{__('For private travel')}}</td>
                                         @elseif($travelpass->travelpass_type == "foods_goods")
-                                        <td>{{__('For Transport Foods & Essential Items')}}</td>
+                                        <td>{{__('For transporting essential goods and foods')}}</td>
                                         @endif
                                     </tr>
                                     <tr>
@@ -304,7 +304,7 @@
                             <form action="{{ route('travelpasses.update', [app()->getLocale(), $travelpass->id] )}}" method="POST" enctype="multipart/form-data" id="travelpass_accept_form">
                                 <a class="btn bg-grey btn-xs waves-effect" style="margin-right:10px" href="{{route('travelpasses.index', app()->getLocale())}}">
                                     <i class="material-icons">keyboard_backspace</i>
-                                    <span>BACK</span>
+                                    <span>{{__('BACK')}}</span>
                                 </a>
                                 @if($travelpass->workplace == \Auth::user()->workplace)
                                 <a type="button" style="margin-right:10px" class="btn bg-purple btn-xs waves-effect" href="{{route('travelpasses.edit', [app()->getLocale(), $travelpass->id])}}">
