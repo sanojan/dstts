@@ -41,7 +41,7 @@ class TravelPassController extends Controller
         }
         if (Gate::allows('admin') || Gate::allows('sys_admin')) {
 
-            $travelpasses = DB::table('travelpass')->where('travelpass_status', '=', 'SUBMITTED')->get();
+            $travelpasses = DB::table('travelpass')->where('travelpass_status', '<>', 'PENDING')->get();
             //dd($travelpass);
 
             //$letters = Auth::user()->letters;
