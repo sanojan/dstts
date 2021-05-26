@@ -12,7 +12,7 @@
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    @if(Gate::allows('sys_admin'))
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -28,7 +28,7 @@
                                     </li>
                         </ul>
                     </li>
-                    @endif
+                    
                     
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -80,13 +80,18 @@
                         </a>
                     </li>
                     @endif
+                    @endif
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">transfer_within_a_station</i>
                             <span>{{__('Travel Pass')}}</span>
-                            @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                            @if(Gate::allows('admin'))
                             @if($new_travelpasses > 0)
                             <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
+                            @endif
+                            @elseif(Gate::allows('user'))
+                            @if($new_approved_travelpasses > 0)
+                            <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
                             @endif
                             @endif
                         </a>
@@ -249,7 +254,7 @@
                                         <td class="font-bold col-blue">{{$travelpass->travelpass_status}}</td>
                                         @elseif($travelpass->travelpass_status == "ACCEPTED")
                                         <td class="font-bold col-deep-orange">{{$travelpass->travelpass_status}}</td>
-                                        @elseif($travelpass->travelpass_status == "TRAVEL PASS ISSUED")
+                                        @elseif(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") ||($travelpass->travelpass_status == "TRAVEL PASS RECEIVED"))
                                         <td class="font-bold col-green">{{$travelpass->travelpass_status}}</td>
                                         @elseif($travelpass->travelpass_status == "REJECTED")
                                         <td class="font-bold col-red">{{$travelpass->travelpass_status}} | Reason: {{$travelpass->rejection_reason}}</td>
@@ -300,7 +305,7 @@
                                 </form>
                                 @endif
                                 @endif
-                                @if($travelpass->travelpass_status == "TRAVEL PASS ISSUED" && Gate::allows('user'))
+                                @if((($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")) && Gate::allows('user'))
                                 
                                 <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{ Storage::url('scanned_travelpasses/' . $travelpass->travelpass_scanned_copy) }}" target="_blank">
                                     <i class="material-icons">file_download</i>

@@ -32,6 +32,7 @@ class CreateTravelpassTable extends Migration
             $table->string('travelpass_status', 25);
             $table->string('travelpass_scanned_copy')->nullable();
             $table->string('rejection_reason')->nullable();
+            $table->string('travelpass_contact_no', 10)->nullable();
 
             $table->timestamps();
             $table->foreign('workplace_id')->references('id')->on('workplaces')->onDelete('cascade');

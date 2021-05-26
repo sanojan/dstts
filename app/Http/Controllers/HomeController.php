@@ -32,6 +32,7 @@ class HomeController extends Controller
         $new_complaints = 0;
         $ongoing_tasks = 0;
         $new_travelpasses = 0;
+        $new_approved_travelpasses = 0;
 
         foreach(Auth::user()->tasks as $task){
             if(count($task->histories) > 0){
@@ -62,9 +63,15 @@ class HomeController extends Controller
             }
         }
 
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
+
         
 
-        return view('home')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+        return view('home')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
     }
 
     public function about()
@@ -76,6 +83,7 @@ class HomeController extends Controller
         $new_complaints = 0;
         $ongoing_tasks = 0;
         $new_travelpasses = 0;
+        $new_approved_travelpasses = 0;
 
         foreach(Auth::user()->tasks as $task){
             if(count($task->histories) > 0){
@@ -105,7 +113,12 @@ class HomeController extends Controller
                 $new_travelpasses += 1;
             }
         }
-        return view('aboutus')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
+        return view('aboutus')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
 
     }
 
@@ -118,6 +131,7 @@ class HomeController extends Controller
         $new_complaints = 0;
         $ongoing_tasks = 0;
         $new_travelpasses = 0;
+        $new_approved_travelpasses = 0;
 
         foreach(Auth::user()->tasks as $task){
             if(count($task->histories) > 0){
@@ -147,7 +161,14 @@ class HomeController extends Controller
                 $new_travelpasses += 1;
             }
         }
-        return view('contactus')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+
+        
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
+        return view('contactus')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
 
     }
     

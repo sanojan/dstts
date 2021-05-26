@@ -12,8 +12,8 @@
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li>
+                    @if(Gate::allows('sys_admin'))
+                    <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
@@ -23,12 +23,12 @@
                                     <li>
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
-                                    <li >
+                                    <li class="">
                                         <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
                                     </li>
                         </ul>
                     </li>
-                    @endif
+                    
                     
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -48,7 +48,6 @@
                                     @endif
                         </ul>
                     </li>
-                    
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -80,24 +79,49 @@
                         </a>
                     </li>
                     @endif
-                    
+                    @endif
+                    <li >
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">transfer_within_a_station</i>
+                            <span>{{__('Travel Pass')}}</span>
+                            @if(Gate::allows('admin'))
+                            @if($new_travelpasses > 0)
+                            <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
+                            @endif
+                            @elseif(Gate::allows('user'))
+                            @if($new_approved_travelpasses > 0)
+                            <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
+                            @endif
+                            @endif
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
+                            </li>
+                            
+                            <li >
+                                <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
+                            </li>    
+                        </ul>
+                    </li>
+                    @if(Gate::allows('sys_admin') || Auth::user()->id == $user->id)
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
-                        @if(Gate::allows('sys_admin'))
                         <ul class="ml-menu">
-                                    
-                                    <li>
-                                        <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
-                                    </li>
-                                    <li class="active">
-                                        <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
-                                    </li>
-                        </ul>
+                        @if(Gate::allows('sys_admin'))  
+                            <li>
+                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                            </li>
                         @endif
+                            <li class="active">
+                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                            </li>
+                        </ul>
                     </li>
+                    @endif
                    
                     @if(Gate::allows('sys_admin'))
                     <li>
@@ -108,13 +132,13 @@
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="pages/widgets/cards/basic.html">Designation</a>
+                                        <a href="#">Designation</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Work Place</a>
+                                        <a href="#">Work Place</a>
                                     </li>
                                     <li>
-                                        <a href="pages/widgets/cards/colored.html">Services</a>
+                                        <a href="#">Services</a>
                                     </li>
                         </ul>
                     </li>
@@ -126,13 +150,13 @@
                         </a>
                     </li>
                     <li >
-                        <a href="#">
+                        <a href="{{route('about', app()->getLocale())}}">
                             <i class="material-icons">group</i>
                             <span>{{__('About Us')}}</span>
                         </a>
                     </li>
                     <li >
-                        <a href="#">
+                        <a href="{{route('contact', app()->getLocale())}}">
                             <i class="material-icons">contact_phone</i>
                             <span>{{__('Contact Us')}}</span>
                         </a>

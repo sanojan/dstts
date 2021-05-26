@@ -27,32 +27,32 @@ class WorkplaceSeeder extends Seeder
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Alayadivembu-Divisional Secretariat',
-                'short_code' => 'ALY'
+                'short_code' => 'ALV'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Uhana-Divisional Secretariat',
-                'short_code' => 'UHA'
+                'short_code' => 'DSU'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Mahaoya-Divisional Secretariat',
-                'short_code' => 'MAH'
+                'short_code' => 'DSM'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Padiyathalawa-Divisional Secretariat',
-                'short_code' => 'PAD'
+                'short_code' => 'DSP'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Dehiaththakandiya-Divisional Secretariat',
-                'short_code' => 'DEH'
+                'short_code' => 'DAK'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Damana-Divisional Secretariat',
-                'short_code' => 'DAM'
+                'short_code' => 'DSD'
             ),
             array(
                 'workplace_type_id' => '2',
@@ -72,17 +72,17 @@ class WorkplaceSeeder extends Seeder
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Karathivu-Divisional Secretariat',
-                'short_code' => 'KAR'
+                'short_code' => 'KTV'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Sainthamaruthu-Divisional Secretariat',
-                'short_code' => 'STM'
+                'short_code' => 'SAM'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Ninthavur-Divisional Secretariat',
-                'short_code' => 'NIN'
+                'short_code' => 'NTR'
             ),
             array(
                 'workplace_type_id' => '2',
@@ -102,22 +102,22 @@ class WorkplaceSeeder extends Seeder
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Thirukkovil-Divisional Secretariat',
-                'short_code' => 'THK'
+                'short_code' => 'TKV'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Pothuvil-Divisional Secretariat',
-                'short_code' => 'POT'
+                'short_code' => 'PVL'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Kalmunai-Divisional Secretariat',
-                'short_code' => 'KLM'
+                'short_code' => 'KAL'
             ),
             array(
                 'workplace_type_id' => '2',
                 'name' => 'Kalmunai(Tamil)-Divisional Secretariat',
-                'short_code' => 'KLT'
+                'short_code' => 'KMN'
             ),
         ));
     }

@@ -12,7 +12,7 @@
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    @if(Gate::allows('sys_admin'))
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -28,7 +28,6 @@
                                     </li>
                         </ul>
                     </li>
-                    @endif
                     
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -80,13 +79,18 @@
                         </a>
                     </li>
                     @endif
+                    @endif
                     <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">transfer_within_a_station</i>
                             <span>{{__('Travel Pass')}}</span>
-                            @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                            @if(Gate::allows('admin'))
                             @if($new_travelpasses > 0)
                             <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
+                            @endif
+                            @elseif(Gate::allows('user'))
+                            @if($new_approved_travelpasses > 0)
+                            <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
                             @endif
                             @endif
                         </a>

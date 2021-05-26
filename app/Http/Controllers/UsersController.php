@@ -11,6 +11,7 @@ use App\Designation;
 use App\Workplace;
 use App\Workplacetype;
 use App\Service;
+use App\TravelPass;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -187,6 +188,19 @@ class UsersController extends Controller
                 $new_complaints += 1;
             }
         }
+        $new_travelpasses = 0;
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "SUBMITTED"){
+                $new_travelpasses += 1;
+            }
+        }
+
+        $new_approved_travelpasses = 0;
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
 
         if($current_user = User::find($id)){
 
@@ -194,7 +208,7 @@ class UsersController extends Controller
                 
 
                 //dd("test");
-                return view('users.show')->with('user', $current_user)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                return view('users.show')->with('user', $current_user)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
 
             }else{
                 
@@ -203,14 +217,14 @@ class UsersController extends Controller
                     'message' => __("You do not have permission to view user profiles"),
                     'alert-type' => 'warning'
                 );
-                return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
             }
         }else{
             $notification = array(
                 'message' => __("Requested User profile is not available"),
                 'alert-type' => 'warning'
             );
-            return redirect(app()->getLocale() . '/users')->with($notification)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+            return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
         }
         
     }

@@ -12,7 +12,7 @@
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    @if(Gate::allows('sys_admin'))
                     <li >
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -28,7 +28,7 @@
                                     </li>
                         </ul>
                     </li>
-                    @endif
+                    
                     
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -79,13 +79,18 @@
                         </a>
                     </li>
                     @endif
+                    @endif
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">transfer_within_a_station</i>
                             <span>{{__('Travel Pass')}}</span>
-                            @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                            @if(Gate::allows('admin'))
                             @if($new_travelpasses > 0)
                             <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
+                            @endif
+                            @elseif(Gate::allows('user'))
+                            @if($new_approved_travelpasses > 0)
+                            <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
                             @endif
                             @endif
                         </a>
@@ -170,14 +175,24 @@
             <div class="card">
                 <div class="body">
                     
-                    <table id="no_export_table_id" class="display ">
+                    <table id="export_table_id" class="display">
                         <thead>
                             <tr>
+                                <th>{{__('Created At')}}</th>
                                 <th>{{__('Ref No.')}}</th>
+                                <th>{{__('Travel Pass Type')}}</th>
                                 <th>{{__('Applicant Name')}}</th>
+                                <th>{{__('Applicant Address')}}</th>
+                                <th>{{__('Applicant NIC')}}</th>
+                                <th>{{__('Applicant Vechicle No. & Type')}}</th>
                                 <th>{{__('Travel Date')}}</th>
+                                <th>{{__('Retun Date')}}</th>
+                                <th>{{__('Reason For Travel')}}</th>
                                 <th>{{__('Travel Path')}}</th>
+                                <th>{{__('Passenger Details')}}</th>
+                                <th>{{__('Items Carried During Travel')}}</th>
                                 <th>{{__('Status')}}</th>
+                                <th>{{__('Reason If Rejected')}}</th>
                                 <th>{{__('Action')}}</th>
                             </tr>
                         </thead>
@@ -185,24 +200,41 @@
                             <tbody>
                                 @foreach($travelpasses as $travelpass)
                                 <tr>
+                                    <td>{{$travelpass->created_at}}</td>
                                     <td>{{$travelpass->travelpass_no}}</td>
+                                    @if($travelpass->travelpass_type == "foods_goods")
+                                    <td>For Essential Items & Foods</td>
+                                    @elseif($travelpass->travelpass_type == "private_trans")
+                                    <td>For Private Transport</td>
+                                    @endif
                                     <td>{{$travelpass->applicant_name}}</td>
+                                    <td>{{$travelpass->applicant_address}}</td>
+                                    <td>{{$travelpass->nic_no}}</td>
+                                    <td>{{$travelpass->vehicle_no}}({{$travelpass->vehicle_type}})</td>
                                     <td>{{$travelpass->travel_date}}</td>
+                                    <td>{{$travelpass->comeback_date}}</td>
+                                    <td>{{$travelpass->reason_for_travel}}</td>
                                     <td>{{$travelpass->travel_path}}</td>
+                                    <td>{{$travelpass->passengers_details}}</td>
+                                    <td>{{$travelpass->travel_items}}</td>
+                                    
+
                                     @if(($travelpass->travelpass_status == "PENDING") || ($travelpass->travelpass_status == "SUBMITTED"))
                                     <td class="font-bold col-blue">{{$travelpass->travelpass_status}}</td>
                                     @elseif($travelpass->travelpass_status == "ACCEPTED")
                                     <td class="font-bold col-deep-orange">{{$travelpass->travelpass_status}}</td>
-                                    @elseif($travelpass->travelpass_status == "TRAVEL PASS ISSUED")
+                                    @elseif(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") ||($travelpass->travelpass_status == "TRAVEL PASS RECEIVED"))
                                     <td class="font-bold col-green">{{$travelpass->travelpass_status}}</td>
                                     @elseif($travelpass->travelpass_status == "REJECTED")
                                     <td class="font-bold col-red">{{$travelpass->travelpass_status}}</td>
                                     @endif
+                                    <td>{{$travelpass->rejection_reason}}</td>
                                     <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('travelpasses.show', [app()->getLocale(), $travelpass->id]) }}">
                                             <i class="material-icons">pageview</i>
                                                 <span>{{__('VIEW')}}</span>
                                         </a>
                                     </td>
+                                    
                                 </tr>
                                 @endforeach
                             </tbody>

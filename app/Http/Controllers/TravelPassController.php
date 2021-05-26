@@ -39,18 +39,26 @@ class TravelPassController extends Controller
                 $new_travelpasses += 1;
             }
         }
+        $new_approved_travelpasses = 0;
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
+
         if (Gate::allows('admin') || Gate::allows('sys_admin')) {
 
-            $travelpasses = DB::table('travelpass')->where('travelpass_status', '<>', 'PENDING')->get();
+            $travelpasses = DB::table('travelpass')->where('travelpass_status', '<>', 'PENDING')->orderBy('id', 'desc')->get();
             //dd($travelpass);
 
             //$letters = Auth::user()->letters;
-            return view('travelpasses.index')->with('travelpasses', $travelpasses)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+            return view('travelpasses.index')->with('travelpasses', $travelpasses)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
         
     
         }else{
-            $travelpasses = Auth::user()->workplace->travelpasses;
-            return view('travelpasses.index')->with('travelpasses', $travelpasses)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+            $travelpasses = DB::table('travelpass')->where('workplace_id', '=', Auth::user()->workplace->id)->orderBy('id', 'desc')->get();
+            
+            return view('travelpasses.index')->with('travelpasses', $travelpasses)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
         }
         
     }
@@ -81,8 +89,14 @@ class TravelPassController extends Controller
                 $new_travelpasses += 1;
             }
         }
+        $new_approved_travelpasses = 0;
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
 
-        return view('travelpasses.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+        return view('travelpasses.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
     }
 
     /**
@@ -125,11 +139,12 @@ class TravelPassController extends Controller
         $travelpass_no = strtoupper("AM/" . Auth::user()->workplace->short_code . "/");
 
         if($request->travelpass_type == "foods_goods"){
-            $travelpass_no .= "01/";
+            $travelpass_no .= "01/" . sprintf("%04d", Auth::user()->workplace->travelpass_count_1 + 1);
         }elseif($request->travelpass_type == "private_trans"){
-            $travelpass_no .= "02/";
+            $travelpass_no .= "02/" . sprintf("%04d", Auth::user()->workplace->travelpass_count_2 + 1);
         }
-        $travelpass_no .= sprintf("%04d", Auth::user()->workplace->travelpass_count + 1);
+        
+        //$travelpass_no .= sprintf("%04d", Auth::user()->workplace->travelpass_count + 1);
 
         $travelpass_application->travelpass_no = $travelpass_no;
         $travelpass_application->travelpass_type = $request->travelpass_type;
@@ -145,12 +160,19 @@ class TravelPassController extends Controller
         $travelpass_application->travel_path = $request->travel_path;
         $travelpass_application->travel_items = $request->travel_goods_info;
         $travelpass_application->travelpass_status = "PENDING";
+        $travelpass_application->travelpass_contact_no = Auth::user()->mobile_no;
         
 
         $travelpass_application->save();
 
         $workplace_travelpass_count = Workplace::find(Auth::user()->workplace->id);
-        $workplace_travelpass_count->travelpass_count = $workplace_travelpass_count->travelpass_count + 1;
+
+        if($request->travelpass_type == "foods_goods"){
+            $workplace_travelpass_count->travelpass_count_1 = $workplace_travelpass_count->travelpass_count_1 + 1;
+        }elseif($request->travelpass_type == "private_trans"){
+            $workplace_travelpass_count->travelpass_count_2 = $workplace_travelpass_count->travelpass_count_2 + 1;
+        }
+        
         $workplace_travelpass_count->save();
 
         //session()->put('success','Letter has been created successfully.');
@@ -191,16 +213,26 @@ class TravelPassController extends Controller
                 $new_travelpasses += 1;
             }
         }
+        $new_approved_travelpasses = 0;
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
 
         if($travelpass = TravelPass::find($id)){
 
             if (Gate::allows('admin')|| Gate::allows('sys_admin')) {
-                return view('travelpasses.show')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+                return view('travelpasses.show')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
 
             }
             else{
                 if($travelpass->workplace == Auth::user()->workplace){
-                    return view('travelpasses.show')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+                    if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                        $travelpass->travelpass_status = "TRAVEL PASS RECEIVED";
+                        $travelpass->save();
+                    }
+                    return view('travelpasses.show')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
                 }else{
                     $notification = array(
                         'message' => __('You do not have permission to view this Travel Pass'),
@@ -246,15 +278,21 @@ class TravelPassController extends Controller
                 $new_travelpasses += 1;
             }
         }
+        $new_approved_travelpasses = 0;
+        foreach(TravelPass::all() as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
 
         if($travelpass = TravelPass::find($id)){
         //Validation for edit fields
             if (Gate::allows('sys_admin') || Gate::allows('admin')) {
-                return view('travelpasses.edit')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+                return view('travelpasses.edit')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
             }
             else{
                 if($travelpass->workplace == Auth::user()->workplace){
-                    return view('travelpasses.edit')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses);
+                    return view('travelpasses.edit')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
                 }
                 else{
                     $notification = array(
@@ -476,6 +514,7 @@ class TravelPassController extends Controller
         $pdf->SetXY(145, 90); // set the position of the box
         $pdf->Cell(0, 0, $travelpass->travelpass_no, 0, 0, 'L');
 
+        /*
         $pdf->SetFontSize('11'); // set font size
         $pdf->SetXY(100, 116); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->applicant_name), 0, 0, 'L'); // add the text, align to Center of cell
@@ -483,6 +522,7 @@ class TravelPassController extends Controller
         $pdf->SetFontSize('11'); // set font size
         $pdf->SetXY(150, 116); // set the position of the box
         $pdf->Cell(0, 0, strtoupper($travelpass->nic_no), 0, 0, 'L');
+        */
 
         $passengers = explode(";", $travelpass->passengers_details);
         
@@ -492,17 +532,19 @@ class TravelPassController extends Controller
 
         foreach($passengers as $key =>$passenger){
             if($key == $i){
-                $nameY += "7";
+                
                 $pdf->SetFontSize('11'); // set font size
                 $pdf->SetXY(100, $nameY); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
+                $nameY += "7";
                 
             }
             else{
-                $nicY += "7";
+                
                 $pdf->SetFontSize('11'); // set font size
                 $pdf->SetXY(150, $nicY); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
+                $nicY += "7";
                 $i += "2";
             }
             
@@ -587,7 +629,7 @@ class TravelPassController extends Controller
         
         $pdf->SetFontSize('11'); // set font size
         $pdf->SetXY(122, 233); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper(Auth::user()->mobile_no), 0, 0, 'L');
+        $pdf->Cell(0, 0, strtoupper($travelpass->travelpass_contact_no), 0, 0, 'L');
 
 
       
@@ -609,6 +651,7 @@ class TravelPassController extends Controller
             $pdf->SetXY(145, 90); // set the position of the box
             $pdf->Cell(0, 0, $travelpass->travelpass_no, 0, 0, 'L');
 
+            /*
             $pdf->SetFontSize('11'); // set font size
             $pdf->SetXY(100, 112); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->applicant_name), 0, 0, 'L'); // add the text, align to Center of cell
@@ -616,6 +659,7 @@ class TravelPassController extends Controller
             $pdf->SetFontSize('11'); // set font size
             $pdf->SetXY(150, 112); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->nic_no), 0, 0, 'L');
+            */
 
             $passengers = explode(";", $travelpass->passengers_details);
         
@@ -625,17 +669,19 @@ class TravelPassController extends Controller
 
             foreach($passengers as $key =>$passenger){
                 if($key == $i){
-                    $nameY += "7";
+                    
                     $pdf->SetFontSize('11'); // set font size
                     $pdf->SetXY(100, $nameY); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
+                    $nameY += "7";
                     
                 }
                 else{
-                    $nicY += "7";
+                    
                     $pdf->SetFontSize('11'); // set font size
                     $pdf->SetXY(150, $nicY); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
+                    $nicY += "7";
                     $i += "2";
                 }
                 
@@ -644,7 +690,7 @@ class TravelPassController extends Controller
           
 
             $pdf->SetFontSize('9'); // set font size
-            $pdf->SetXY(115, 160); // set the position of the box
+            $pdf->SetXY(115, 157); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->reason_for_travel), 0, 0, 'L');
 
             $pdf->SetFontSize('11'); // set font size
@@ -696,15 +742,15 @@ class TravelPassController extends Controller
 
             $pdf->SetFontSize('11'); // set font size
             $pdf->SetXY(108, 245); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper(Auth::user()->mobile_no), 0, 0, 'L');
+            $pdf->Cell(0, 0, strtoupper($travelpass->travelpass_contact_no), 0, 0, 'L');
 
         }
         
         
 
         // Because I is for preview for browser.
-        //$pdf->Output("D", $travelpass->travelpass_no . ".pdf");
-        $pdf->Output();
+        $pdf->Output("D", $travelpass->travelpass_no . ".pdf");
+        //$pdf->Output();
 
         
     }
