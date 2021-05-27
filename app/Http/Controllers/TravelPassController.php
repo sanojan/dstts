@@ -629,7 +629,7 @@ class TravelPassController extends Controller
         
         $pdf->SetFontSize('11'); // set font size
         $pdf->SetXY(122, 233); // set the position of the box
-        $pdf->Cell(0, 0, strtoupper($travelpass->travelpass_contact_no), 0, 0, 'L');
+        $pdf->Cell(0, 0, strtoupper($travelpass->workplace->contact_no), 0, 0, 'L');
 
 
       
@@ -742,7 +742,7 @@ class TravelPassController extends Controller
 
             $pdf->SetFontSize('11'); // set font size
             $pdf->SetXY(108, 245); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->travelpass_contact_no), 0, 0, 'L');
+            $pdf->Cell(0, 0, strtoupper($travelpass->workplace->contact_no), 0, 0, 'L');
 
         }
         
