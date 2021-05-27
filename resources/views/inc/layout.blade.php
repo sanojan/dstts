@@ -153,6 +153,7 @@
                             <li class="header">NOTIFICATIONS</li>
                             <li class="body">
                                 <ul class="menu">
+                                <!--
                                     <li>
                                         <a href="javascript:void(0);">
                                             <div class="icon-circle bg-light-green">
@@ -166,7 +167,7 @@
                                             </div>
                                         </a>
                                     </li>
-                                    
+                                -->
                                 </ul>
                             </li>
                             <li class="footer">
@@ -180,12 +181,13 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">flag</i>
-                            <span class="label-count">9</span>
+                            <!--<span class="label-count">9</span> -->
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">TASKS</li>
                             <li class="body">
                                 <ul class="menu tasks">
+                                <!--
                                     <li>
                                         <a href="javascript:void(0);">
                                             <h4>
@@ -198,6 +200,7 @@
                                             </div>
                                         </a>
                                     </li>
+                                    -->
                                 </ul>
                             </li>
                             <li class="footer">

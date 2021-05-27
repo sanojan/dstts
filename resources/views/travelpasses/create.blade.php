@@ -375,7 +375,7 @@
                         <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
                         <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px">
                             <i class="material-icons">note_add</i>
-                            <span>{{__('SUBMIT')}}</span>
+                            <span>{{__('CREATE')}}</span>
                         </button>
                         
                         <a class="btn bg-grey waves-effect" style="margin-right:10px" href="{{route('travelpasses.index', app()->getLocale())}}">
