@@ -120,7 +120,7 @@ class WorkplaceSeeder extends Seeder
                 'workplace_type_id' => '2',
                 'name' => 'Thirukkovil-Divisional Secretariat',
                 'short_code' => 'TKV',
-                'contact_no' => ''
+                'contact_no' => '0672265056'
             ),
             array(
                 'workplace_type_id' => '2',
