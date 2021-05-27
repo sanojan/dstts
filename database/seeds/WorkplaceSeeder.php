@@ -54,7 +54,7 @@ class WorkplaceSeeder extends Seeder
                 'workplace_type_id' => '2',
                 'name' => 'Dehiaththakandiya-Divisional Secretariat',
                 'short_code' => 'DAK',
-                'contact_no' => '0272250197'
+                'contact_no' => '0272250167'
             ),
             array(
                 'workplace_type_id' => '2',

@@ -178,11 +178,11 @@
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box bg-red hover-expand-effect">
                     <div class="icon">
-                        <i class="material-icons">new_releases</i>
+                        <i class="material-icons">close</i>
                     </div>
                     <div class="content">
-                        <div class="text">{{__('NEW TASKS')}}</div>
-                        <div class="number count-to task-number" data-from="0" data-to="{{$new_tasks}}" data-speed="1000" data-fresh-interval="20">125</div>
+                        <div class="text">{{__('REJECTED APPLICATIONS')}}</div>
+                        <div class="number count-to task-number" data-from="0" data-to="{{$rejected_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
                     </div>
                 </div>
             </div>
@@ -190,11 +190,11 @@
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box bg-orange hover-expand-effect">
                     <div class="icon">
-                        <i class="material-icons">play_arrow</i>
+                        <i class="material-icons">check</i>
                     </div>
                     <div class="content">
-                        <div class="text">{{__('ON GOING TASKS')}}</div>
-                        <div class="number count-to task-number" data-from="0" data-to="{{$ongoing_tasks}}" data-speed="1000" data-fresh-interval="20">125</div>
+                        <div class="text">{{__('ACCEPTED APPLICATIONS')}}</div>
+                        <div class="number count-to task-number" data-from="0" data-to="{{$accepted_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
                     </div>
                 </div>
             </div>
@@ -202,11 +202,11 @@
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box bg-green hover-expand-effect">
                     <div class="icon">
-                        <i class="material-icons">playlist_add_check</i>
+                        <i class="material-icons">assignment_turned_in</i>
                     </div>
                     <div class="content">
-                        <div class="text">{{__('COMPLETED TASKS')}}</div>
-                        <div class="number count-to task-number" data-from="0" data-to="{{$comp_tasks}}" data-speed="1000" data-fresh-interval="20">125</div>
+                        <div class="text">{{__('ISSUED TRAVEL PASSES')}}</div>
+                        <div class="number count-to task-number" data-from="0" data-to="{{$issued_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
                     </div>
                 </div>
             </div>
@@ -217,8 +217,8 @@
                         <i class="material-icons">list</i>
                     </div>
                     <div class="content">
-                        <div class="text">{{__('TOTAL TASKS')}}</div>
-                        <div class="number count-to task-number" data-from="0" data-to="{{$tot_tasks}}" data-speed="1000" data-fresh-interval="20">125</div>
+                        <div class="text">{{__('TRAVEL PASS APPLICATIONS')}}</div>
+                        <div class="number count-to task-number" data-from="0" data-to="{{$tot_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
                     </div>
                 </div>
             </div>

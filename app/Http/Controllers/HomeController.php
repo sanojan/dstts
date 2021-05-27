@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Task;
 use Auth;
+use Gate;
 use App\TravelPass;
 
 class HomeController extends Controller
@@ -33,6 +34,45 @@ class HomeController extends Controller
         $ongoing_tasks = 0;
         $new_travelpasses = 0;
         $new_approved_travelpasses = 0;
+
+        $tot_travelpass = 0;
+        $rejected_travelpass = 0;
+        $accepted_travelpass = 0;
+        $issued_travelpass = 0;
+
+        
+        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+
+            $tot_travelpass = count(TravelPass::all());
+            foreach(TravelPass::all() as $travelpass){
+                if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                    $issued_travelpass += 1;
+                }
+                elseif($travelpass->travelpass_status == "ACCEPTED"){
+                    $accepted_travelpass += 1;
+                }
+                elseif($travelpass->travelpass_status == "REJECTED"){
+                    $rejected_travelpass += 1;
+                }
+            
+            }
+        }
+        else{
+            $tot_travelpass = count(Auth::user()->workplace->travelpasses);
+            foreach(Auth::user()->workplace->travelpasses as $travelpass){
+                if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                    $issued_travelpass += 1;
+                }
+                elseif($travelpass->travelpass_status == "ACCEPTED"){
+                    $accepted_travelpass += 1;
+                }
+                elseif($travelpass->travelpass_status == "REJECTED"){
+                    $rejected_travelpass += 1;
+                }
+            
+            }
+        }
+
 
         foreach(Auth::user()->tasks as $task){
             if(count($task->histories) > 0){
@@ -71,7 +111,7 @@ class HomeController extends Controller
 
         
 
-        return view('home')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+        return view('home')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses)->with('tot_travelpass', $tot_travelpass)->with('rejected_travelpass', $rejected_travelpass)->with('accepted_travelpass', $accepted_travelpass)->with('issued_travelpass', $issued_travelpass);
     }
 
     public function about()
