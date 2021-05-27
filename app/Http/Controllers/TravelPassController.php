@@ -48,7 +48,7 @@ class TravelPassController extends Controller
 
         if (Gate::allows('admin') || Gate::allows('sys_admin')) {
 
-            $travelpasses = DB::table('travelpass')->where('travelpass_status', '<>', 'PENDING')->orderBy('id', 'desc')->get();
+            $travelpasses = DB::table('travelpass')->where('travelpass_status', '<>', 'PENDING')->orderBy('updated_at', 'desc')->get();
             //dd($travelpass);
 
             //$letters = Auth::user()->letters;
@@ -56,7 +56,7 @@ class TravelPassController extends Controller
         
     
         }else{
-            $travelpasses = DB::table('travelpass')->where('workplace_id', '=', Auth::user()->workplace->id)->orderBy('id', 'desc')->get();
+            $travelpasses = DB::table('travelpass')->where('workplace_id', '=', Auth::user()->workplace->id)->orderBy('updated_at', 'desc')->get();
             
             return view('travelpasses.index')->with('travelpasses', $travelpasses)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
         }
@@ -133,7 +133,7 @@ class TravelPassController extends Controller
 
          
 
-        //Create an instance of letter model
+        //Create an instance of travelpass model
         $travelpass_application = new TravelPass;
         $travelpass_application->workplace_id = Auth::user()->workplace->id;
         $travelpass_no = strtoupper("AM/" . Auth::user()->workplace->short_code . "/");
@@ -434,7 +434,37 @@ class TravelPassController extends Controller
              
     
             //Create an instance of travelpass model
+
+            
           
+            $workplace_travelpass_count = Workplace::find(Auth::user()->workplace->id);
+
+            if($request->travelpass_type != $travelpass->travelpass_type){
+            
+                
+
+                $travelpass_no = strtoupper("AM/" . Auth::user()->workplace->short_code . "/");
+
+                if($request->travelpass_type == "foods_goods"){
+                    $travelpass_no .= "01/" . sprintf("%04d", Auth::user()->workplace->travelpass_count_1 + 1);
+                }elseif($request->travelpass_type == "private_trans"){
+                    $travelpass_no .= "02/" . sprintf("%04d", Auth::user()->workplace->travelpass_count_2 + 1);
+                }
+                $travelpass->travelpass_no = $travelpass_no;
+
+                if($request->travelpass_type == "foods_goods"){
+                    $workplace_travelpass_count->travelpass_count_1 = $workplace_travelpass_count->travelpass_count_1 + 1;
+                    $workplace_travelpass_count->travelpass_count_2 = $workplace_travelpass_count->travelpass_count_2 - 1;
+                }elseif($request->travelpass_type == "private_trans"){
+                    $workplace_travelpass_count->travelpass_count_2 = $workplace_travelpass_count->travelpass_count_2 + 1;
+                    $workplace_travelpass_count->travelpass_count_1 = $workplace_travelpass_count->travelpass_count_1 - 1;
+                }
+                $workplace_travelpass_count->save();
+            }
+        
+
+            
+            
             $travelpass->travelpass_type = $request->travelpass_type;
             $travelpass->applicant_name = $request->applicant_name;
             $travelpass->applicant_address = $request->applicant_address;
@@ -448,10 +478,13 @@ class TravelPassController extends Controller
             $travelpass->travel_path = $request->travel_path;
             $travelpass->travel_items = $request->travel_goods_info;
     
-            
+            $travelpass->travelpass_status = "PENDING";
             
             $travelpass->save();
     
+
+            
+
             //session()->put('success','Letter has been created successfully.');
     
             $notification = array(

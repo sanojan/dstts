@@ -270,7 +270,7 @@
                                     <i class="material-icons">keyboard_backspace</i>
                                     <span>{{__('BACK')}}</span>
                                 </a>
-                                @if(($travelpass->workplace == \Auth::user()->workplace) && ($travelpass->travelpass_status == "PENDING"))
+                                @if(($travelpass->workplace == \Auth::user()->workplace) && (($travelpass->travelpass_status == "PENDING") || ($travelpass->travelpass_status == "REJECTED")))
                                 <a type="button" style="margin-right:10px" class="btn bg-purple btn-xs waves-effect" href="{{route('travelpasses.edit', [app()->getLocale(), $travelpass->id])}}">
                                     <i class="material-icons">mode_edit</i>
                                     <span>{{__('EDIT DETAILS')}}</span>
