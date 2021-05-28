@@ -617,14 +617,14 @@ class TravelPassController extends Controller
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $palceX += strlen($place) + "15";
                 }
-                else if(($key >= 4) && ($key < 9)){
+                else if(($key >= 4) && ($key < 8)){
 
                     $pdf->SetFontSize('8'); // set font size
                     $pdf->SetXY($anotherX, 166); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $anotherX += strlen($place) + "15";
                 }
-                else if(($key >= 10) || ($key < 11)){
+                else if(($key >= 9) || ($key < 11)){
                     $pdf->SetFontSize('8'); // set font size
                     $pdf->SetXY($differentX, 170); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
@@ -757,14 +757,14 @@ class TravelPassController extends Controller
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $palceX += strlen($place) + "15";
                     }
-                    else if(($key >= 3) && ($key < 9)){
+                    else if(($key >= 3) && ($key < 8)){
 
                         $pdf->SetFontSize('8'); // set font size
                         $pdf->SetXY($anotherX, 172); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $anotherX += strlen($place) + "15";
                     }
-                    else if(($key >= 10) || ($key < 11)){
+                    else if(($key >= 9) || ($key < 11)){
                         $pdf->SetFontSize('8'); // set font size
                         $pdf->SetXY($differentX, 176); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
