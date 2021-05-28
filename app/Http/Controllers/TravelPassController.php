@@ -617,9 +617,16 @@ class TravelPassController extends Controller
             $pdf->SetXY(117, 178); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->travel_date . "     -"), 0, 0, 'L');
 
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(150, 178); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
+            
+            if($travelpass->comeback_date){
+                $pdf->SetFontSize('11'); // set font size
+                $pdf->SetXY(150, 178); // set the position of the box
+                $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
+            }else{
+                $pdf->SetFontSize('10'); // set font size
+                $pdf->SetXY(145, 183); // set the position of the box
+                $pdf->Cell(0, 0, strtoupper("not return"), 0, 0, 'L');
+            }
 
             $places = explode(";", $travelpass->travel_path);
             $palceX = "115";
@@ -749,9 +756,15 @@ class TravelPassController extends Controller
                 $pdf->SetXY(117, 183); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->travel_date . "     -"), 0, 0, 'L');
 
-                $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(150, 183); // set the position of the box
-                $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
+                if($travelpass->comeback_date){
+                    $pdf->SetFontSize('11'); // set font size
+                    $pdf->SetXY(150, 183); // set the position of the box
+                    $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
+                }else{
+                    $pdf->SetFontSize('10'); // set font size
+                    $pdf->SetXY(145, 183); // set the position of the box
+                    $pdf->Cell(0, 0, strtoupper("not return"), 0, 0, 'L');
+                }
 
                 $pdf->SetFontSize('11'); // set font size
                 $pdf->SetXY(145, 146); // set the position of the box
@@ -905,9 +918,16 @@ class TravelPassController extends Controller
             $pdf->SetXY(117, 178); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->travel_date . "     -"), 0, 0, 'L');
 
-            $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(150, 178); // set the position of the box
-            $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
+            
+            if($travelpass->comeback_date){
+                $pdf->SetFontSize('11'); // set font size
+                $pdf->SetXY(150, 178); // set the position of the box
+                $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
+            }else{
+                $pdf->SetFontSize('10'); // set font size
+                $pdf->SetXY(145, 183); // set the position of the box
+                $pdf->Cell(0, 0, strtoupper("not return"), 0, 0, 'L');
+            }
 
             $places = explode(";", $travelpass->travel_path);
             $palceX = "115";
@@ -1037,9 +1057,15 @@ class TravelPassController extends Controller
                 $pdf->SetXY(117, 183); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->travel_date . "     -"), 0, 0, 'L');
 
-                $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(150, 183); // set the position of the box
-                $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
+                if($travelpass->comeback_date){
+                    $pdf->SetFontSize('11'); // set font size
+                    $pdf->SetXY(150, 183); // set the position of the box
+                    $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
+                }else{
+                    $pdf->SetFontSize('10'); // set font size
+                    $pdf->SetXY(145, 183); // set the position of the box
+                    $pdf->Cell(0, 0, strtoupper("not return"), 0, 0, 'L');
+                }
 
                 $pdf->SetFontSize('11'); // set font size
                 $pdf->SetXY(145, 146); // set the position of the box
