@@ -293,6 +293,10 @@
                                     <i class="material-icons">close</i>
                                     <span>{{__('REJECT APPLICATION')}}</span>
                                 </button>
+                                <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.preview', [app()->getLocale(), $travelpass->id] )}}">
+                                    <i class="material-icons">remove_red_eye</i>
+                                    <span>{{__('PREVIEW APPLICATION')}}</span>
+                                </a>
                                 @elseif($travelpass->travelpass_status == "ACCEPTED")
                                 <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.pdf', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
                                     <i class="material-icons">file_download</i>
