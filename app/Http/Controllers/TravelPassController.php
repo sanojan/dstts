@@ -288,11 +288,28 @@ class TravelPassController extends Controller
         if($travelpass = TravelPass::find($id)){
         //Validation for edit fields
             if (Gate::allows('sys_admin') || Gate::allows('admin')) {
-                return view('travelpasses.edit')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+                if($travelpass->travelpass_status == "PENDING"){
+                    return view('travelpasses.edit')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+                }
+                else{
+                    $notification = array(
+                        'message' => __('You cannot edit already submitted travelpass application'),
+                        'alert-type' => 'warning'
+                    );
+                    return redirect(app()->getLocale() . '/travelpasses/' . $id)->with($notification);
+                }
             }
             else{
                 if($travelpass->workplace == Auth::user()->workplace){
-                    return view('travelpasses.edit')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+                    if($travelpass->travelpass_status == "PENDING"){
+                        return view('travelpasses.edit')->with('travelpass', $travelpass)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+                    }else{
+                        $notification = array(
+                            'message' => __('You cannot edit already submitted travelpass application'),
+                            'alert-type' => 'warning'
+                        );
+                        return redirect(app()->getLocale() . '/travelpasses/' . $id)->with($notification);
+                    }
                 }
                 else{
                     $notification = array(
