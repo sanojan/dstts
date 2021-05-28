@@ -348,18 +348,67 @@ if(locale == "si"){
 
     $('#export_table_id').DataTable({
         retrieve: true,
-        dom: 'Blfrtip',
+            dom: 'Blfrtip',
+            autoWidth: false,
             buttons: [
                 {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: ':visible'
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
                 },
-                title: 'Daily summary of Letters-' + date,
-                messageTop: 'Letters details report generated from DS-TTS',
+                title: 'Daily summary of Travel Passes-' + date,
+                messageTop: 'Travel Passes details report generated from DS-TTS',
                 messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
                 },
                 'colvis'
+            ],
+            "order": [],
+
+            "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+            },
+            {
+                "targets": [ 2 ],
+                "visible": false
+            },
+            {
+                "targets": [ 4 ],
+                "visible": false
+            },
+            {
+                "targets": [ 5 ],
+                "visible": false
+            },
+            {
+                "targets": [ 6 ],
+                "visible": false
+            },
+            {
+                "targets": [ 8 ],
+                "visible": false
+            },
+            {
+                "targets": [ 9 ],
+                "visible": false
+            },
+            {
+                "targets": [ 10 ],
+                "visible": false
+            },
+            {
+                "targets": [ 11 ],
+                "visible": false
+            },
+            {
+                "targets": [ 12 ],
+                "visible": false
+            },
+            {
+                "targets": [ 14 ],
+                "visible": false
+            }
         ],
         language: {
             search: "වගුවේ සොයන්න:",
@@ -403,18 +452,67 @@ if(locale == "ta"){
 
     $('#export_table_id').DataTable({
         retrieve: true,
-        dom: 'Blfrtip',
+            dom: 'Blfrtip',
+            autoWidth: false,
             buttons: [
                 {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: ':visible'
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
                 },
-                title: 'Daily summary of Letters-' + date,
-                messageTop: 'Letters details report generated from DS-TTS',
+                title: 'Daily summary of Travel Passes-' + date,
+                messageTop: 'Travel Passes details report generated from DS-TTS',
                 messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
                 },
                 'colvis'
+            ],
+            "order": [],
+
+            "columnDefs": [
+            {
+                "targets": [ 0 ],
+                "visible": false,
+            },
+            {
+                "targets": [ 2 ],
+                "visible": false
+            },
+            {
+                "targets": [ 4 ],
+                "visible": false
+            },
+            {
+                "targets": [ 5 ],
+                "visible": false
+            },
+            {
+                "targets": [ 6 ],
+                "visible": false
+            },
+            {
+                "targets": [ 8 ],
+                "visible": false
+            },
+            {
+                "targets": [ 9 ],
+                "visible": false
+            },
+            {
+                "targets": [ 10 ],
+                "visible": false
+            },
+            {
+                "targets": [ 11 ],
+                "visible": false
+            },
+            {
+                "targets": [ 12 ],
+                "visible": false
+            },
+            {
+                "targets": [ 14 ],
+                "visible": false
+            }
         ],
         language: {
             search: "தேடுக:",

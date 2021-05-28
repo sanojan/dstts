@@ -260,8 +260,10 @@
                                             <option value="Motor Bike" @if(old('vehicle_type')=="Motor Bike") selected @endif>{{__('Motor Bike')}}</option>
                                             <option value="Three Wheeler" @if(old('vehicle_type')=="Three Wheeler") selected @endif>{{__('Three Wheeler')}}</option>
                                             <option value="Car" @if(old('vehicle_type')=="Car") selected @endif>{{__('Car')}}</option>
+                                            <option value="Van" @if(old('vehicle_type')=="Van") selected @endif>{{__('Van')}}</option>
                                             <option value="Public Transport" @if(old('vehicle_type')=="Public Transport") selected @endif>{{__('Public Transport')}}</option>
                                             <option value="Small Lorry" @if(old('vehicle_type')=="Small Lorry") selected @endif>{{__('Small Lorry')}}</option>
+                                            <option value="Lorry" @if(old('vehicle_type')=="Lorry") selected @endif>{{__('Lorry')}}</option>
                                             <option value="Other" @if(old('vehicle_type')=="Other") selected @endif>{{__('Other')}}</option>
                                         </select>
                                     </div>
@@ -325,7 +327,7 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <textarea rows="5" class="form-control no-resize" name="passengers_info">{{ old('passengers_info') }}</textarea>
-                                        <label class="form-label">{{__('Details of Passengers | i.e: name;NIC;name;NIC')}}</label>
+                                        <label class="form-label">{{__('Details of Passengers | i.e: Name with Initial;NIC;Name with Initial;NIC')}}</label>
                                     </div>
                                     @error('passengers_info')
                                             <label class="error" role="alert">
