@@ -46,6 +46,8 @@ Route::group(['prefix' => '{language}'], function () {
 
     Route::get('/travelpasses/{id}/pdf','TravelPassController@newPDF')->name('travelpass.pdf');
     Route::get('/travelpasses/{id}/preview_pdf','TravelPassController@previewPDF')->name('travelpass.preview');
+    Route::get('/travelpasses/{id}/final_pdf','TravelPassController@finalPDF')->name('travelpass.final');
+    Route::get('/travelpasses/{id}/application_pdf','TravelPassController@appliPDF')->name('travelpass.appli');
     //Route::get('/travelpasses/downloadPDF/{id}','TravelPassController@downloadPDF');
     
     Route::get('get-workplaces-list','WorkplacetypeController@getWorkplaces');

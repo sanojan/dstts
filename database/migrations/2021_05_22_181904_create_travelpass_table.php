@@ -28,7 +28,9 @@ class CreateTravelpassTable extends Migration
             $table->string('reason_for_travel')->nullable();
             $table->string('passengers_details', 350);
             $table->string('travel_path', 250);
+            $table->string('comeback_path', 250)->nullable();
             $table->string('travel_items', 350)->nullable();
+            $table->string('comeback_items', 350)->nullable();
             $table->string('travelpass_status', 25);
             $table->string('travelpass_scanned_copy')->nullable();
             $table->string('rejection_reason')->nullable();

@@ -25,9 +25,14 @@
     <!-- Animation Css -->
     <link href="{{asset('plugins/animate-css/animate.css')}}" rel="stylesheet" />
     
-    <!-- Toastr Css -->
-    
-    
+    <!-- Morris Css -->
+    <link href="{{asset('plugins/morrisjs/morris.css')}}" rel="stylesheet" />
+    <script src="{{asset('plugins/raphael/raphael.min.js')}}"></script>
+    <script src="{{asset('plugins/morrisjs/morris.js')}}"></script>
+
+    <!-- ChartJs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        
     <!-- Datatables Css -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css"/>
@@ -297,11 +302,9 @@
 <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
 
 <!-- Morris Plugin Js -->
-<script src="{{asset('plugins/raphael/raphael.min.js')}}"></script>
-<script src="{{asset('plugins/morrisjs/morris.js')}}"></script>
 
-<!-- ChartJs -->
-<script src="{{asset('plugins/chartjs/Chart.bundle.js')}}"></script>
+
+
 
 <!-- Flot Charts Plugin Js -->
 <script src="{{asset('plugins/flot-charts/jquery.flot.js')}}"></script>
@@ -688,12 +691,22 @@ function change_regno_textbox()
                 document.getElementById("reason_for_travel").value = "";
                 document.getElementById("reason_for_travel").disabled = true;
                 document.getElementById("travel_goods_info").disabled= false;
+                document.getElementById("comeback_goods_info").disabled= false;
+                document.getElementById("travel_goods_info").required = true;
+                document.getElementById("comeback_goods_info").required= true;
+                document.getElementById("reason_for_travel").required= false;
+
 
             } 
             if(document.getElementById("travelpass_type").value === "private_trans") {
                 document.getElementById("reason_for_travel").disabled= false;
                 document.getElementById("travel_goods_info").disabled= true;
+                document.getElementById("comeback_goods_info").disabled= true;
                 document.getElementById("travel_goods_info").value = "";
+                document.getElementById("comeback_goods_info").value= "";
+                document.getElementById("travel_goods_info").required = false;
+                document.getElementById("comeback_goods_info").required= false;
+                document.getElementById("reason_for_travel").required= true;
             }
             
         }

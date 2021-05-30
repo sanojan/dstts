@@ -255,7 +255,7 @@
                             <div class="col-md-4">
                                 <div class="input-group">
                                     <div class="form-line">
-                                        <select class="form-control vehicle_type_dropdown" style="width:100%;" id="vehicle_type" name="vehicle_type" onChange="change_regno_textbox();">
+                                        <select class="form-control vehicle_type_dropdown" style="width:100%;" id="vehicle_type" name="vehicle_type" onChange="change_regno_textbox();" required>
                                             <option value="" @if(old('vehicle_type')=="") selected disabled @endif>{{__('Select Vehicle Type')}}</option>
                                             <option value="Motor Bike" @if(old('vehicle_type')=="Motor Bike") selected @endif>{{__('Motor Bike')}}</option>
                                             <option value="Three Wheeler" @if(old('vehicle_type')=="Three Wheeler") selected @endif>{{__('Three Wheeler')}}</option>
@@ -340,14 +340,30 @@
 
                         <div class="row clearfix">
 
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                    <input type="text" id="travel_path" class="form-control" name="travel_path" value="{{ old('travel_path') }}">
-                                    <label class="form-label">{{__('Travel Path | i.e: Kalmunai;Batticaloa;Colombo')}}</label>
+                                    <input type="text" id="travel_path" class="form-control" name="travel_path" value="{{ old('travel_path') }}" required>
+                                    <label class="form-label">{{__('Travel Path (Enter Main cities only) | i.e: City1;City2;City3')}}</label>
                                     </div>
                                     @error('travel_path')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                                        
+                            </div>
+
+                            <div class="col-md-6">
+                                
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                    <input type="text" id="return_path" class="form-control" name="return_path" value="{{ old('return_path') }}" required>
+                                    <label class="form-label">{{__('Return Path (Enter Main cities only) (Enter "Not Applicable" If applicant will not return) | i.e: City1;City2;City3')}}</label>
+                                    </div>
+                                    @error('return_path')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </label>
@@ -363,9 +379,24 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <textarea rows="5" id="travel_goods_info" class="form-control no-resize" name="travel_goods_info">{{ old('travel_goods_info') }}</textarea>
-                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when travel | i.e: Category-Quantity;Category-Quantity')}}</label>
+                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when Travel (Enter "Not Applicable" If no items when travel)| i.e: Category-Quantity;Category-Quantity')}}</label>
                                     </div>
                                     @error('travel_goods_info')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-12">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <textarea rows="5" id="comeback_goods_info" class="form-control no-resize" name="comeback_goods_info">{{ old('comeback_goods_info') }}</textarea>
+                                        <label class="form-label">{{__('Details of Essential Food Items & Goods when Return (Enter "Not Applicable" If no items when return) | i.e: Category-Quantity;Category-Quantity')}}</label>
+                                    </div>
+                                    @error('comeback_goods_info')
                                             <label class="error" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </label>

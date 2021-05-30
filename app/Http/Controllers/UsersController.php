@@ -196,7 +196,7 @@ class UsersController extends Controller
         }
 
         $new_approved_travelpasses = 0;
-        foreach(TravelPass::all() as $travelpass){
+        foreach(Auth::user()->workplace->travelpasses as $travelpass){
             if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
                 $new_approved_travelpasses += 1;
             }

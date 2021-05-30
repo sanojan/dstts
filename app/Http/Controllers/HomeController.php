@@ -45,7 +45,7 @@ class HomeController extends Controller
 
             $tot_travelpass = count(TravelPass::all());
             foreach(TravelPass::all() as $travelpass){
-                if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                if(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
                     $issued_travelpass += 1;
                 }
                 elseif($travelpass->travelpass_status == "ACCEPTED"){
@@ -60,7 +60,7 @@ class HomeController extends Controller
         else{
             $tot_travelpass = count(Auth::user()->workplace->travelpasses);
             foreach(Auth::user()->workplace->travelpasses as $travelpass){
-                if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                if(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
                     $issued_travelpass += 1;
                 }
                 elseif($travelpass->travelpass_status == "ACCEPTED"){
@@ -103,7 +103,8 @@ class HomeController extends Controller
             }
         }
 
-        foreach(TravelPass::all() as $travelpass){
+
+        foreach(Auth::user()->workplace->travelpasses as $travelpass){
             if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
                 $new_approved_travelpasses += 1;
             }
@@ -153,7 +154,7 @@ class HomeController extends Controller
                 $new_travelpasses += 1;
             }
         }
-        foreach(TravelPass::all() as $travelpass){
+        foreach(Auth::user()->workplace->travelpasses as $travelpass){
             if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
                 $new_approved_travelpasses += 1;
             }
@@ -203,7 +204,7 @@ class HomeController extends Controller
         }
 
         
-        foreach(TravelPass::all() as $travelpass){
+        foreach(Auth::user()->workplace->travelpasses as $travelpass){
             if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
                 $new_approved_travelpasses += 1;
             }

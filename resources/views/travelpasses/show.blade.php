@@ -212,6 +212,10 @@
                                         <td>{{__('Details of Foods & Essential Items during travel')}}:</td>
                                         <td>{{$travelpass->travel_items}}</td>
                                     </tr>
+                                    <tr>
+                                        <td>{{__('Details of Foods & Essential Items during return')}}:</td>
+                                        <td>{{$travelpass->comeback_items}}</td>
+                                    </tr>
                                     @endif
                                     
                                     <tr>
@@ -242,6 +246,11 @@
                                         <td>{{$travelpass->travel_path}}</td>
     
                                     </tr>
+                                    <tr>
+                                        <td>{{__('Return Path')}}:</td>
+                                        <td>{{$travelpass->comeback_path}}</td>
+    
+                                    </tr>
                                    
                                     <tr>
                                         <td>{{__('Passengers Details')}}:</td>
@@ -266,11 +275,13 @@
                             
                             <div>
                             <form action="{{ route('travelpasses.update', [app()->getLocale(), $travelpass->id] )}}" method="POST" enctype="multipart/form-data" id="travelpass_accept_form">
+                                    {{ method_field('PUT') }}
+                                    {{ csrf_field() }}
                                 <a class="btn bg-grey btn-xs waves-effect" style="margin-right:10px" href="{{route('travelpasses.index', app()->getLocale())}}">
                                     <i class="material-icons">keyboard_backspace</i>
                                     <span>{{__('BACK')}}</span>
                                 </a>
-                                @if(($travelpass->workplace == \Auth::user()->workplace) && (($travelpass->travelpass_status == "PENDING") || ($travelpass->travelpass_status == "REJECTED")))
+                                @if(($travelpass->workplace->id == Auth::user()->workplace->id) && (($travelpass->travelpass_status == "PENDING") || ($travelpass->travelpass_status == "REJECTED")))
                                 <a type="button" style="margin-right:10px" class="btn bg-purple btn-xs waves-effect" href="{{route('travelpasses.edit', [app()->getLocale(), $travelpass->id])}}">
                                     <i class="material-icons">mode_edit</i>
                                     <span>{{__('EDIT DETAILS')}}</span>
@@ -283,8 +294,7 @@
                                 @if(Gate::allows('admin'))
                                 @if($travelpass->travelpass_status == "SUBMITTED")
                                 
-                                    {{ method_field('PUT') }}
-                                    {{ csrf_field() }}
+                                    
                                 <button type="submit" style="margin-right:10px" class="btn bg-blue btn-xs waves-effect" name="subbutton" value="accept">
                                     <i class="material-icons">check</i>
                                     <span>{{__('ACCEPT APPLICATION')}}</span>
@@ -293,7 +303,7 @@
                                     <i class="material-icons">close</i>
                                     <span>{{__('REJECT APPLICATION')}}</span>
                                 </button>
-                                <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.preview', [app()->getLocale(), $travelpass->id] )}}">
+                                <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.appli', [app()->getLocale(), $travelpass->id] )}}">
                                     <i class="material-icons">remove_red_eye</i>
                                     <span>{{__('PREVIEW APPLICATION')}}</span>
                                 </a>
@@ -302,16 +312,30 @@
                                     <i class="material-icons">file_download</i>
                                     <span>{{__('DOWNLOAD APPLICATION')}}</span>
                                 </a>
-                                <button type="button" style="margin-right:10px" class="btn bg-indigo btn-xs waves-effect" data-toggle="collapse" data-target="#uploadTravelPass" aria-expanded="false" aria-controls="uploadTravelPass">
+                                <a type="button" style="margin-right:10px" class="btn bg-indigo btn-xs waves-effect" href="{{ route('travelpass.preview', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
+                                    <i class="material-icons">remove_red_eye</i>
+                                    <span>{{__('PREVIEW TRAVEL PASS')}}</span>
+                                </a>
+                                <button type="submit" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" name="subbutton" value="send">
                                     <i class="material-icons">send</i>
                                     <span>{{__('SEND TRAVEL PASS')}}</span>
                                 </button>
+                                @elseif((($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")) && Gate::allows('admin'))
+                                <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.pdf', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
+                                    <i class="material-icons">file_download</i>
+                                    <span>{{__('DOWNLOAD APPLICATION')}}</span>
+                                </a>
+                                <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{ route('travelpass.final', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
+                                    <i class="material-icons">file_download</i>
+                                    <span>{{__('DOWNLOAD TRAVEL PASS')}}</span>
+                                </a>
+
                                 </form>
                                 @endif
                                 @endif
                                 @if((($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")) && Gate::allows('user'))
                                 
-                                <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{ Storage::url('scanned_travelpasses/' . $travelpass->travelpass_scanned_copy) }}" target="_blank">
+                                <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{ route('travelpass.final', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
                                     <i class="material-icons">file_download</i>
                                     <span>{{__('DOWNLOAD TRAVEL PASS')}}</span>
                                 </a> 
@@ -368,48 +392,7 @@
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="uploadTravelPass" aria-expanded="false" style="height: 0px;">
-                                    <div class="well">
-                                        <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
-                                            <form action="{{ route('travelpasses.update', [app()->getLocale(), $travelpass->id] )}}" method="POST" enctype="multipart/form-data" id="issue_travelpass_form">
-                                            {{ method_field('PUT') }}
-                                            {{ csrf_field() }}
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:200px"></th>
-                                                            <th style="width:200px"></th>
-                                                            <th style="width:50px"></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                            <label class="form-label">{{__('Select Travel Pass')}}</label>
-                                                            </td>
-                                                            <td>
-                                                                
-                                                            <input type="file" name="travelpass_scanned_copy" class="form-control"> 
-                                                            @error('travelpass_scanned_copy')
-                                                                    <label class="error" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </label>
-                                                            @enderror
-                                                                    
-                                                            </td>  <td></td>     
-                                                            <td>
-                                                                <button type="submit" style="margin-right:10px" name="subbutton" value="travelpass" class="btn bg-green btn-xs waves-effect" >
-                                                                <i class="material-icons">check</i>
-                                                                <span>{{__('SUBMIT')}}</span>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 
                             </div>
                         </div>
