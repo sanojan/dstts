@@ -963,7 +963,7 @@ class TravelPassController extends Controller
             // Below is the path of pdf in which you going to print details.
             //  Right now i had blank pdf
             if($travelpass->travelpass_type == "foods_goods"){
-            $path = public_path("form1.pdf");
+            $path = public_path("form1signed.pdf");
             // Set path
             $pdf->setSourceFile($path);
 
@@ -975,11 +975,11 @@ class TravelPassController extends Controller
             // Horizontal and veritcal setXY
 
             $pdf->SetFontSize('14'); // set font size
-            $pdf->SetXY(35, 95); // set the position of the box 
+            $pdf->SetXY(30, 107); // set the position of the box 
             $pdf->Cell(0, 0, strtoupper(substr($travelpass->workplace->name, 0, strpos($travelpass->workplace->name, '-'))), 0, 0, 'L');
 
             $pdf->SetFontSize('14'); // set font size
-            $pdf->SetXY(145, 95); // set the position of the box
+            $pdf->SetXY(140, 107); // set the position of the box
             $pdf->Cell(0, 0, $travelpass->travelpass_no, 0, 0, 'L');
 
             /*
@@ -994,8 +994,8 @@ class TravelPassController extends Controller
 
             $passengers = explode(";", $travelpass->passengers_details);
             
-            $nameY = "121";
-            $nicY = "121";
+            $nameY = "130";
+            $nicY = "130";
             $i = "0";
 
             foreach($passengers as $key =>$passenger){
@@ -1019,36 +1019,36 @@ class TravelPassController extends Controller
             }
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(117, 143); // set the position of the box
+            $pdf->SetXY(110, 151); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->vehicle_no), 0, 0, 'L');
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(145, 143); // set the position of the box
+            $pdf->SetXY(140, 151); // set the position of the box
             $pdf->Cell(0, 0, strtoupper("(" . $travelpass->vehicle_type . ")"), 0, 0, 'L');
 
             $items = explode(";", $travelpass->travel_items);
-            $palceX = "89";
-            $anotherX = "89";
-            $differentX = "89";
+            $palceX = "91";
+            $anotherX = "91";
+            $differentX = "91";
 
             foreach($items as $key =>$item){
 
                 if($key < 4){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($palceX, 151); // set the position of the box
+                    $pdf->SetXY($palceX, 158); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $palceX += strlen($item) + "12";
                 }
                 else if(($key >= 3) && ($key < 7)){
 
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($anotherX, 154); // set the position of the box
+                    $pdf->SetXY($anotherX, 161); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $anotherX += strlen($item) + "12";
                 }
                 else if(($key >= 8) || ($key < 11)){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($differentX, 157); // set the position of the box
+                    $pdf->SetXY($differentX, 164); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $differentX += strlen($item) + "12";
                 }
@@ -1056,28 +1056,28 @@ class TravelPassController extends Controller
             }
 
             $items = explode(";", $travelpass->comeback_items);
-            $palceX = "89";
-            $anotherX = "89";
-            $differentX = "89";
+            $palceX = "91";
+            $anotherX = "91";
+            $differentX = "91";
 
             foreach($items as $key =>$item){
 
                 if($key < 4){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($palceX, 161); // set the position of the box
+                    $pdf->SetXY($palceX, 168); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $palceX += strlen($item) + "12";
                 }
                 else if(($key >= 3) && ($key < 7)){
 
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($anotherX, 164); // set the position of the box
+                    $pdf->SetXY($anotherX, 171); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $anotherX += strlen($item) + "12";
                 }
                 else if(($key >= 8) || ($key < 11)){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($differentX, 167); // set the position of the box
+                    $pdf->SetXY($differentX, 174); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $differentX += strlen($item) + "12";
                 }
@@ -1086,28 +1086,28 @@ class TravelPassController extends Controller
 
 
             $places = explode(";", $travelpass->travel_path);
-            $palceX = "89";
-            $anotherX = "89";
-            $differentX = "89";
+            $palceX = "91";
+            $anotherX = "91";
+            $differentX = "91";
 
             foreach($places as $key =>$place){
 
                 if($key < 4){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($palceX, 171); // set the position of the box
+                    $pdf->SetXY($palceX, 179); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $palceX += strlen($place) + "15";
                 }
                 else if(($key >= 4) && ($key < 8)){
 
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($anotherX, 175); // set the position of the box
+                    $pdf->SetXY($anotherX, 183); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $anotherX += strlen($place) + "15";
                 }
                 else if(($key >= 9) || ($key < 11)){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($differentX, 179); // set the position of the box
+                    $pdf->SetXY($differentX, 187); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $differentX += strlen($place) + "15";
                 }
@@ -1115,28 +1115,28 @@ class TravelPassController extends Controller
             }
 
             $places = explode(";", $travelpass->comeback_path);
-            $palceX = "89";
-            $anotherX = "89";
-            $differentX = "89";
+            $palceX = "91";
+            $anotherX = "91";
+            $differentX = "91";
 
             foreach($places as $key =>$place){
 
                 if($key < 4){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($palceX, 184); // set the position of the box
+                    $pdf->SetXY($palceX, 192); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $palceX += strlen($place) + "15";
                 }
                 else if(($key >= 4) && ($key < 8)){
 
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($anotherX, 188); // set the position of the box
+                    $pdf->SetXY($anotherX, 196); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $anotherX += strlen($place) + "15";
                 }
                 else if(($key >= 9) || ($key < 11)){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($differentX, 192); // set the position of the box
+                    $pdf->SetXY($differentX, 200); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $differentX += strlen($place) + "15";
                 }
@@ -1144,13 +1144,13 @@ class TravelPassController extends Controller
             }
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(117, 200); // set the position of the box
+            $pdf->SetXY(117, 207); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->travel_date . "     -"), 0, 0, 'L');
 
             
             if($travelpass->comeback_date){
                 $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(150, 200); // set the position of the box
+                $pdf->SetXY(150, 207); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
             }else{
                 $pdf->SetFontSize('11'); // set font size
@@ -1163,14 +1163,14 @@ class TravelPassController extends Controller
             
             
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(123, 260); // set the position of the box
+            $pdf->SetXY(123, 263); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->workplace->contact_no), 0, 0, 'L');
 
 
         
             }
             else if($travelpass->travelpass_type == "private_trans"){
-                $path = public_path("form2.pdf");
+                $path = public_path("form2signed.pdf");
                 // Set path
                 $pdf->setSourceFile($path);
 
@@ -1179,11 +1179,11 @@ class TravelPassController extends Controller
                 $pdf->useTemplate($tplId);
 
                 $pdf->SetFontSize('14'); // set font size
-                $pdf->SetXY(35, 97); // set the position of the box 
+                $pdf->SetXY(25, 110); // set the position of the box 
                 $pdf->Cell(0, 0, strtoupper(substr($travelpass->workplace->name, 0, strpos($travelpass->workplace->name, '-'))), 0, 0, 'L');
         
                 $pdf->SetFontSize('14'); // set font size
-                $pdf->SetXY(143, 97); // set the position of the box
+                $pdf->SetXY(135, 110); // set the position of the box
                 $pdf->Cell(0, 0, $travelpass->travelpass_no, 0, 0, 'L');
 
                 /*
@@ -1198,8 +1198,8 @@ class TravelPassController extends Controller
 
                 $passengers = explode(";", $travelpass->passengers_details);
             
-                $nameY = "124";
-                $nicY = "124";
+                $nameY = "135";
+                $nicY = "135";
                 $i = "0";
 
                 foreach($passengers as $key =>$passenger){
@@ -1214,7 +1214,7 @@ class TravelPassController extends Controller
                     else{
                         
                         $pdf->SetFontSize('11'); // set font size
-                        $pdf->SetXY(155, $nicY); // set the position of the box
+                        $pdf->SetXY(150, $nicY); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
                         $nicY += "7";
                         $i += "2";
@@ -1223,41 +1223,41 @@ class TravelPassController extends Controller
                 }
                 
                 $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(145, 160); // set the position of the box
+                $pdf->SetXY(130, 164); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper("(" . $travelpass->vehicle_type . ")"), 0, 0, 'L');
 
                 $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(110, 160); // set the position of the box
+                $pdf->SetXY(96, 164); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->vehicle_no), 0, 0, 'L');
 
                 $pdf->SetFontSize('10'); // set font size
-                $pdf->SetXY(96, 172); // set the position of the box
+                $pdf->SetXY(96, 175); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->reason_for_travel), 0, 0, 'L');
                 
 
                 $places = explode(";", $travelpass->travel_path);
-                $palceX = "96";
-                $anotherX = "96";
-                $differentX = "96";
+                $palceX = "93";
+                $anotherX = "93";
+                $differentX = "93";
 
                 foreach($places as $key =>$place){
 
                     if($key < 3){
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($palceX, 180); // set the position of the box
+                        $pdf->SetXY($palceX, 183); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $palceX += strlen($place) + "15";
                     }
                     else if(($key >= 3) && ($key < 7)){
 
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($anotherX, 184); // set the position of the box
+                        $pdf->SetXY($anotherX, 187); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $anotherX += strlen($place) + "15";
                     }
                     else if(($key >= 8) || ($key < 11)){
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($differentX, 188); // set the position of the box
+                        $pdf->SetXY($differentX, 191); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $differentX += strlen($place) + "15";
                     }
@@ -1265,28 +1265,28 @@ class TravelPassController extends Controller
                 }
 
                 $places = explode(";", $travelpass->comeback_path);
-                $palceX = "96";
-                $anotherX = "96";
-                $differentX = "96";
+                $palceX = "93";
+                $anotherX = "93";
+                $differentX = "93";
 
                 foreach($places as $key =>$place){
 
                     if($key < 3){
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($palceX, 194); // set the position of the box
+                        $pdf->SetXY($palceX, 196); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $palceX += strlen($place) + "15";
                     }
                     else if(($key >= 3) && ($key < 7)){
 
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($anotherX, 198); // set the position of the box
+                        $pdf->SetXY($anotherX, 200); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $anotherX += strlen($place) + "15";
                     }
                     else if(($key >= 8) || ($key < 11)){
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($differentX, 202); // set the position of the box
+                        $pdf->SetXY($differentX, 204); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $differentX += strlen($place) + "15";
                     }
@@ -1310,7 +1310,7 @@ class TravelPassController extends Controller
                 }
 
                 $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(118, 262); // set the position of the box
+                $pdf->SetXY(110, 267); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->workplace->contact_no), 0, 0, 'L');
 
             }
@@ -1352,7 +1352,7 @@ class TravelPassController extends Controller
             // Below is the path of pdf in which you going to print details.
             //  Right now i had blank pdf
             if($travelpass->travelpass_type == "foods_goods"){
-            $path = public_path("form1.pdf");
+            $path = public_path("form1signed.pdf");
             // Set path
             $pdf->setSourceFile($path);
 
@@ -1364,11 +1364,11 @@ class TravelPassController extends Controller
             // Horizontal and veritcal setXY
 
             $pdf->SetFontSize('14'); // set font size
-            $pdf->SetXY(35, 95); // set the position of the box 
+            $pdf->SetXY(30, 107); // set the position of the box 
             $pdf->Cell(0, 0, strtoupper(substr($travelpass->workplace->name, 0, strpos($travelpass->workplace->name, '-'))), 0, 0, 'L');
 
             $pdf->SetFontSize('14'); // set font size
-            $pdf->SetXY(145, 95); // set the position of the box
+            $pdf->SetXY(140, 107); // set the position of the box
             $pdf->Cell(0, 0, $travelpass->travelpass_no, 0, 0, 'L');
 
             /*
@@ -1383,8 +1383,8 @@ class TravelPassController extends Controller
 
             $passengers = explode(";", $travelpass->passengers_details);
             
-            $nameY = "121";
-            $nicY = "121";
+            $nameY = "130";
+            $nicY = "130";
             $i = "0";
 
             foreach($passengers as $key =>$passenger){
@@ -1408,36 +1408,36 @@ class TravelPassController extends Controller
             }
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(117, 143); // set the position of the box
+            $pdf->SetXY(110, 151); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->vehicle_no), 0, 0, 'L');
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(145, 143); // set the position of the box
+            $pdf->SetXY(140, 151); // set the position of the box
             $pdf->Cell(0, 0, strtoupper("(" . $travelpass->vehicle_type . ")"), 0, 0, 'L');
 
             $items = explode(";", $travelpass->travel_items);
-            $palceX = "89";
-            $anotherX = "89";
-            $differentX = "89";
+            $palceX = "91";
+            $anotherX = "91";
+            $differentX = "91";
 
             foreach($items as $key =>$item){
 
                 if($key < 4){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($palceX, 151); // set the position of the box
+                    $pdf->SetXY($palceX, 158); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $palceX += strlen($item) + "12";
                 }
                 else if(($key >= 3) && ($key < 7)){
 
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($anotherX, 154); // set the position of the box
+                    $pdf->SetXY($anotherX, 161); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $anotherX += strlen($item) + "12";
                 }
                 else if(($key >= 8) || ($key < 11)){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($differentX, 157); // set the position of the box
+                    $pdf->SetXY($differentX, 164); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $differentX += strlen($item) + "12";
                 }
@@ -1445,28 +1445,28 @@ class TravelPassController extends Controller
             }
 
             $items = explode(";", $travelpass->comeback_items);
-            $palceX = "89";
-            $anotherX = "89";
-            $differentX = "89";
+            $palceX = "91";
+            $anotherX = "91";
+            $differentX = "91";
 
             foreach($items as $key =>$item){
 
                 if($key < 4){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($palceX, 161); // set the position of the box
+                    $pdf->SetXY($palceX, 168); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $palceX += strlen($item) + "12";
                 }
                 else if(($key >= 3) && ($key < 7)){
 
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($anotherX, 164); // set the position of the box
+                    $pdf->SetXY($anotherX, 171); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $anotherX += strlen($item) + "12";
                 }
                 else if(($key >= 8) || ($key < 11)){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($differentX, 167); // set the position of the box
+                    $pdf->SetXY($differentX, 174); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($item . ","), 0, 0, 'L');
                     $differentX += strlen($item) + "12";
                 }
@@ -1475,28 +1475,28 @@ class TravelPassController extends Controller
 
 
             $places = explode(";", $travelpass->travel_path);
-            $palceX = "89";
-            $anotherX = "89";
-            $differentX = "89";
+            $palceX = "91";
+            $anotherX = "91";
+            $differentX = "91";
 
             foreach($places as $key =>$place){
 
                 if($key < 4){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($palceX, 171); // set the position of the box
+                    $pdf->SetXY($palceX, 179); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $palceX += strlen($place) + "15";
                 }
                 else if(($key >= 4) && ($key < 8)){
 
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($anotherX, 175); // set the position of the box
+                    $pdf->SetXY($anotherX, 183); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $anotherX += strlen($place) + "15";
                 }
                 else if(($key >= 9) || ($key < 11)){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($differentX, 179); // set the position of the box
+                    $pdf->SetXY($differentX, 187); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $differentX += strlen($place) + "15";
                 }
@@ -1504,28 +1504,28 @@ class TravelPassController extends Controller
             }
 
             $places = explode(";", $travelpass->comeback_path);
-            $palceX = "89";
-            $anotherX = "89";
-            $differentX = "89";
+            $palceX = "91";
+            $anotherX = "91";
+            $differentX = "91";
 
             foreach($places as $key =>$place){
 
                 if($key < 4){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($palceX, 184); // set the position of the box
+                    $pdf->SetXY($palceX, 192); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $palceX += strlen($place) + "15";
                 }
                 else if(($key >= 4) && ($key < 8)){
 
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($anotherX, 188); // set the position of the box
+                    $pdf->SetXY($anotherX, 196); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $anotherX += strlen($place) + "15";
                 }
                 else if(($key >= 9) || ($key < 11)){
                     $pdf->SetFontSize('8'); // set font size
-                    $pdf->SetXY($differentX, 192); // set the position of the box
+                    $pdf->SetXY($differentX, 200); // set the position of the box
                     $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                     $differentX += strlen($place) + "15";
                 }
@@ -1533,13 +1533,13 @@ class TravelPassController extends Controller
             }
 
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(117, 200); // set the position of the box
+            $pdf->SetXY(117, 207); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->travel_date . "     -"), 0, 0, 'L');
 
             
             if($travelpass->comeback_date){
                 $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(150, 200); // set the position of the box
+                $pdf->SetXY(150, 207); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->comeback_date), 0, 0, 'L');
             }else{
                 $pdf->SetFontSize('11'); // set font size
@@ -1552,14 +1552,14 @@ class TravelPassController extends Controller
             
             
             $pdf->SetFontSize('11'); // set font size
-            $pdf->SetXY(123, 260); // set the position of the box
+            $pdf->SetXY(123, 263); // set the position of the box
             $pdf->Cell(0, 0, strtoupper($travelpass->workplace->contact_no), 0, 0, 'L');
 
 
         
             }
             else if($travelpass->travelpass_type == "private_trans"){
-                $path = public_path("form2.pdf");
+                $path = public_path("form2signed.pdf");
                 // Set path
                 $pdf->setSourceFile($path);
 
@@ -1568,11 +1568,11 @@ class TravelPassController extends Controller
                 $pdf->useTemplate($tplId);
 
                 $pdf->SetFontSize('14'); // set font size
-                $pdf->SetXY(35, 97); // set the position of the box 
+                $pdf->SetXY(25, 110); // set the position of the box 
                 $pdf->Cell(0, 0, strtoupper(substr($travelpass->workplace->name, 0, strpos($travelpass->workplace->name, '-'))), 0, 0, 'L');
         
                 $pdf->SetFontSize('14'); // set font size
-                $pdf->SetXY(143, 97); // set the position of the box
+                $pdf->SetXY(135, 110); // set the position of the box
                 $pdf->Cell(0, 0, $travelpass->travelpass_no, 0, 0, 'L');
 
                 /*
@@ -1587,8 +1587,8 @@ class TravelPassController extends Controller
 
                 $passengers = explode(";", $travelpass->passengers_details);
             
-                $nameY = "124";
-                $nicY = "124";
+                $nameY = "135";
+                $nicY = "135";
                 $i = "0";
 
                 foreach($passengers as $key =>$passenger){
@@ -1603,7 +1603,7 @@ class TravelPassController extends Controller
                     else{
                         
                         $pdf->SetFontSize('11'); // set font size
-                        $pdf->SetXY(155, $nicY); // set the position of the box
+                        $pdf->SetXY(150, $nicY); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($passenger), 0, 0, 'L');
                         $nicY += "7";
                         $i += "2";
@@ -1612,41 +1612,41 @@ class TravelPassController extends Controller
                 }
                 
                 $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(145, 160); // set the position of the box
+                $pdf->SetXY(130, 164); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper("(" . $travelpass->vehicle_type . ")"), 0, 0, 'L');
 
                 $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(110, 160); // set the position of the box
+                $pdf->SetXY(96, 164); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->vehicle_no), 0, 0, 'L');
 
                 $pdf->SetFontSize('10'); // set font size
-                $pdf->SetXY(96, 172); // set the position of the box
+                $pdf->SetXY(96, 175); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->reason_for_travel), 0, 0, 'L');
                 
 
                 $places = explode(";", $travelpass->travel_path);
-                $palceX = "96";
-                $anotherX = "96";
-                $differentX = "96";
+                $palceX = "93";
+                $anotherX = "93";
+                $differentX = "93";
 
                 foreach($places as $key =>$place){
 
                     if($key < 3){
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($palceX, 180); // set the position of the box
+                        $pdf->SetXY($palceX, 183); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $palceX += strlen($place) + "15";
                     }
                     else if(($key >= 3) && ($key < 7)){
 
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($anotherX, 184); // set the position of the box
+                        $pdf->SetXY($anotherX, 187); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $anotherX += strlen($place) + "15";
                     }
                     else if(($key >= 8) || ($key < 11)){
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($differentX, 188); // set the position of the box
+                        $pdf->SetXY($differentX, 191); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $differentX += strlen($place) + "15";
                     }
@@ -1654,28 +1654,28 @@ class TravelPassController extends Controller
                 }
 
                 $places = explode(";", $travelpass->comeback_path);
-                $palceX = "96";
-                $anotherX = "96";
-                $differentX = "96";
+                $palceX = "93";
+                $anotherX = "93";
+                $differentX = "93";
 
                 foreach($places as $key =>$place){
 
                     if($key < 3){
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($palceX, 194); // set the position of the box
+                        $pdf->SetXY($palceX, 196); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $palceX += strlen($place) + "15";
                     }
                     else if(($key >= 3) && ($key < 7)){
 
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($anotherX, 198); // set the position of the box
+                        $pdf->SetXY($anotherX, 200); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $anotherX += strlen($place) + "15";
                     }
                     else if(($key >= 8) || ($key < 11)){
                         $pdf->SetFontSize('8'); // set font size
-                        $pdf->SetXY($differentX, 202); // set the position of the box
+                        $pdf->SetXY($differentX, 204); // set the position of the box
                         $pdf->Cell(0, 0, strtoupper($place . ","), 0, 0, 'L');
                         $differentX += strlen($place) + "15";
                     }
@@ -1699,7 +1699,7 @@ class TravelPassController extends Controller
                 }
 
                 $pdf->SetFontSize('11'); // set font size
-                $pdf->SetXY(118, 262); // set the position of the box
+                $pdf->SetXY(110, 267); // set the position of the box
                 $pdf->Cell(0, 0, strtoupper($travelpass->workplace->contact_no), 0, 0, 'L');
 
             }
