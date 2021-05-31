@@ -253,7 +253,7 @@
                                     elseif($travelpass->travelpass_status == "ACCEPTED"){
                                         $accepted_today += 1;
                                     }
-                                    elseif($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                                    elseif(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
                                         $issued_today += 1;
                                     }
                                 }

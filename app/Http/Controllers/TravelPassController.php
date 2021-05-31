@@ -1335,7 +1335,7 @@ class TravelPassController extends Controller
         
         $travelpass = TravelPass::find($id);
 
-        if (($travelpass->workplace->id == Auth::user()->workplace->id) || Gate::allows('admin')) {
+        if ((($travelpass->workplace->id == Auth::user()->workplace->id) && (($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED"))) || Gate::allows('admin')) {
 
            
 
