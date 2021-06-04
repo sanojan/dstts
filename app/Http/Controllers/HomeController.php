@@ -43,7 +43,7 @@ class HomeController extends Controller
         
         if (Gate::allows('sys_admin') || Gate::allows('admin')) {
 
-            $tot_travelpass = count(TravelPass::all());
+           
             foreach(TravelPass::all() as $travelpass){
                 if(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
                     $issued_travelpass += 1;
@@ -54,11 +54,12 @@ class HomeController extends Controller
                 elseif($travelpass->travelpass_status == "REJECTED"){
                     $rejected_travelpass += 1;
                 }
-            
+                
             }
+            $tot_travelpass = $issued_travelpass + $accepted_travelpass + $rejected_travelpass;
         }
         else{
-            $tot_travelpass = count(Auth::user()->workplace->travelpasses);
+            
             foreach(Auth::user()->workplace->travelpasses as $travelpass){
                 if(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
                     $issued_travelpass += 1;
@@ -69,8 +70,9 @@ class HomeController extends Controller
                 elseif($travelpass->travelpass_status == "REJECTED"){
                     $rejected_travelpass += 1;
                 }
-            
+               
             }
+            $tot_travelpass = $issued_travelpass + $accepted_travelpass + $rejected_travelpass;
         }
 
 
@@ -111,7 +113,6 @@ class HomeController extends Controller
         }
 
         
-
         return view('home')->with('tot_tasks', $tot_tasks)->with('comp_tasks', $comp_tasks)->with('new_tasks', $new_tasks)->with('ongoing_tasks', $ongoing_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses)->with('tot_travelpass', $tot_travelpass)->with('rejected_travelpass', $rejected_travelpass)->with('accepted_travelpass', $accepted_travelpass)->with('issued_travelpass', $issued_travelpass);
     }
 

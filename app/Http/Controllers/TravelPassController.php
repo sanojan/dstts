@@ -10,6 +10,8 @@ use Gate;
 use DB;
 use PDF;
 use setasign\Fpdi\Fpdi;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReportExport;
 
 class TravelPassController extends Controller
 {
@@ -2105,5 +2107,11 @@ class TravelPassController extends Controller
             return redirect(app()->getLocale() . '/travelpasses/' . $id)->with($notification);
         }
     }
+
+    public function reportExport() 
+    {
+       
+        return Excel::download(new ReportExport, 'Daily Report of Issued Travel Passes (' . date('d_m_Y') . ').xlsx');
+    }    
 
 }

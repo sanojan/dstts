@@ -229,7 +229,7 @@
                 @php
                 $dt = Carbon\Carbon::now();
                 @endphp
-            <h2>{{__('TODAY SUMMARY')}} ({{$dt->format('d-m-Y')}})</h2>
+            <h2>{{__('TODAY SUMMARY')}} ({{$dt->format('d/m/Y')}})</h2>
             </div>
             <div class="row clearfix">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -240,13 +240,14 @@
                         <div class="content">
                             <div class="text">{{__('REJECTED APPLICATIONS')}}</div>
                             @php
+                            $short_code[] = "";
                             $rejected_today = 0;
                             $accepted_today = 0;
                             $issued_today = 0;
                             $total_today = 0;
+        
                             foreach(\App\TravelPass::all() as $travelpass){
                                 if($travelpass->created_at->isToday()){
-                                    $total_today += 1;
                                     if($travelpass->travelpass_status == "REJECTED"){
                                         $rejected_today += 1;
                                     }
@@ -259,13 +260,16 @@
                                 }
                             }
 
-
+                            
+                            $total_today = $issued_today + $accepted_today + $rejected_today;
+                            
+                            
                             @endphp
                             <div class="number count-to task-number" data-from="0" data-to="{{$rejected_today}}" data-speed="1000" data-fresh-interval="20">125</div>
                         </div>
                     </div>
                 </div>
-
+                           
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-orange hover-expand-effect">
                         <div class="icon">
@@ -302,7 +306,22 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="header">
+                    <h2>DAILY REPORT ({{date('d/m/Y')}})</h2>
+                </div>
+                <div class="body"><iframe class="chartjs-hidden-iframe" style="width: 100%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; inset: 0px;"></iframe>
+                <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{route('travelpass.report', app()->getLocale())}}">
+                    <i class="material-icons">download</i>
+                    <span>{{__('DOWNLOAD REPORT')}}</span>
+                </a>
+                </div>
+            </div>
             @endif
+
+
+            
 
             <!--
             <div class="card">
@@ -313,7 +332,7 @@
                     <canvas id="myChart" height="50"></canvas>
                 </div>
             </div>
-            -->
+           -->
 
             
             
@@ -337,15 +356,10 @@
             );
         @endif
         </script>
+    
         <script>
-            const labels = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            ];
+
+            const labels = [javascript_array];
             const data = {
             labels: labels,
             datasets: [{

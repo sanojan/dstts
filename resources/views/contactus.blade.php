@@ -187,7 +187,7 @@
                     <p><b>Please contact for Technical Assistance:</b><br /><br />
                     <button type="button" class="btn btn-default waves-effect">
                         <i class="material-icons">phone</i>
-                        <b>Call: +94 76 331 2306</b>
+                        <b>Call: +94 76 011 8597</b>
                     </button>
                     OR 
                     <button type="button" class="btn btn-default waves-effect">

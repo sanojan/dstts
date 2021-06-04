@@ -48,11 +48,15 @@ Route::group(['prefix' => '{language}'], function () {
     Route::get('/travelpasses/{id}/preview_pdf','TravelPassController@previewPDF')->name('travelpass.preview');
     Route::get('/travelpasses/{id}/final_pdf','TravelPassController@finalPDF')->name('travelpass.final');
     Route::get('/travelpasses/{id}/application_pdf','TravelPassController@appliPDF')->name('travelpass.appli');
-    //Route::get('/travelpasses/downloadPDF/{id}','TravelPassController@downloadPDF');
+    Route::get('report','TravelPassController@reportExport')->name('travelpass.report');
     
     Route::get('get-workplaces-list','WorkplacetypeController@getWorkplaces');
     Route::get('getWorkplaces','UsersController@getWorkplaces');
     Route::get('get-gndivision-list','GNDivisionController@getGNDivisions');
+
+    Route::get('/foo', function () {
+        Artisan::call('storage:link');
+    });
 
 
     //Route::resource('workplace', 'WorkplaceController');
