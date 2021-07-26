@@ -272,7 +272,7 @@
                                     </tr>
                                 </tbody>    
                             </table>
-                            
+                          
                             <div>
                             <form action="{{ route('travelpasses.update', [app()->getLocale(), $travelpass->id] )}}" method="POST" enctype="multipart/form-data" id="travelpass_accept_form">
                                     {{ method_field('PUT') }}

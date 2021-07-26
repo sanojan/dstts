@@ -21,6 +21,7 @@
         "nesbot/carbon": "^2.40",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi-fpdf": "^2.3",
+        "yajra/laravel-datatables-oracle": "^9.18",
         "yoeunes/toastr": "^1.2"
     },
     "require-dev": {

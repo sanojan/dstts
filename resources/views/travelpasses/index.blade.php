@@ -196,55 +196,12 @@
                                 <th>{{__('Action')}}</th>
                             </tr>
                         </thead>
-                            @if(count($travelpasses) > 0)
-                            <tbody>
-                                @foreach($travelpasses as $travelpass)
-                                <tr>
-                                    <td>{{$travelpass->created_at}}</td>
-                                    <td>{{$travelpass->travelpass_no}}</td>
-                                    @if($travelpass->travelpass_type == "foods_goods")
-                                    <td>For Essential Items & Foods</td>
-                                    @elseif($travelpass->travelpass_type == "private_trans")
-                                    <td>For Private Transport</td>
-                                    @endif
-                                    <td>{{$travelpass->applicant_name}}</td>
-                                    <td>{{$travelpass->applicant_address}}</td>
-                                    <td>{{$travelpass->nic_no}}</td>
-                                    <td>{{$travelpass->vehicle_no}}({{$travelpass->vehicle_type}})</td>
-                                    <td>{{$travelpass->travel_date}}</td>
-                                    <td>{{$travelpass->comeback_date}}</td>
-                                    <td>{{$travelpass->reason_for_travel}}</td>
-                                    <td>{{$travelpass->travel_path}}</td>
-                                    <td>{{$travelpass->passengers_details}}</td>
-                                    <td>{{$travelpass->travel_items}}</td>
-                                    
-
-                                    @if(($travelpass->travelpass_status == "PENDING") || ($travelpass->travelpass_status == "SUBMITTED"))
-                                    <td class="font-bold col-blue">{{$travelpass->travelpass_status}}</td>
-                                    @elseif($travelpass->travelpass_status == "ACCEPTED")
-                                    <td class="font-bold col-deep-orange">{{$travelpass->travelpass_status}}</td>
-                                    @elseif(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") ||($travelpass->travelpass_status == "TRAVEL PASS RECEIVED"))
-                                    <td class="font-bold col-green">{{$travelpass->travelpass_status}}</td>
-                                    @elseif($travelpass->travelpass_status == "REJECTED")
-                                    <td class="font-bold col-red">{{$travelpass->travelpass_status}}</td>
-                                    @endif
-                                    <td>{{$travelpass->rejection_reason}}</td>
-                                    <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('travelpasses.show', [app()->getLocale(), $travelpass->id]) }}">
-                                            <i class="material-icons">pageview</i>
-                                                <span>{{__('VIEW')}}</span>
-                                        </a>
-                                    </td>
-                                    
-                                </tr>
-                                @endforeach
-                            </tbody>
-                            @endif
-                        
+                          
                     </table>
                 </div>
             </div>
         </div>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
         <script >
         @if(session()->has('message'))

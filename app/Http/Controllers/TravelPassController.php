@@ -12,6 +12,7 @@ use PDF;
 use setasign\Fpdi\Fpdi;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ReportExport;
+use DataTables;
 
 class TravelPassController extends Controller
 {
@@ -20,7 +21,8 @@ class TravelPassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    
+     public function index(Request $request)
     {
         //Return Travel Pass index page
         $new_tasks = 0;
@@ -48,13 +50,47 @@ class TravelPassController extends Controller
             }
         }
 
+        if ($request->ajax()) {
+
+            if (Gate::allows('admin') || Gate::allows('sys_admin')) {
+                
+                $data = DB::table('travelpass')->where('travelpass_status', '<>', 'PENDING')->orderBy('updated_at', 'desc');
+
+            }else{
+                $data = DB::table('travelpass')->where('workplace_id', '=', Auth::user()->workplace->id)->orderBy('updated_at', 'desc')->get();
+            }
+
+            
+            return Datatables::of($data)
+
+                ->addIndexColumn()
+                ->addColumn('action', function($row){
+
+                    $btn = '<a href=' . route("travelpasses.show", [app()->getLocale(), $row->id]) . ' class="btn bg-green btn-block btn-sm">View</a>';
+
+                    return $btn;
+
+                })
+
+                ->rawColumns(['action'])
+
+                ->make(true);
+
+        }
+
+        
+
+        return view('travelpasses.index')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+
+
         if (Gate::allows('admin') || Gate::allows('sys_admin')) {
 
-            $travelpasses = DB::table('travelpass')->where('travelpass_status', '<>', 'PENDING')->orderBy('updated_at', 'desc')->get();
+            //$travelpasses = DB::table('travelpass')->where('travelpass_status', '<>', 'PENDING')->orderBy('updated_at', 'desc');
             //dd($travelpass);
 
             //$letters = Auth::user()->letters;
-            return view('travelpasses.index')->with('travelpasses', $travelpasses)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+            
+            return view('travelpasses.index')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
         
     
         }else{

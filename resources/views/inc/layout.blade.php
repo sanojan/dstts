@@ -26,10 +26,7 @@
     <link href="{{asset('plugins/animate-css/animate.css')}}" rel="stylesheet" />
     
     <!-- Morris Css -->
-    <link href="{{asset('plugins/morrisjs/morris.css')}}" rel="stylesheet" />
-    <script src="{{asset('plugins/raphael/raphael.min.js')}}"></script>
-    <script src="{{asset('plugins/morrisjs/morris.js')}}"></script>
-
+    
     <!-- ChartJs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         
@@ -318,15 +315,12 @@
 
 <!-- Custom Js -->
 <script src="{{asset('js/admin.js')}}"></script>
-<script src="{{asset('js/pages/index.js')}}"></script>
 
 <!-- Demo Js -->
 <script src="{{asset('js/demo.js')}}"></script>
 
 <!-- Input Mask Plugin Js -->
-<script src="{{asset('plugins/jquery-inputmask/jquery.inputmask.bundle.js')}}"></script>
 
-<script src="{{asset('plugins/jquery-inputmask/inputmask_code.js')}}"></script>
 
 <!-- Data Tables Js -->
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.js"></script>
@@ -353,6 +347,32 @@ if(locale == "si"){
         retrieve: true,
             dom: 'Blfrtip',
             autoWidth: false,
+            processing : true,
+                serverSide : true,
+                ajax: "{{ route('travelpasses.index', app()->getLocale()) }}",
+                
+                
+                columns: [
+                {data: 'created_at'},
+                {data: 'travelpass_no'},
+                {data: 'travelpass_type'},
+                {data: 'applicant_name'},
+                {data: 'applicant_address'},
+                {data: 'nic_no'},
+                {data: 'vehicle_type'},
+                {data: 'travel_date'},
+                {data: 'comeback_date'},
+                {data: 'reason_for_travel'},
+                {data: 'travel_path'},
+                {data: 'passengers_details'},
+                {data: 'travel_items'},
+                {data: 'travelpass_status'},
+                {data: 'rejection_reason'},
+
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+
+                ],
+           
             buttons: [
                 {
                 extend: 'excelHtml5',
@@ -457,6 +477,32 @@ if(locale == "ta"){
         retrieve: true,
             dom: 'Blfrtip',
             autoWidth: false,
+            processing : true,
+                serverSide : true,
+                ajax: "{{ route('travelpasses.index', app()->getLocale()) }}",
+                
+                
+                columns: [
+                {data: 'created_at'},
+                {data: 'travelpass_no'},
+                {data: 'travelpass_type'},
+                {data: 'applicant_name'},
+                {data: 'applicant_address'},
+                {data: 'nic_no'},
+                {data: 'vehicle_type'},
+                {data: 'travel_date'},
+                {data: 'comeback_date'},
+                {data: 'reason_for_travel'},
+                {data: 'travel_path'},
+                {data: 'passengers_details'},
+                {data: 'travel_items'},
+                {data: 'travelpass_status'},
+                {data: 'rejection_reason'},
+
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+
+                ],
+           
             buttons: [
                 {
                 extend: 'excelHtml5',
@@ -560,6 +606,32 @@ if(locale == "en"){
             retrieve: true,
             dom: 'Blfrtip',
             autoWidth: false,
+            processing : true,
+                serverSide : true,
+                ajax: "{{ route('travelpasses.index', app()->getLocale()) }}",
+                
+                
+                columns: [
+                {data: 'created_at'},
+                {data: 'travelpass_no'},
+                {data: 'travelpass_type'},
+                {data: 'applicant_name'},
+                {data: 'applicant_address'},
+                {data: 'nic_no'},
+                {data: 'vehicle_type'},
+                {data: 'travel_date'},
+                {data: 'comeback_date'},
+                {data: 'reason_for_travel'},
+                {data: 'travel_path'},
+                {data: 'passengers_details'},
+                {data: 'travel_items'},
+                {data: 'travelpass_status'},
+                {data: 'rejection_reason'},
+
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+
+                ],
+           
             buttons: [
                 {
                 extend: 'excelHtml5',
