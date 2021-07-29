@@ -360,6 +360,7 @@ if(locale == "si"){
                 {data: 'applicant_address'},
                 {data: 'nic_no'},
                 {data: 'vehicle_type'},
+                {data: 'vehicle_no'},
                 {data: 'travel_date'},
                 {data: 'comeback_date'},
                 {data: 'reason_for_travel'},
@@ -388,51 +389,70 @@ if(locale == "si"){
             "order": [],
 
             "columnDefs": [
-            {
-                "targets": [ 0 ],
-                "visible": false,
-            },
-            {
-                "targets": [ 2 ],
-                "visible": false
-            },
-            {
-                "targets": [ 4 ],
-                "visible": false
-            },
-            {
-                "targets": [ 5 ],
-                "visible": false
-            },
-            {
-                "targets": [ 6 ],
-                "visible": false
-            },
-            {
-                "targets": [ 8 ],
-                "visible": false
-            },
-            {
-                "targets": [ 9 ],
-                "visible": false
-            },
-            {
-                "targets": [ 10 ],
-                "visible": false
-            },
-            {
-                "targets": [ 11 ],
-                "visible": false
-            },
-            {
-                "targets": [ 12 ],
-                "visible": false
-            },
-            {
-                "targets": [ 14 ],
-                "visible": false
-            }
+        {
+            "targets": [ 0 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 2 ],
+            "visible": false
+        },
+        {
+            "targets": [ 4 ],
+            "visible": false
+        },
+        {
+            "targets": [ 5 ],
+            "visible": false
+        },
+        {
+            "targets": [ 6 ],
+            "visible": false
+        },
+        {
+            "targets": [ 7 ],
+            "visible": false
+        },
+        {
+            "targets": [ 9 ],
+            "visible": false
+        },
+        {
+            "targets": [ 10 ],
+            "visible": false
+        },
+        {
+            "targets": [ 11 ],
+            "visible": false
+        },
+        {
+            "targets": [ 12 ],
+            "visible": false
+        },
+        {
+            "targets": [ 13 ],
+            "visible": false
+        },
+        {
+            "targets": [ 15 ],
+            "visible": false
+        }
         ],
+        "createdRow": function (row, data, index) {
+            if(data.travelpass_status == "TRAVEL PASS ISSUED" || data.travelpass_status == "TRAVEL PASS RECEIVED"){
+                $('td', row).eq(3).addClass("font-bold col-green");
+            }
+            if(data.travelpass_status == "SUBMITTED" || data.travelpass_status == "PENDING"){
+                $('td', row).eq(3).addClass("font-bold col-blue");
+            }
+            if(data.travelpass_status == "ACCEPTED"){
+                $('td', row).eq(3).addClass("font-bold col-deep-orange");
+            }
+            if(data.travelpass_status == "REJECTED"){
+                $('td', row).eq(3).addClass("font-bold col-red");
+            }
+        },
+
         language: {
             search: "වගුවේ සොයන්න:",
             paginate: {
@@ -490,6 +510,7 @@ if(locale == "ta"){
                 {data: 'applicant_address'},
                 {data: 'nic_no'},
                 {data: 'vehicle_type'},
+                {data: 'vehicle_no'},
                 {data: 'travel_date'},
                 {data: 'comeback_date'},
                 {data: 'reason_for_travel'},
@@ -518,51 +539,70 @@ if(locale == "ta"){
             "order": [],
 
             "columnDefs": [
-            {
-                "targets": [ 0 ],
-                "visible": false,
-            },
-            {
-                "targets": [ 2 ],
-                "visible": false
-            },
-            {
-                "targets": [ 4 ],
-                "visible": false
-            },
-            {
-                "targets": [ 5 ],
-                "visible": false
-            },
-            {
-                "targets": [ 6 ],
-                "visible": false
-            },
-            {
-                "targets": [ 8 ],
-                "visible": false
-            },
-            {
-                "targets": [ 9 ],
-                "visible": false
-            },
-            {
-                "targets": [ 10 ],
-                "visible": false
-            },
-            {
-                "targets": [ 11 ],
-                "visible": false
-            },
-            {
-                "targets": [ 12 ],
-                "visible": false
-            },
-            {
-                "targets": [ 14 ],
-                "visible": false
-            }
+        {
+            "targets": [ 0 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 2 ],
+            "visible": false
+        },
+        {
+            "targets": [ 4 ],
+            "visible": false
+        },
+        {
+            "targets": [ 5 ],
+            "visible": false
+        },
+        {
+            "targets": [ 6 ],
+            "visible": false
+        },
+        {
+            "targets": [ 7 ],
+            "visible": false
+        },
+        {
+            "targets": [ 9 ],
+            "visible": false
+        },
+        {
+            "targets": [ 10 ],
+            "visible": false
+        },
+        {
+            "targets": [ 11 ],
+            "visible": false
+        },
+        {
+            "targets": [ 12 ],
+            "visible": false
+        },
+        {
+            "targets": [ 13 ],
+            "visible": false
+        },
+        {
+            "targets": [ 15 ],
+            "visible": false
+        }
         ],
+        "createdRow": function (row, data, index) {
+            if(data.travelpass_status == "TRAVEL PASS ISSUED" || data.travelpass_status == "TRAVEL PASS RECEIVED"){
+                $('td', row).eq(3).addClass("font-bold col-green");
+            }
+            if(data.travelpass_status == "SUBMITTED" || data.travelpass_status == "PENDING"){
+                $('td', row).eq(3).addClass("font-bold col-blue");
+            }
+            if(data.travelpass_status == "ACCEPTED"){
+                $('td', row).eq(3).addClass("font-bold col-deep-orange");
+            }
+            if(data.travelpass_status == "REJECTED"){
+                $('td', row).eq(3).addClass("font-bold col-red");
+            }
+        },
+        
         language: {
             search: "தேடுக:",
             paginate: {
@@ -602,96 +642,118 @@ if(locale == "ta"){
 }
 
 if(locale == "en"){
-        $('#export_table_id').DataTable({
-            retrieve: true,
-            dom: 'Blfrtip',
-            autoWidth: false,
-            processing : true,
-                serverSide : true,
-                ajax: "{{ route('travelpasses.index', app()->getLocale()) }}",
-                
-                
-                columns: [
-                {data: 'created_at'},
-                {data: 'travelpass_no'},
-                {data: 'travelpass_type'},
-                {data: 'applicant_name'},
-                {data: 'applicant_address'},
-                {data: 'nic_no'},
-                {data: 'vehicle_type'},
-                {data: 'travel_date'},
-                {data: 'comeback_date'},
-                {data: 'reason_for_travel'},
-                {data: 'travel_path'},
-                {data: 'passengers_details'},
-                {data: 'travel_items'},
-                {data: 'travelpass_status'},
-                {data: 'rejection_reason'},
+    $('#export_table_id').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('travelpasses.index', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'created_at'},
+        {data: 'travelpass_no'},
+        {data: 'travelpass_type'},
+        {data: 'applicant_name'},
+        {data: 'applicant_address'},
+        {data: 'nic_no'},
+        {data: 'vehicle_type'},
+        {data: 'vehicle_no'},
+        {data: 'travel_date'},
+        {data: 'comeback_date'},
+        {data: 'reason_for_travel'},
+        {data: 'travel_path'},
+        {data: 'passengers_details'},
+        {data: 'travel_items'},
+        {data: 'travelpass_status'},
+        {data: 'rejection_reason'},
 
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
 
-                ],
-           
-            buttons: [
-                {
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-                },
-                title: 'Daily summary of Travel Passes-' + date,
-                messageTop: 'Travel Passes details report generated from DS-TTS',
-                messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
-                },
-                'colvis'
-            ],
-            "order": [],
-
-            "columnDefs": [
-            {
-                "targets": [ 0 ],
-                "visible": false,
-            },
-            {
-                "targets": [ 2 ],
-                "visible": false
-            },
-            {
-                "targets": [ 4 ],
-                "visible": false
-            },
-            {
-                "targets": [ 5 ],
-                "visible": false
-            },
-            {
-                "targets": [ 6 ],
-                "visible": false
-            },
-            {
-                "targets": [ 8 ],
-                "visible": false
-            },
-            {
-                "targets": [ 9 ],
-                "visible": false
-            },
-            {
-                "targets": [ 10 ],
-                "visible": false
-            },
-            {
-                "targets": [ 11 ],
-                "visible": false
-            },
-            {
-                "targets": [ 12 ],
-                "visible": false
-            },
-            {
-                "targets": [ 14 ],
-                "visible": false
-            }
         ],
+
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+            },
+            title: 'Daily summary of Travel Passes-' + date,
+            messageTop: 'Travel Passes details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+        "order": [],
+
+        "columnDefs": [
+        {
+            "targets": [ 0 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 2 ],
+            "visible": false
+        },
+        {
+            "targets": [ 4 ],
+            "visible": false
+        },
+        {
+            "targets": [ 5 ],
+            "visible": false
+        },
+        {
+            "targets": [ 6 ],
+            "visible": false
+        },
+        {
+            "targets": [ 7 ],
+            "visible": false
+        },
+        {
+            "targets": [ 9 ],
+            "visible": false
+        },
+        {
+            "targets": [ 10 ],
+            "visible": false
+        },
+        {
+            "targets": [ 11 ],
+            "visible": false
+        },
+        {
+            "targets": [ 12 ],
+            "visible": false
+        },
+        {
+            "targets": [ 13 ],
+            "visible": false
+        },
+        {
+            "targets": [ 15 ],
+            "visible": false
+        }
+        ],
+
+        "createdRow": function (row, data, index) {
+            if(data.travelpass_status == "TRAVEL PASS ISSUED" || data.travelpass_status == "TRAVEL PASS RECEIVED"){
+                $('td', row).eq(3).addClass("font-bold col-green");
+            }
+            if(data.travelpass_status == "SUBMITTED" || data.travelpass_status == "PENDING"){
+                $('td', row).eq(3).addClass("font-bold col-blue");
+            }
+            if(data.travelpass_status == "ACCEPTED"){
+                $('td', row).eq(3).addClass("font-bold col-deep-orange");
+            }
+            if(data.travelpass_status == "REJECTED"){
+                $('td', row).eq(3).addClass("font-bold col-red");
+            }
+        },
+        
         
             
     } );
@@ -718,6 +780,8 @@ $('#no_export_table_id').DataTable({
         retrieve: true,
 } );
 </script>
+
+
 <script type="text/javascript">
    $('.letter_no_dropdown').select2({
   placeholder: '{{__('Select the Letter NO')}}',
@@ -782,7 +846,7 @@ function change_regno_textbox()
             }
             
         }
-
+        
 </script>
 
 </body>

@@ -184,7 +184,8 @@
                                 <th>{{__('Applicant Name')}}</th>
                                 <th>{{__('Applicant Address')}}</th>
                                 <th>{{__('Applicant NIC')}}</th>
-                                <th>{{__('Applicant Vechicle No. & Type')}}</th>
+                                <th>{{__('Vechicle Type')}}</th>
+                                <th>{{__('Vechicle No')}}</th>
                                 <th>{{__('Travel Date')}}</th>
                                 <th>{{__('Retun Date')}}</th>
                                 <th>{{__('Reason For Travel')}}</th>
@@ -215,5 +216,7 @@
             );
         @endif
         </script>
+
+
 </section>
 @endsection

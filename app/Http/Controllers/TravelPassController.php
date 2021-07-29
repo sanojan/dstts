@@ -61,9 +61,8 @@ class TravelPassController extends Controller
             }
 
             
-            return Datatables::of($data)
-
-                ->addIndexColumn()
+            return Datatables::of($data)->addIndexColumn()
+            
                 ->addColumn('action', function($row){
 
                     $btn = '<a href=' . route("travelpasses.show", [app()->getLocale(), $row->id]) . ' class="btn bg-green btn-block btn-sm">View</a>';
@@ -71,10 +70,8 @@ class TravelPassController extends Controller
                     return $btn;
 
                 })
-
-                ->rawColumns(['action'])
-
-                ->make(true);
+                
+                ->rawColumns(['action'])->make(true);
 
         }
 
