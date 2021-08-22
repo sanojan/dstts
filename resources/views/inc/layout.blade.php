@@ -490,6 +490,84 @@ if(locale == "si"){
         }
             
         } );
+
+        $('#sellers_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('sellers.index', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'address'},
+        {data: 'nic_no'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        
+
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2]
+            },
+            title: 'List of Wholesale sellers -' + date,
+            messageTop: 'Wholesale seller details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+        "order": [],
+   
+            
+    } );
+
+    $('#workplaces_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('workplaces.all', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'contact_no'},
+        {data: 'sellers_list'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        buttons: [
+            'colvis'
+        ],
+        "order": [],
+
+        "createdRow": function (row, data, index) {
+            if(data.sellers_list == "SUBMITTED"){
+                $('td', row).eq(2).addClass("font-bold col-blue");
+            }
+            if(data.sellers_list == "APPROVED"){
+                $('td', row).eq(2).addClass("font-bold col-green");
+            }
+            if(data.sellers_list == "REJECTED"){
+                $('td', row).eq(2).addClass("font-bold col-red");
+            }
+            if(data.sellers_list == "CHANGE REQUESTED"){
+                $('td', row).eq(2).addClass("font-bold col-teal");
+            }
+        },
+   
+            
+    } );
 } 
 if(locale == "ta"){
 
@@ -639,6 +717,84 @@ if(locale == "ta"){
         }
             
         } );
+
+        $('#sellers_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('sellers.index', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'address'},
+        {data: 'nic_no'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        
+
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2]
+            },
+            title: 'List of Wholesale sellers -' + date,
+            messageTop: 'Wholesale seller details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+        "order": [],
+   
+            
+    } );
+
+    $('#workplaces_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('workplaces.all', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'contact_no'},
+        {data: 'sellers_list'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        buttons: [
+            'colvis'
+        ],
+        "order": [],
+
+        "createdRow": function (row, data, index) {
+            if(data.sellers_list == "SUBMITTED"){
+                $('td', row).eq(2).addClass("font-bold col-blue");
+            }
+            if(data.sellers_list == "APPROVED"){
+                $('td', row).eq(2).addClass("font-bold col-green");
+            }
+            if(data.sellers_list == "REJECTED"){
+                $('td', row).eq(2).addClass("font-bold col-red");
+            }
+            if(data.sellers_list == "CHANGE REQUESTED"){
+                $('td', row).eq(2).addClass("font-bold col-teal");
+            }
+        },
+   
+            
+    } );
 }
 
 if(locale == "en"){
@@ -768,7 +924,89 @@ if(locale == "en"){
 
         
             
-        } );
+    } );
+
+    $('#sellers_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('sellers.index', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'address'},
+        {data: 'nic_no'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        
+
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2]
+            },
+            title: 'List of Wholesale sellers -' + date,
+            messageTop: 'Wholesale seller details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+        "order": [],
+   
+            
+    } );
+
+    $('#workplaces_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('workplaces.all', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'contact_no'},
+        {data: 'sellers_list'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        buttons: [
+            'colvis'
+        ],
+        "order": [],
+
+        "createdRow": function (row, data, index) {
+            if(data.sellers_list == "SUBMITTED"){
+                $('td', row).eq(2).addClass("font-bold col-blue");
+            }
+            if(data.sellers_list == "APPROVED"){
+                $('td', row).eq(2).addClass("font-bold col-green");
+            }
+            if(data.sellers_list == "REJECTED"){
+                $('td', row).eq(2).addClass("font-bold col-red");
+            }
+            if(data.sellers_list == "CHANGE REQUESTED"){
+                $('td', row).eq(2).addClass("font-bold col-teal");
+            }
+        },
+   
+            
+    } );
+
+    
+
+    
 }
 
 else

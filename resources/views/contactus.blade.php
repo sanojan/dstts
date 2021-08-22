@@ -101,7 +101,10 @@
                             
                             <li >
                                 <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
-                            </li>    
+                            </li>  
+                            <li>
+                                <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
+                            </li>  
                         </ul>
                     </li>
                     @if(Gate::allows('sys_admin'))
@@ -181,16 +184,18 @@
                     <p><b>Please send us your valuable feedback and suggestions to us.</b><br /><br />
                     <button type="button" class="btn btn-default waves-effect">
                         <i class="material-icons">drafts</i>
-                        <b>Email: help@dsems.net</b>
+                        <b>Email: ampdissec@gmail.com</b>
                     </button></p>
                     <br />
                     <p><b>Please contact for Technical Assistance:</b><br /><br />
                     <button type="button" class="btn btn-default waves-effect">
+                        <p><b>Sinhala/Tamil Medium</b></p>
                         <i class="material-icons">phone</i>
                         <b>Call: +94 76 011 8597</b>
                     </button>
                     OR 
                     <button type="button" class="btn btn-default waves-effect">
+                        <p><b>Tamil/English Medium</b></p>
                         <i class="material-icons">phone</i>
                         <b>Call: +94 75 757 2116</b>
                     </button>

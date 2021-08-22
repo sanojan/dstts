@@ -102,6 +102,9 @@
                             <li class="active">
                                 <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
                             </li>    
+                            <li>
+                                <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
+                            </li>
                         </ul>
                     </li>
                     @if(Gate::allows('sys_admin'))
@@ -177,7 +180,7 @@
                     <form action="{{ route('travelpasses.store', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="travelpass_add_form">
                     @csrf
                         <div class="row clearfix">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="input-group">
                                     <div class="form-line">
                                         <select class="form-control travelpass_type_dropdown" style="width:100%;" id="travelpass_type" name="travelpass_type" onChange="change_travelpass_type();">
@@ -195,10 +198,27 @@
                                 </div>
                                      
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <select class="form-control seller_dropdown" style="width:100%;" id="wholesale_seller" name="wholesale_seller" onChange="change_travelpass_type();" disabled>
+                                        <option value="" @if(old('wholesale_seller')=="") disabled selected @endif>{{__('Select Wholesale Seller')}}</option>
+                                        
+                                        </select>
+                                    </div>
+                                        
+                                    @error('travelpass_type')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                    @enderror
+                                </div>
+                                     
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="applicant_name" class="form-control" name="applicant_name" value="{{ old('applicant_name') }}">
+                                        <input type="text" id="applicant_name" class="form-control" name="applicant_name" value="{{ old('applicant_name') }}" readonly>
                                         <label class="form-label">{{__('Applicant Name')}}</label>
                                     </div>
                                     @error('applicant_name')
@@ -208,10 +228,10 @@
                                     @enderror
                                 </div>
                             </div> 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="applicant_address" class="form-control" name="applicant_address" value="{{ old('applicant_address') }}">
+                                        <input type="text" id="applicant_address" class="form-control" name="applicant_address" value="{{ old('applicant_address') }}" readonly>
                                         <label class="form-label">{{__('Applicant Address')}}</label>
                                     </div>
                                     @error('applicant_address')
@@ -228,7 +248,7 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="nic_no" class="form-control" name="nic_no" value="{{ old('nic_no') }}">
+                                        <input type="text" id="nic_no" class="form-control" name="nic_no" value="{{ old('nic_no') }}" readonly>
                                         <label class="form-label">{{__('NIC No')}}</label>
                                     </div>
                                     @error('nic_no')
@@ -421,8 +441,9 @@
                 </div>
             </div>
         </div>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
         <script >
         @if(session()->has('message'))
             $.notify({
@@ -435,10 +456,93 @@
             },
             );
         @endif
+
+
+        $('.seller_dropdown').select2({
+        placeholder: '{{__('Select Wholesale Seller')}}',
+        width: 'resolve'
+        });
+
+        $('#travelpass_type').change(function(){
+            var travelpasstype = $(this).val();  
+            if(travelpasstype == "foods_goods"){
+                $.ajax({
+                    type:"GET",
+                    url:"{{url('app()->getLocale()/get-sellers-list')}}",
+                    success:function(res){        
+                        if(res){
+                            $("#applicant_name").val("");
+                            $("#applicant_address").val("");
+                            $("#nic_no").val("");
+                            $("#wholesale_seller").prop("disabled", false);
+                            $("#wholesale_seller").prop("required", true);
+                            $("#applicant_name").prop("readonly", true);
+                            $("#applicant_address").prop("readonly", true);
+                            $("#nic_no").prop("readonly", true);
+                            $("#wholesale_seller").empty();
+                            $("#wholesale_seller").append('<option disabled selected>{{__('Select Wholesale Seller')}}</option>');
+                            
+                            
+                            $.each(res,function(key,value){
+                            $("#wholesale_seller").append('<option value="'+value['id']+'">'+value['name']+" "+value['nic_no']+'</option>');
+                            });
+                        
+                        }else{
+                            alert('Please get approval for your Wholesale sellers list to create Travelpass applications for transporting essential items!');
+                            $("#wholesale_seller").empty();
+                            $("#wholesale_seller").append('<option disabled selected>{{__('Select Wholesale Seller')}}</option>');
+                            $("#applicant_name").prop("readonly", true);
+                            $("#applicant_address").prop("readonly", true);
+                            $("#nic_no").prop("readonly", true);
+                            $("#applicant_name").val("");
+                            $("#applicant_address").val("");
+                            $("#nic_no").val("");
+                            
+                        }
+                    }
+                });
+            }else{
+                $("#wholesale_seller").prop("disabled", true);
+                $("#wholesale_seller").prop("required", false);
+                $("#wholesale_seller").empty();
+                $("#applicant_name").prop("readonly", false);
+                $("#applicant_address").prop("readonly", false);
+                $("#nic_no").prop("readonly", false);
+                $("#applicant_name").val("");
+                $("#applicant_address").val("");
+                $("#nic_no").val("");
+            }   
+        });
+
+        $('#wholesale_seller').change(function(){
+            var seller = $(this).val();  
+            if(seller){
+                $.ajax({
+                    type:"GET",
+                    url:"{{url('app()->getLocale()/get-seller-details')}}?seller_id="+seller,
+                    success:function(res){        
+                        if(res){
+                            
+                            $.each(res,function(key,value){
+                                $('#applicant_name').val(value['name']);
+                                $('#applicant_address').val(value['address']);
+                                $('#nic_no').val(value['nic_no']);
+                            });
+                        
+                        }else{
+                            $("#wholesale_seller").empty();
+                            $("#wholesale_seller").append('<option disabled selected>{{__('Select Wholesale Seller')}}</option>');
+                            
+                        }
+                    }
+                });
+            }
+        });
+
         </script>
 
 </section>
 
-
+<noscript>Sorry, your browser does not support JavaScript!</noscript>
 @endsection
 

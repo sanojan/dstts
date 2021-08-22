@@ -30,4 +30,8 @@ class Workplace extends Model
     public function travelpasses(){
         return $this->hasMany('App\TravelPass');
     }
+
+    public function sellers(){
+        return $this->hasMany('App\Seller');
+    }
 }

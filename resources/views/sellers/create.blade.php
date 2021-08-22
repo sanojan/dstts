@@ -13,7 +13,7 @@
                         </a>
                     </li>
                     @if(Gate::allows('sys_admin'))
-                    <li >
+                    <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
@@ -23,7 +23,7 @@
                                     <li>
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
-                                    <li >
+                                    <li class="">
                                         <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
                                     </li>
                         </ul>
@@ -95,16 +95,18 @@
                             @endif
                         </a>
                         <ul class="ml-menu">
-                            <li class="active">
+                            <li>
                                 <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
                             </li>
                             
-                            <li >
+                            <li>
                                 <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
                             </li>    
-                            <li>
+
+                            <li class="active">
                                 <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
                             </li>
+
                         </ul>
                     </li>
                     @if(Gate::allows('sys_admin'))
@@ -172,44 +174,79 @@
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>{{__('VIEW TRAVEL PASSES')}}</h2>
+                <h2>{{__('ADD NEW WHOLESALE SELLER')}}</h2>
             </div>
-            
             <div class="card">
+                
                 <div class="body">
+                    <form action="{{ route('sellers.store', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="sellers_add_form">
+                    @csrf
+                        <div class="row clearfix">
+                            
+                            <div class="col-md-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="text" id="applicant_name" class="form-control" name="seller_name" value="{{ old('seller_name') }}">
+                                        <label class="form-label">{{__('Seller Name')}}</label>
+                                    </div>
+                                    @error('seller_name')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div> 
+                            <div class="col-md-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="text" id="seller_address" class="form-control" name="seller_address" value="{{ old('seller_address') }}">
+                                        <label class="form-label">{{__('Seller Address')}}</label>
+                                    </div>
+                                    @error('seller_address')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div> 
+                            <div class="col-md-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="text" id="nic_no" class="form-control" name="nic_no" value="{{ old('nic_no') }}">
+                                        <label class="form-label">{{__('NIC No')}}</label>
+                                    </div>
+                                    @error('nic_no')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div>   
+                        </div>
                     
-                    <table id="export_table_id" class="display">
-                        <thead>
-                            <tr>
-                                <th>{{__('Created At')}}</th>
-                                <th>{{__('Ref No.')}}</th>
-                                <th>{{__('Travel Pass Type')}}</th>
-                                <th>{{__('Applicant Name')}}</th>
-                                <th>{{__('Applicant Address')}}</th>
-                                <th>{{__('Applicant NIC')}}</th>
-                                <th>{{__('Vechicle Type')}}</th>
-                                <th>{{__('Vechicle No')}}</th>
-                                <th>{{__('Travel Date')}}</th>
-                                <th>{{__('Retun Date')}}</th>
-                                <th>{{__('Reason For Travel')}}</th>
-                                <th>{{__('Travel Path')}}</th>
-                                <th>{{__('Passenger Details')}}</th>
-                                <th>{{__('Items Carried During Travel')}}</th>
-                                <th>{{__('Status')}}</th>
-                                <th>{{__('Reason If Rejected')}}</th>
-                                <th>{{__('Action')}}</th>
-                            </tr>
-                        </thead>
-                          
-                    </table>
+                        
+                        <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
+                        <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px">
+                            <i class="material-icons">note_add</i>
+                            <span>{{__('CREATE')}}</span>
+                        </button>
+                        
+                        <a class="btn bg-grey waves-effect" style="margin-right:10px" href="{{route('sellers.index', app()->getLocale())}}">
+                            <i class="material-icons">keyboard_backspace</i>
+                            <span>{{__('BACK')}}</span>
+                        </a>
+
+                        
+                    </form>
                 </div>
             </div>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
         <script >
         @if(session()->has('message'))
             $.notify({
+                title: '<strong>Heads up!</strong>',
                 message: '{{ session()->get('message') }}'
             },{
                 type: '{{session()->get('alert-type')}}',
@@ -220,6 +257,8 @@
         @endif
         </script>
 
-
 </section>
+
+
 @endsection
+

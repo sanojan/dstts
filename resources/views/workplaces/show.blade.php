@@ -95,16 +95,18 @@
                             @endif
                         </a>
                         <ul class="ml-menu">
-                            <li class="active">
+                            <li >
                                 <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
                             </li>
                             
                             <li >
                                 <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
-                            </li>    
-                            <li>
+                            </li>   
+                            
+                            <li class="active">
                                 <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
                             </li>
+
                         </ul>
                     </li>
                     @if(Gate::allows('sys_admin'))
@@ -170,55 +172,171 @@
 
 @section('content')
 <section class="content">
-        <div class="container-fluid">
-            <div class="block-header">
-                <h2>{{__('VIEW TRAVEL PASSES')}}</h2>
-            </div>
-            
-            <div class="card">
-                <div class="body">
-                    
-                    <table id="export_table_id" class="display">
-                        <thead>
-                            <tr>
-                                <th>{{__('Created At')}}</th>
-                                <th>{{__('Ref No.')}}</th>
-                                <th>{{__('Travel Pass Type')}}</th>
-                                <th>{{__('Applicant Name')}}</th>
-                                <th>{{__('Applicant Address')}}</th>
-                                <th>{{__('Applicant NIC')}}</th>
-                                <th>{{__('Vechicle Type')}}</th>
-                                <th>{{__('Vechicle No')}}</th>
-                                <th>{{__('Travel Date')}}</th>
-                                <th>{{__('Retun Date')}}</th>
-                                <th>{{__('Reason For Travel')}}</th>
-                                <th>{{__('Travel Path')}}</th>
-                                <th>{{__('Passenger Details')}}</th>
-                                <th>{{__('Items Carried During Travel')}}</th>
-                                <th>{{__('Status')}}</th>
-                                <th>{{__('Reason If Rejected')}}</th>
-                                <th>{{__('Action')}}</th>
-                            </tr>
-                        </thead>
-                          
-                    </table>
+    <div class="container-fluid">
+        <div class="block-header">
+                <h2>{{__('WHOLESALE SELLERS OF')}} @php echo strtoupper($workplace->name) @endphp</h2>
+        </div>
+        
+        @if(Gate::allows('admin') || Gate::allows('sys_admin'))
+        <div class="card">
+            <div class="body">
+                
+                <table id="workplaces_sellers_table" class="display">
+                    <thead>
+                        <tr>
+                            <th>{{__('Seller Name')}}</th>
+                            <th>{{__('Seller Address')}}</th>
+                            <th>{{__('Seller NIC No.')}}</th>
+                            
+                        </tr>
+                    </thead>
+                        
+                </table>
+                <br />
+                <b>Wholesale Sellers List Status: </b> 
+                @if($workplace->sellers_list)
+                    @if($workplace->sellers_list == "SUBMITTED")
+                        <p class="font-bold col-blue" style="display:inline">{{$workplace->sellers_list}}</p>
+                        <br />
+                        <br /> 
+                    @elseif($workplace->sellers_list == "APPROVED")  
+                        <p class="font-bold col-green" style="display:inline">{{$workplace->sellers_list}}</p>
+                        <br />
+                        <br /> 
+                    @elseif($workplace->sellers_list == "REJECTED")
+                        <p class="font-bold col-red" style="display:inline">{{$workplace->sellers_list}} (Reason: {{$workplace->rejection_reason}})</p>
+                        <br />
+                        <br />
+                    @elseif($workplace->sellers_list == "CHANGE REQUESTED")
+                    <p class="font-bold col-teal" style="display:inline">{{$workplace->sellers_list}}</p>
+                    <br />
+                    <br />
+                    @endif 
+                @else
+                    <p class="font-bold col-orange" style="display:inline">NOT SUBMITTED</p>
+                    <br />
+                    <br />   
+                @endif
+
+                <form action="{{ route('workplaces.update', [app()->getLocale(), $workplace->id] )}}" method="POST" enctype="multipart/form-data" id="sellers_submit_form">
+                        {{ method_field('PUT') }}
+                        {{ csrf_field() }}
+                        <a class="btn bg-grey btn-xs waves-effect" style="margin-right:10px" href="{{route('sellers.index', app()->getLocale())}}">
+                            <i class="material-icons">keyboard_backspace</i>
+                            <span>{{__('BACK')}}</span>
+                        </a>
+                @if($workplace->sellers_list == "SUBMITTED")
+                        <button type="submit" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" name="sellers_list" value="approve">
+                            <i class="material-icons">check</i>
+                            <span>{{__('APPROVE LIST')}}</span>
+                        </button>
+                        <button type="button" style="margin-right:10px" class="btn bg-red btn-xs waves-effect" data-toggle="collapse" data-target="#rejectSellersList" aria-expanded="false" aria-controls="rejectSellersList">
+                            <i class="material-icons">clear</i>
+                            <span>{{__('REJECT LIST')}}</span>
+                        </button>
+                @elseif($workplace->sellers_list == "CHANGE REQUESTED")
+                        <button type="submit" style="margin-right:10px" class="btn bg-teal btn-xs waves-effect" name="sellers_list" value="allow_edit">
+                            <i class="material-icons">thumb_up</i>
+                            <span>{{__('ALLOW CHANGES')}}</span>
+                        </button>
+                    </form>
+                @endif
+
+                <br /><br />
+                <div class="collapse" id="rejectSellersList" aria-expanded="false" style="height: 0px;">
+                    <div class="well">
+                        <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+                            <form action="{{ route('workplaces.update', [app()->getLocale(), $workplace->id] )}}" method="POST" enctype="multipart/form-data" id="accept_travelpass_form">
+                            {{ method_field('PUT') }}
+                            {{ csrf_field() }}
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width:200px"></th>
+                                            <th style="width:200px"></th>
+                                            <th style="width:50px"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                            <label class="form-label">{{__('Reason for Rejection')}}</label>
+                                            </td>
+                                            <td>
+                                                
+                                            <input type="text" name="reject_remarks" class="form-control" > 
+                                                    
+                                            </td>  <td></td>     
+                                            <td>
+                                                <button type="submit" style="margin-right:10px" name="sellers_list" value="reject" class="btn bg-green btn-xs waves-effect" >
+                                                <i class="material-icons">check</i>
+                                                <span>{{__('SUBMIT')}}</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
-        <script >
-        @if(session()->has('message'))
-            $.notify({
-                message: '{{ session()->get('message') }}'
-            },{
-                type: '{{session()->get('alert-type')}}',
-                delay: 5000,
-                offset: {x: 50, y:100}
-            },
-            );
         @endif
-        </script>
+
+
+
+
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.colVis.min.js"></script>
+    <script >
+    @if(session()->has('message'))
+        $.notify({
+            message: '{{ session()->get('message') }}'
+        },{
+            type: '{{session()->get('alert-type')}}',
+            delay: 5000,
+            offset: {x: 50, y:100}
+        },
+        );
+    @endif
+
+    $('#workplaces_sellers_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('workplaces.show', [app()->getLocale(), $workplace->id]) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'address'},
+        {data: 'nic_no'},
+
+
+        ],
+
+        buttons: [
+            'colvis'
+        ],
+        "order": [],
+   
+            
+    } );
+
+    
+    </script>
 
 
 </section>

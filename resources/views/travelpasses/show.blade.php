@@ -103,6 +103,9 @@
                             <li >
                                 <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
                             </li>    
+                            <li>
+                                <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
+                            </li>
                         </ul>
                     </li>
                     <li>

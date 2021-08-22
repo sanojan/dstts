@@ -102,6 +102,9 @@
                             <li >
                                 <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
                             </li>    
+                            <li>
+                                <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
+                            </li>
                         </ul>
                     </li>
                     @if(Gate::allows('sys_admin'))
@@ -182,10 +185,13 @@
                                 <div class="input-group">
                                     <div class="form-line">
                                     <select class="form-control travelpass_type_dropdown" style="width:100%;" id="travelpass_type" name="travelpass_type" onChange="change_travelpass_type();">
-                                        <option value="" @if(old('travelpass_type')=="") disabled selected @endif>{{__('Select Travel Pass Type')}}</option>
-                                        <option value="foods_goods" @if(old('travelpass_type')=="foods_goods") selected @elseif($travelpass->travelpass_type=='foods_goods') selected @endif>{{__('For transporting essential goods and foods')}}</option>
-                                        <option value="private_trans" @if(old('travelpass_type')=="private_trans") selected @elseif($travelpass->travelpass_type=='private_trans') selected @endif>{{__('For private travel')}}</option>
-                                        </select>
+                                        @if($travelpass->travelpass_type=='foods_goods')
+                                            <option value="foods_goods" selected> {{__('For transporting essential goods and foods')}}</option>
+                                            </select>
+                                        @elseif($travelpass->travelpass_type=='private_trans')
+                                            <option value="private_trans" selected>{{__('For private travel')}}</option>
+                                            </select>
+                                        @endif
                                     </div>
                                         
                                     @error('travelpass_type')
@@ -199,7 +205,7 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="applicant_name" class="form-control" name="applicant_name" value="{{ $travelpass->applicant_name }}">    
+                                        <input type="text" id="applicant_name" class="form-control" name="applicant_name" value="{{ $travelpass->applicant_name }}" @if($travelpass->travelpass_type=='foods_goods') readonly @endif>    
                                         <label class="form-label">{{__('Applicant Name')}}</label>
                                     </div>
                                     @error('applicant_name')
@@ -212,7 +218,7 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="applicant_address" class="form-control" name="applicant_address" value="{{ $travelpass->applicant_address }}">
+                                        <input type="text" id="applicant_address" class="form-control" name="applicant_address" value="{{ $travelpass->applicant_address }}" @if($travelpass->travelpass_type=='foods_goods') readonly @endif>
                                         <label class="form-label">{{__('Applicant Address')}}</label>
                                     </div>
                                     @error('applicant_address')
@@ -229,7 +235,7 @@
                             <div class="col-md-4">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" id="nic_no" class="form-control" name="nic_no" value="{{ $travelpass->nic_no }}">
+                                        <input type="text" id="nic_no" class="form-control" name="nic_no" value="{{ $travelpass->nic_no }}" @if($travelpass->travelpass_type=='foods_goods') readonly @endif>
                                         <label class="form-label">{{__('NIC No')}}</label>
                                     </div>
                                     @error('nic_no')
@@ -437,6 +443,7 @@
             },
             );
         @endif
+
         </script>
 
 </section>

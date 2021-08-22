@@ -420,7 +420,7 @@ $('.service_dropdown').select2({
 </script>
 
 <script>
-    $('#workplace_type').change(function(){
+$('#workplace_type').change(function(){
   var workplaceid = $(this).val();  
   if(workplaceid){
     $.ajax({
