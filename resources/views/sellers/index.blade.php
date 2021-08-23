@@ -231,6 +231,7 @@
                             <i class="material-icons">playlist_add</i>
                             <span>{{__('ADD NEW SELLER')}}</span>
                         </a>
+                @if(count(Auth::user()->workplace->sellers) > 0)
                         <button type="submit" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" name="sellers_list" value="submit">
                             <i class="material-icons">check</i>
                             <span>{{__('SUBMIT LIST')}}</span>
@@ -241,6 +242,7 @@
                             <span>{{__('REQUEST CHANGES')}}</span>
                         </button>
                     </form>
+                @endif
                 @endif
             </div>
         </div>
