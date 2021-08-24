@@ -1,18 +1,18 @@
 @extends('inc.layout')
 
 @section('sidebar')
- 
-                <!-- Menu -->
-                <div class="menu">
+         
+            <!-- Menu -->
+            <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li >
+                    <li class="">
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -20,7 +20,7 @@
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li >
+                                    <li>
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
                                     <li class="active">
@@ -30,6 +30,24 @@
                     </li>
                     @endif
                     
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{__('Files')}}</span>
+                            
+                        </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                    </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
+                                    <li >
+                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                    </li>
+                                    @endif
+                        </ul>
+                    </li>
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
@@ -43,20 +61,43 @@
                                     <li>
                                         <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
                                         <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
                                     </li>
                                     @endif
                         </ul>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    <li class="">
+                        <a href="{{route('complaints.index', app()->getLocale())}}">
+                            <i class="material-icons">warning</i>
+                            <span>{{__('Complaints')}}</span>
+                            @if($new_complaints > 0)
+                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @endif
                     @if(Gate::allows('sys_admin'))
-                    <li >
-                        <a href="index.html">
+                    <li class="">
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
+                        <ul class="ml-menu">
+                                    
+                            <li>
+                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                            </li>
+                            <li class="">
+                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                            </li>
+                        </ul>
                     </li>
+                    @endif
+                   
+                    @if(Gate::allows('sys_admin'))
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
@@ -65,18 +106,18 @@
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="#">{{__('Designation')}}</a>
+                                        <a href="#">Designation</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Work Place')}}</a>
+                                        <a href="#">Work Place</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Services')}}</a>
+                                        <a href="#">Services</a>
                                     </li>
                         </ul>
                     </li>
                     @endif
-                    <li >
+                    <li>
                         <a href="#">
                             <i class="material-icons">help</i>
                             <span>{{__('Help')}}</span>
@@ -110,6 +151,58 @@
                 <div class="body">
                     <form action="{{ route('letters.store', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="letter_add_form">
                     @csrf
+                        <div class="row clearfix">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <select class="form-control letter_type_dropdown" style="width:100%;" id="letter_type" name="letter_type" onChange="change_regno_textbox();">
+                                        <option value="" @if(old('letter_type')=="") selected disabled @endif>{{__('Select Letter Type')}}</option>
+                                        <option value="reg_post" @if(old('letter_type')=="reg_post") selected disabled @endif>Registered Post</option>
+                                        <option value="norm_post" @if(old('letter_type')=="norm_post") selected disabled @endif>Normal Post</option>
+                                        <option value="fax" @if(old('letter_type')=="fax") selected disabled @endif>Fax</option>
+                                        <option value="email" @if(old('letter_type')=="email") selected disabled @endif>Email</option>
+                                        <option value="from_ga" @if(old('letter_type')=="from_ga") selected disabled @endif>From GA</option>
+                                        <option value="from_ds" @if(old('letter_type')=="from_ds") selected disabled @endif>From DS</option>
+                                        </select>
+                                    </div>
+                                        
+                                    @error('letter_type')
+                                    <label class="error" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </label>
+                                    @enderror
+                                </div>
+                                    
+                                
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                    <input placeholder="" class="form-control" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="letter_receive_date" name="letter_receive_date" value="{{ old('letter_receive_date') }}">
+                                    <label class="form-label">{{__('Receieved Date')}}</label> 
+                                    </div>
+                                    @error('letter_receive_date')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div> 
+                            <div class="col-md-4">
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <input type="text" id="reg_no" class="form-control" name="reg_no" value="{{ old('reg_no') }}" disabled> 
+                                        <label class="form-label">{{__('Registered Post No.')}}</label>
+                                    </div>
+                                    @error('reg_no')
+                                            <label class="error" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </label>
+                                    @enderror
+                                </div>
+                            </div>   
+                        </div>
+                    
                         <div class="row clearfix">
                             <div class="col-md-4">
                                 <div class="form-group form-float">
@@ -214,7 +307,8 @@
                 </div>
             </div>
         </div>
-
 </section>
+
+
 @endsection
 

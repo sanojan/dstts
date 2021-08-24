@@ -6,13 +6,13 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li >
+                    <li class="">
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
@@ -32,6 +32,24 @@
                     
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{__('Files')}}</span>
+                            
+                        </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                    </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
+                                    <li >
+                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                    </li>
+                                    @endif
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>{{__('Tasks')}}</span>
                             @if($new_tasks > 0)
@@ -43,20 +61,43 @@
                                     <li>
                                         <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
                                         <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
                                     </li>
                                     @endif
                         </ul>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    <li class="">
+                        <a href="{{route('complaints.index', app()->getLocale())}}">
+                            <i class="material-icons">warning</i>
+                            <span>{{__('Complaints')}}</span>
+                            @if($new_complaints > 0)
+                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @endif
                     @if(Gate::allows('sys_admin'))
-                    <li >
-                        <a href="index.html">
+                    <li class="">
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
+                        <ul class="ml-menu">
+                                    
+                            <li>
+                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                            </li>
+                            <li class="">
+                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                            </li>
+                        </ul>
                     </li>
+                    @endif
+                   
+                    @if(Gate::allows('sys_admin'))
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
@@ -65,18 +106,18 @@
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="#">{{__('Designation')}}</a>
+                                        <a href="#">Designation</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Work Place')}}</a>
+                                        <a href="#">Work Place</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Services')}}</a>
+                                        <a href="#">Services</a>
                                     </li>
                         </ul>
                     </li>
                     @endif
-                    <li >
+                    <li>
                         <a href="#">
                             <i class="material-icons">help</i>
                             <span>{{__('Help')}}</span>
@@ -99,12 +140,20 @@
             </div>
 @endsection
 
-@section('content')
+@section('content') 
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
                 <h2>{{__('LETTER DETAILS')}}</h2>
             </div>
+            @if(session()->has('message'))
+                <div class="alert alert-{{session()->get('alert-type')}}">
+                    {{ session()->get('message') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card">
                         <div class="body table-responsive">
                             <table class="table">
@@ -172,7 +221,7 @@
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}
 
-                                    <button type="submit" class="btn btn-danger btn-xs waves-effect"  onclick="return confirm('Are you sure? You cannot revert this action.')">
+                                    <button type="submit" class="btn btn-danger btn-xs waves-effect" onclick="return confirm('{{__('Are you sure? You cannot revert this action.')}}')">
                                         <i class="material-icons">delete</i>
                                             <span>{{__('DELETE LETTER')}}</span>
                                     </button>
@@ -208,10 +257,13 @@
                             <div class="col-md-6">
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to[]" value="{{ old('assigned_to') }}">
+                                        <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to[]">
                                         <option value="" ></option>
                                         @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i>({{$user->workplace}})</option>
+                                        @php
+                                        $user_workplace = \App\Workplace::find($user->workplace_id);
+                                        @endphp
+                                        <option value="{{$user->id}}">{{$user->name}}-<i>{{$user->designation}}</i> ({{$user_workplace->name}})</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -283,7 +335,7 @@
                         
                         
                         <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
-                        <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px">
+                        <button type="submit" class="btn btn-primary waves-effect" name="task_from_letter_button" value="task_from_letter" style="margin-right:10px">
                             <i class="material-icons">note_add</i>
                             <span>{{__('CREATE')}}</span>
                         </button>
@@ -305,7 +357,7 @@
                                             <div class="panel-heading" role="tab" id="headingOne_{{$task->id}}">
                                                 <h4 class="panel-title">
                                                     <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_{{$task->id}}" aria-expanded="true" aria-controls="collapseOne_{{$task->id}}" class="">
-                                                        New Task Assigned To {{$task->user->name}} - {{$task->user->designation}} ({{$task->user->workplace}}) On {{$task->created_at}} 
+                                                        New Task Assigned To {{$task->user->name}} - {{$task->user->designation}} ({{$task->user->workplace->name}}) On {{$task->created_at}} 
                                                     </a>
                                                 </h4>
                                             </div>

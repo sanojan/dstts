@@ -26,7 +26,16 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    //protected $redirectTo = RouteServiceProvider::HOME;
+    public function redirectTo(){
+        if(session()->has('locale')) {
+            app()->setLocale(session('locale'));
+        } else {
+            app()->setLocale(config('app.locale'));    
+        }
+       
+        return  app()->getLocale() . '/home';
+    }
 
     /**
      * Create a new controller instance.

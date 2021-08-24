@@ -15,7 +15,7 @@ class CreateAssignmentsTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('letter_id');
+            $table->foreignId('letter_id')->nullable();
             $table->unsignedBigInteger('assigned_by');
             $table->foreignId('user_id');
             $table->string('remarks', 150)->nullable();

@@ -25,17 +25,32 @@ class LettersController extends Controller
                 $new_tasks += 1;
             }
         }
-        if (Gate::allows('admin') || Gate::allows('div_sec')) {
-        $letters = Auth::user()->letters;
-        return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks);
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
+        if (Gate::allows('admin')) {
+
+            $letters = DB::table('users')->join('letters', function ($join) {
+                $join->on('users.id', '=', 'letters.user_id')
+                 ->where('users.workplace_id', '=', Auth::user()->workplace->id);
+                })->get();
+
+            //$letters = Auth::user()->letters;
+            return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+        
+    
         } 
+
         elseif(Gate::allows('sys_admin')){
             $letters = Letter::all();
-            return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks);
+            return view('letters.index')->with('letters', $letters)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         
         }else {
             $notification = array(
-                'message' => 'You do not have permission to view letters',
+                'message' => __("You do not have permission to view letters"),
                 'alert-type' => 'warning'
             );
             
@@ -56,14 +71,20 @@ class LettersController extends Controller
                 $new_tasks += 1;
             }
         }
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
 
-        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
-            return view('letters.create')->with('new_tasks', $new_tasks);
+        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+            return view('letters.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
         
         }else{
             
             $notification = array(
-                'message' => 'You do not have permission to create letters',
+                'message' => __("You do not have permission to create letters"),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks);
@@ -80,20 +101,22 @@ class LettersController extends Controller
     public function store(Request $request)
     {
 
-        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
+        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
         //Create letters
         $this->validate($request, [
             'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
+            'letter_type' => 'required',
             'letter_date' => 'before:tomorrow',
-            'letter_sender' => 'required|regex:/^[a-z .\'\/ - 0-9]+$/i|max:150',
+            'letter_receive_date' => 'before:tomorrow',
+            'letter_sender' => 'required|regex:/^[a-z .\'\/ -, 0-9]+$/i|max:150',
             'letter_title' => 'required|max:150',
             'letter_content' => 'nullable|max:250',
-            'letter_scanned_copy' => 'max:1999|nullable|mimes:jpeg,jpg,pdf'
+            'letter_scanned_copy' => 'max:4999|nullable|mimes:jpeg,jpg,pdf'
 
         ],
         ['letter_no.regex' => 'letter number cannot contain special characters',
         'letter_sender.regex' => 'letter sender name cannot contain special characters',
-        'letter_scanned_copy.max' => 'Document file size should be less than 2 MB',
+        'letter_scanned_copy.max' => 'Document file size should be less than 5 MB',
         'letter_scanned_copy.mimes' => 'Only PDF, JPEG & JPG formats are allowed']);
 
          //Handle File Upload
@@ -116,6 +139,9 @@ class LettersController extends Controller
         $letter = new Letter;
         $letter->letter_no = $request->letter_no;
         $letter->letter_date = $request->letter_date;
+        $letter->letter_type = $request->letter_type;
+        $letter->letter_received_on = $request->letter_receive_date;
+        $letter->letter_reg_no = $request->reg_no;
         $letter->letter_from = $request->letter_sender;
         $letter->letter_title = $request->letter_title;
         $letter->letter_content = $request->letter_content;
@@ -127,7 +153,7 @@ class LettersController extends Controller
         //session()->put('success','Letter has been created successfully.');
 
         $notification = array(
-            'message' => 'Letter has been created successfully!', 
+            'message' => __('Letter has been created successfully!'), 
             'alert-type' => 'success'
         );
 
@@ -135,7 +161,7 @@ class LettersController extends Controller
     }
     else{
         $notification = array(
-            'message' => 'You do not have permission to create letters',
+            'message' => __("You do not have permission to create letters"),
             'alert-type' => 'warning'
         );
         
@@ -151,8 +177,7 @@ class LettersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($lang, $id)
-    {
-        
+    { 
         
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
@@ -161,46 +186,53 @@ class LettersController extends Controller
             }
         }
 
-        $letter = Letter::find($id);
-        if (Gate::allows('sys_admin') || Gate::allows('admin') ) {
-            
-            
-            $users = DB::table('users')->whereNotIn('id', array(Auth::user()->id))->get();
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
 
-            if($letter->user->id == Auth::user()->id){
-                //Return letters show page
-                //dd($lang, $id, $letter);
-                return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks);
-            }else{
+        if($letter = Letter::find($id)){
+
+            if (Gate::allows('admin')) {
+                
+                $matchThese = [['workplace_id', '=', Auth::user()->workplace->id], ['id', '!=', Auth::user()->id]];
+                $orThose = [['designation', '=', 'Divisional Secretary'], ['workplace_id', '!=', Auth::user()->workplace->id]];
+                $orThese = [['designation', '=', 'District Secretary'], ['workplace_id', '!=', Auth::user()->workplace->id]];
+                
+                $users = DB::table('users')->where($matchThese)->orWhere($orThose)->orWhere($orThese)->whereNotIn('id', array(Auth::user()->id))->get();
+                
+                if($letter->user->workplace == Auth::user()->workplace){
+                    //Return letters show page
+                    //dd($lang, $id, $letter);
+                    return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                }else{
+                    $notification = array(
+                        'message' => __('You do not have permission to view this letter'),
+                        'alert-type' => 'warning'
+                    );
+                    return redirect(app()->getLocale(). '/letters')->with($notification);
+                }
+            
+            }
+            elseif(Gate::allows('sys_admin')){
+
+                    
+                    
+                $users = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
+                return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+            }
+            else{
                 $notification = array(
-                    'message' => 'You do not have permission to view this letter',
+                    'message' => __('You do not have permission to view letters'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale(). '/letters')->with($notification);
             }
-        
-        }
-        elseif(Gate::allows('div_sec')){
-
-            $users = DB::table('users')->where([['workplace', '=', 'Ampara - District Secretariat'],['designation', '=', 'District Secretary'],])->orWhere('designation', 'Divisional Secretary')->whereNotIn('id', array(Auth::user()->id))->get();
-            
-            
-
-            if($letter->user->id == Auth::user()->id){
-                //Return letters show page
-                return view('letters.show')->with('letter', $letter)->with('users', $users);
-            }else{
-                $notification = array(
-                    'message' => 'You do not have permission to view this letter',
-                    'alert-type' => 'warning'
-                );
-                return redirect(app()->getLocale() . '/letters')->with($notification);
-            }
-            
-            
         }else{
             $notification = array(
-                'message' => 'You do not have permission to view letters',
+                'message' => __('Requested letter is not avaialble'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale(). '/letters')->with($notification);
@@ -222,26 +254,42 @@ class LettersController extends Controller
             }
         }
 
+        $new_complaints = 0;
+        foreach(Auth::user()->complaints as $complaint){
+            if($complaint->status == "Unread"){
+                $new_complaints += 1;
+            }
+        }
+
         //Validation for edit fields
-        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
-        $letter = Letter::find($id);
-            if($letter->user->id == Auth::user()->id){
-                return view('letters.edit')->with('letter', $letter)->with('new_tasks', $new_tasks);
+        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+
+            if($letter = Letter::find($id)){
+                if($letter->user->id == Auth::user()->id){
+                    return view('letters.edit')->with('letter', $letter)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                }else{
+                    $notification = array(
+                        'message' => __('You do not have permission to edit this letter'),
+                        'alert-type' => 'warning'
+                    );
+                    return redirect(app()->getLocale() . '/letters')->with($notification);
+                }
+            
             }else{
                 $notification = array(
-                    'message' => 'You do not have permission to edit this letter',
+                    'message' => __('Requested letter is not avaialble'),
                     'alert-type' => 'warning'
                 );
                 return redirect(app()->getLocale() . '/letters')->with($notification);
             }
-        
         }else{
             $notification = array(
-                'message' => 'You do not have permission to edit letters',
+                'message' => __('You do not have permission to edit letters'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/letters')->with($notification);
         }
+        
     }
 
     /**
@@ -255,12 +303,12 @@ class LettersController extends Controller
     {
         
 
-        if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec')) {
+        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
         //Update letter details
         $this->validate($request, [
-            'letter_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
+            'letter_no' => 'bail|required|regex:/^[a-z ,.\'\/ - 0-9]+$/i',
             'letter_date' => 'before:tomorrow',
-            'letter_sender' => 'required|regex:/^[a-z .\'\/ - 0-9]+$/i|max:150',
+            'letter_sender' => 'required|regex:/^[a-z .,\'\/ - 0-9]+$/i|max:150',
             'letter_title' => 'required|max:150',
             'letter_content' => 'nullable|max:250',
             'letter_scanned_copy' => 'max:1999|nullable|mimes:jpeg,jpg,pdf'
@@ -309,13 +357,13 @@ class LettersController extends Controller
         $letter->save();
         }else{
             $notification = array(
-                'message' => 'You do not have permission to edit this letter',
+                'message' => __('You do not have permission to edit this letter'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/letters')->with($notification);
         }
         $notification = array(
-            'message' => 'Letter has been updated successfully!', 
+            'message' => __('Letter has been updated successfully!'), 
             'alert-type' => 'success'
         );
 
@@ -323,7 +371,7 @@ class LettersController extends Controller
     }
     else{
         $notification = array(
-            'message' => 'You do not have permission to edit letters',
+            'message' => __('You do not have permission to edit letters'),
             'alert-type' => 'warning'
         );
         return redirect(app()->getLocale() . '/letters')->with($notification);
@@ -337,27 +385,28 @@ class LettersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($lang, $id)
     {
+        
         if (Gate::allows('sys_admin')) {
         //Delete letter
         $letter = Letter::find($id);
         $letter->delete();
         
         $notification = array(
-            'message' => 'Letter has been deleted sucessfully',
+            'message' => __('Letter has been deleted successfully!'),
             'alert-type' => 'success'
         );
 
         return redirect(app()->getLocale() . '/letters')->with($notification);
-    }
-    else{
+        }
+        else{
         $notification = array(
-            'message' => 'You do not have permission to delete this letter',
+            'message' => __('You do not have permission to delete this letter'),
             'alert-type' => 'warning'
         );
 
-        return redirect(app()->getLocale() . '/letters' . $id)->with($notification);
-    }
+        return redirect(app()->getLocale() . '/letters/' . $id)->with($notification);
+        }
     }
 }

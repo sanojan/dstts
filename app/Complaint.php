@@ -16,7 +16,12 @@ class Complaint extends Model
     public $timestamps = true;
 
     //link
-    public function letter(){
-        return $this->hasOne('App\Letter');
+    public function user(){
+        return $this->belongsTo('App\User');
     }
+    
+    public function tasks()
+   {
+      return $this->hasMany('App\Task');
+   }
 }

@@ -3,7 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
+        <link rel="icon" type="image/png" href="{{ asset('images/favicon-16x16.png') }}">
         <title>{{ config('app.name') }}</title>
 
         <!-- Fonts -->
@@ -13,11 +14,15 @@
         <style>
             html, body {
                 background-color: #fff;
+                background-image: url("/images/dsbg.jpg");
+                background-repeat: no-repeat;
+                background-size: cover;
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
                 height: 100vh;
                 margin: 0;
+                color: white;
             }
 
             .full-height {
@@ -49,7 +54,8 @@
             }
 
             .links > a {
-                color: #636b6f;
+                color: white;
+                background-color: coral;
                 padding: 0 25px;
                 font-size: 13px;
                 font-weight: 600;
@@ -63,7 +69,7 @@
             }
         </style>
     </head>
-    <body>
+    <body >
     
         <div class="flex-center position-ref full-height">
             <div class="top-right links">
@@ -84,7 +90,7 @@
                 </div>
             @endif
 
-            <div class="content">
+            <div class="content" style="background-color: #66ccff">
                 <div class="title m-b-md">
                 {{ __("Task Tracking System") }}
                 </div>

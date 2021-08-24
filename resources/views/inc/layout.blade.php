@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-
+@inject('app', 'Illuminate\Contracts\Foundation\Application')
+@inject('urlGenerator', 'Illuminate\Routing\UrlGenerator')
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -8,6 +9,8 @@
     <title>DS-TTS</title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-16x16.png') }}">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
@@ -22,11 +25,14 @@
     <!-- Animation Css -->
     <link href="{{asset('plugins/animate-css/animate.css')}}" rel="stylesheet" />
     
-    <!-- Toastr Css -->
-    @toastr_css
+    <!-- Morris Css -->
     
+    <!-- ChartJs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        
     <!-- Datatables Css -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css"/>
     
     <!-- Dropdown with search-->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
@@ -84,7 +90,7 @@
                 <ul class="nav navbar-nav navbar-right">
                 
                     <!-- Call Search -->
-                    <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
+                    <li><a href="#" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
                     <!-- #END# Call Search -->
                     <!-- Language Switcher -->
                     <li class="dropdown">
@@ -100,13 +106,12 @@
                             @endif
                             </span>
                         </a>
-                        
                         <ul class="dropdown-menu">
                             <li class="header">CHOOSE YOUR LANGUAGE</li>
                             <li class="body">
                                 <ul class="menu">
                                     <li>
-                                        <a href="{{ route(Route::currentRouteName(), 'en') }}">
+                                    <a href="{{ $urlGenerator->toLanguage('en') }}">
                                             
                                             <div class="menu-info">
                                                 <h4>ENGLISH</h4>
@@ -114,7 +119,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route(Route::currentRouteName(), 'si') }}">
+                                        <a href="{{ $urlGenerator->toLanguage('si') }}">
                                             
                                             <div class="menu-info">
                                                 <h4>සිංහල</h4>
@@ -123,7 +128,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route(Route::currentRouteName(), 'ta') }}">
+                                        <a href="{{ $urlGenerator->toLanguage('ta') }}">
                                             
                                             <div class="menu-info">
                                                 <h4>தமிழ்</h4>
@@ -131,6 +136,8 @@
                                             </div>
                                         </a>
                                     </li>
+                                        
+                                        
                                     
                                 </ul>
                             </li>
@@ -148,6 +155,7 @@
                             <li class="header">NOTIFICATIONS</li>
                             <li class="body">
                                 <ul class="menu">
+                                <!--
                                     <li>
                                         <a href="javascript:void(0);">
                                             <div class="icon-circle bg-light-green">
@@ -161,7 +169,7 @@
                                             </div>
                                         </a>
                                     </li>
-                                    
+                                -->
                                 </ul>
                             </li>
                             <li class="footer">
@@ -175,12 +183,13 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">flag</i>
-                            <span class="label-count">9</span>
+                            <!--<span class="label-count">9</span> -->
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">TASKS</li>
                             <li class="body">
                                 <ul class="menu tasks">
+                                <!--
                                     <li>
                                         <a href="javascript:void(0);">
                                             <h4>
@@ -193,6 +202,7 @@
                                             </div>
                                         </a>
                                     </li>
+                                    -->
                                 </ul>
                             </li>
                             <li class="footer">
@@ -217,15 +227,15 @@
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{Auth::user()->name}}</div>
-                    <div class="email">{{Auth::user()->email}}</div>
+                    <div class="email">{{Auth::user()->designation}}</div>
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
+                            <li><a href="{{route('users.show', [app()->getLocale(), Auth::user()->id])}}"><i class="material-icons">person</i>My Profile</a></li>
+                            <!--
                             <li role="seperator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
+                            <li><a href="javascript:void(0);"><i class="material-icons">group</i>Test</a></li>
+                            -->
                             <li role="seperator" class="divider"></li>
                             <li><a href="{{ route('logout', app()->getLocale()) }}"
                                        onclick="event.preventDefault();
@@ -266,7 +276,6 @@
 
 
 <!-- Toastr Plugin Js -->
-@toastr_js
 
 <!-- Bootstrap Core Js -->
 <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
@@ -274,8 +283,6 @@
 <!-- Select Plugin Js
 <script src="{{asset('plugins/bootstrap-select/js/bootstrap-select.js')}}"></script> -->
 
-<!-- Slimscroll Plugin Js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js" integrity="sha512-cJMgI2OtiquRH4L9u+WQW+mz828vmdp9ljOcm/vKTQ7+ydQUktrPVewlykMgozPP+NUBbHdeifE6iJ6UVjNw5Q==" crossorigin="anonymous"></script>
 
 <!-- Waves Effect Plugin Js -->
 <script src="{{asset('plugins/node-waves/waves.js')}}"></script>
@@ -285,13 +292,16 @@
 
 <!-- Moment Plugin Js -->
 
+<!-- slimscroll -->
+<script src="{{asset('plugins/jquery-slimscroll/jquery.slimscroll.js')}}"></script>
+
+<!-- Notify -->
+<script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
 
 <!-- Morris Plugin Js -->
-<script src="{{asset('plugins/raphael/raphael.min.js')}}"></script>
-<script src="{{asset('plugins/morrisjs/morris.js')}}"></script>
 
-<!-- ChartJs -->
-<script src="{{asset('plugins/chartjs/Chart.bundle.js')}}"></script>
+
+
 
 <!-- Flot Charts Plugin Js -->
 <script src="{{asset('plugins/flot-charts/jquery.flot.js')}}"></script>
@@ -305,65 +315,144 @@
 
 <!-- Custom Js -->
 <script src="{{asset('js/admin.js')}}"></script>
-<script src="{{asset('js/pages/index.js')}}"></script>
 
 <!-- Demo Js -->
 <script src="{{asset('js/demo.js')}}"></script>
 
 <!-- Input Mask Plugin Js -->
-<script src="{{asset('plugins/jquery-inputmask/jquery.inputmask.bundle.js')}}"></script>
 
-<script src="{{asset('plugins/jquery-inputmask/inputmask_code.js')}}"></script>
 
 <!-- Data Tables Js -->
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.22/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.colVis.min.js"></script>
 
 <!-- Dropdown with search-->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
-<script>
-  @if(Session::has('message'))
-    var type = "{{ Session::get('alert-type', 'info') }}";
-    switch(type){
-        case 'info':
-            toastr.options.positionClass = 'toast-top-right';
-            toastr.options.progressBar = true;
-            toastr.options.showDuration = 400;
-            toastr.info("{{ Session::get('message') }}");
-            break;
-        
-        case 'warning':
-            toastr.options.positionClass = 'toast-top-right';
-            toastr.options.progressBar = true;
-            toastr.options.showDuration = 400;
-            toastr.warning("{{ Session::get('message') }}");
-            break;
-
-        case 'success':
-            toastr.options.positionClass = 'toast-top-right';
-            toastr.options.progressBar = true;
-            //toastr.options.iconClasses = 'toast-success';
-            toastr.options.showDuration = 400;
-            toastr.success("{{ Session::get('message') }}");
-            break;
-
-        case 'error':
-            toastr.options.positionClass = 'toast-top-right';
-            toastr.options.progressBar = true;
-            toastr.options.showDuration = 400;
-            toastr.error("{{ Session::get('message') }}");
-            break;
-    }
-  @endif
-</script>
 
 <script type="text/javascript">
 var locale = '{{ config('app.locale') }}';
 
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
 if(locale == "si"){
 
-    $('#table_id').DataTable({
+    $('#export_table_id').DataTable({
         retrieve: true,
+            dom: 'Blfrtip',
+            autoWidth: false,
+            processing : true,
+                serverSide : true,
+                ajax: "{{ route('travelpasses.index', app()->getLocale()) }}",
+                
+                
+                columns: [
+                {data: 'created_at'},
+                {data: 'travelpass_no'},
+                {data: 'travelpass_type'},
+                {data: 'applicant_name'},
+                {data: 'applicant_address'},
+                {data: 'nic_no'},
+                {data: 'vehicle_type'},
+                {data: 'vehicle_no'},
+                {data: 'travel_date'},
+                {data: 'comeback_date'},
+                {data: 'reason_for_travel'},
+                {data: 'travel_path'},
+                {data: 'passengers_details'},
+                {data: 'travel_items'},
+                {data: 'travelpass_status'},
+                {data: 'rejection_reason'},
+
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+
+                ],
+           
+            buttons: [
+                {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+                },
+                title: 'Daily summary of Travel Passes-' + date,
+                messageTop: 'Travel Passes details report generated from DS-TTS',
+                messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+                },
+                'colvis'
+            ],
+            "order": [],
+
+            "columnDefs": [
+        {
+            "targets": [ 0 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 2 ],
+            "visible": false
+        },
+        {
+            "targets": [ 4 ],
+            "visible": false
+        },
+        {
+            "targets": [ 5 ],
+            "visible": false
+        },
+        {
+            "targets": [ 6 ],
+            "visible": false
+        },
+        {
+            "targets": [ 7 ],
+            "visible": false
+        },
+        {
+            "targets": [ 9 ],
+            "visible": false
+        },
+        {
+            "targets": [ 10 ],
+            "visible": false
+        },
+        {
+            "targets": [ 11 ],
+            "visible": false
+        },
+        {
+            "targets": [ 12 ],
+            "visible": false
+        },
+        {
+            "targets": [ 13 ],
+            "visible": false
+        },
+        {
+            "targets": [ 15 ],
+            "visible": false
+        }
+        ],
+        "createdRow": function (row, data, index) {
+            if(data.travelpass_status == "TRAVEL PASS ISSUED" || data.travelpass_status == "TRAVEL PASS RECEIVED"){
+                $('td', row).eq(3).addClass("font-bold col-green");
+            }
+            if(data.travelpass_status == "SUBMITTED" || data.travelpass_status == "PENDING"){
+                $('td', row).eq(3).addClass("font-bold col-blue");
+            }
+            if(data.travelpass_status == "ACCEPTED"){
+                $('td', row).eq(3).addClass("font-bold col-deep-orange");
+            }
+            if(data.travelpass_status == "REJECTED"){
+                $('td', row).eq(3).addClass("font-bold col-red");
+            }
+        },
+
         language: {
             search: "වගුවේ සොයන්න:",
             paginate: {
@@ -379,11 +468,219 @@ if(locale == "si"){
         }
             
         } );
+
+        $('#no_export_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+            buttons: [
+                'colvis'
+        ],
+        language: {
+            search: "වගුවේ සොයන්න:",
+            paginate: {
+            first:      "පළමුවන",
+            previous:   "පෙර",
+            next:       "ඊලඟ",
+            last:       "අවසන්"
+            },
+        zeroRecords:    "වගුවේ දත්ත නොමැත",
+        infoEmpty:      "ඇතුළත් කිරීම් 0 න් 0 සිට 0 දක්වා පෙන්වයි",
+        info:           "ඇතුළත් කිරීම් _TOTAL_ න් _START_ සිට   _END_ දක්වා පෙන්වයි",
+        lengthMenu:     "ඇතුළත් කිරීම් _MENU_ ක් පෙන්වන්න",
+        }
+            
+        } );
+
+        $('#sellers_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('sellers.index', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'address'},
+        {data: 'nic_no'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        
+
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2]
+            },
+            title: 'List of Wholesale sellers -' + date,
+            messageTop: 'Wholesale seller details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+        "order": [],
+   
+            
+    } );
+
+    $('#workplaces_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('workplaces.all', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'contact_no'},
+        {data: 'sellers_list'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        buttons: [
+            'colvis'
+        ],
+        "order": [],
+
+        "createdRow": function (row, data, index) {
+            if(data.sellers_list == "SUBMITTED"){
+                $('td', row).eq(2).addClass("font-bold col-blue");
+            }
+            if(data.sellers_list == "APPROVED"){
+                $('td', row).eq(2).addClass("font-bold col-green");
+            }
+            if(data.sellers_list == "REJECTED"){
+                $('td', row).eq(2).addClass("font-bold col-red");
+            }
+            if(data.sellers_list == "CHANGE REQUESTED"){
+                $('td', row).eq(2).addClass("font-bold col-teal");
+            }
+        },
+   
+            
+    } );
 } 
 if(locale == "ta"){
 
-    $('#table_id').DataTable({
+    $('#export_table_id').DataTable({
         retrieve: true,
+            dom: 'Blfrtip',
+            autoWidth: false,
+            processing : true,
+                serverSide : true,
+                ajax: "{{ route('travelpasses.index', app()->getLocale()) }}",
+                
+                
+                columns: [
+                {data: 'created_at'},
+                {data: 'travelpass_no'},
+                {data: 'travelpass_type'},
+                {data: 'applicant_name'},
+                {data: 'applicant_address'},
+                {data: 'nic_no'},
+                {data: 'vehicle_type'},
+                {data: 'vehicle_no'},
+                {data: 'travel_date'},
+                {data: 'comeback_date'},
+                {data: 'reason_for_travel'},
+                {data: 'travel_path'},
+                {data: 'passengers_details'},
+                {data: 'travel_items'},
+                {data: 'travelpass_status'},
+                {data: 'rejection_reason'},
+
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+
+                ],
+           
+            buttons: [
+                {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+                },
+                title: 'Daily summary of Travel Passes-' + date,
+                messageTop: 'Travel Passes details report generated from DS-TTS',
+                messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+                },
+                'colvis'
+            ],
+            "order": [],
+
+            "columnDefs": [
+        {
+            "targets": [ 0 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 2 ],
+            "visible": false
+        },
+        {
+            "targets": [ 4 ],
+            "visible": false
+        },
+        {
+            "targets": [ 5 ],
+            "visible": false
+        },
+        {
+            "targets": [ 6 ],
+            "visible": false
+        },
+        {
+            "targets": [ 7 ],
+            "visible": false
+        },
+        {
+            "targets": [ 9 ],
+            "visible": false
+        },
+        {
+            "targets": [ 10 ],
+            "visible": false
+        },
+        {
+            "targets": [ 11 ],
+            "visible": false
+        },
+        {
+            "targets": [ 12 ],
+            "visible": false
+        },
+        {
+            "targets": [ 13 ],
+            "visible": false
+        },
+        {
+            "targets": [ 15 ],
+            "visible": false
+        }
+        ],
+        "createdRow": function (row, data, index) {
+            if(data.travelpass_status == "TRAVEL PASS ISSUED" || data.travelpass_status == "TRAVEL PASS RECEIVED"){
+                $('td', row).eq(3).addClass("font-bold col-green");
+            }
+            if(data.travelpass_status == "SUBMITTED" || data.travelpass_status == "PENDING"){
+                $('td', row).eq(3).addClass("font-bold col-blue");
+            }
+            if(data.travelpass_status == "ACCEPTED"){
+                $('td', row).eq(3).addClass("font-bold col-deep-orange");
+            }
+            if(data.travelpass_status == "REJECTED"){
+                $('td', row).eq(3).addClass("font-bold col-red");
+            }
+        },
+        
         language: {
             search: "தேடுக:",
             paginate: {
@@ -398,34 +695,397 @@ if(locale == "ta"){
         lengthMenu:     "_MENU_ உள்ளீடுகளைக் காட்டு",
         }
     } );
-}
 
-if(locale == "en"){
-        $('#table_id').DataTable({
-            retrieve: true,
+    $('#no_export_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+            buttons: [
+                'colvis'
+        ],
+        language: {
+            search: "தேடுக:",
+            paginate: {
+            first:      "முதல்",
+            previous:   "முந்தையது",
+            next:       "அடுத்தது",
+            last:       "கடந்த"
+        },
+        zeroRecords:    "அட்டவணையில் தரவு இல்லை",
+        infoEmpty:      "0 முதல் 0 வரையிலான உள்ளீடுகளைக் காட்டுகிறது",
+        info:           "_TOTAL_ உள்ளீடுகளில் _START_ முதல் _END_ வரையான உள்ளீடுகள்",
+        lengthMenu:     "_MENU_ உள்ளீடுகளைக் காட்டு",
+        }
+            
+        } );
+
+        $('#sellers_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('sellers.index', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'address'},
+        {data: 'nic_no'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        
+
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2]
+            },
+            title: 'List of Wholesale sellers -' + date,
+            messageTop: 'Wholesale seller details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+        "order": [],
+   
+            
+    } );
+
+    $('#workplaces_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('workplaces.all', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'contact_no'},
+        {data: 'sellers_list'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        buttons: [
+            'colvis'
+        ],
+        "order": [],
+
+        "createdRow": function (row, data, index) {
+            if(data.sellers_list == "SUBMITTED"){
+                $('td', row).eq(2).addClass("font-bold col-blue");
+            }
+            if(data.sellers_list == "APPROVED"){
+                $('td', row).eq(2).addClass("font-bold col-green");
+            }
+            if(data.sellers_list == "REJECTED"){
+                $('td', row).eq(2).addClass("font-bold col-red");
+            }
+            if(data.sellers_list == "CHANGE REQUESTED"){
+                $('td', row).eq(2).addClass("font-bold col-teal");
+            }
+        },
+   
+            
     } );
 }
 
+if(locale == "en"){
+    $('#export_table_id').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('travelpasses.index', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'created_at'},
+        {data: 'travelpass_no'},
+        {data: 'travelpass_type'},
+        {data: 'applicant_name'},
+        {data: 'applicant_address'},
+        {data: 'nic_no'},
+        {data: 'vehicle_type'},
+        {data: 'vehicle_no'},
+        {data: 'travel_date'},
+        {data: 'comeback_date'},
+        {data: 'reason_for_travel'},
+        {data: 'travel_path'},
+        {data: 'passengers_details'},
+        {data: 'travel_items'},
+        {data: 'travelpass_status'},
+        {data: 'rejection_reason'},
+
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+            },
+            title: 'Daily summary of Travel Passes-' + date,
+            messageTop: 'Travel Passes details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+        "order": [],
+
+        "columnDefs": [
+        {
+            "targets": [ 0 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 2 ],
+            "visible": false
+        },
+        {
+            "targets": [ 4 ],
+            "visible": false
+        },
+        {
+            "targets": [ 5 ],
+            "visible": false
+        },
+        {
+            "targets": [ 6 ],
+            "visible": false
+        },
+        {
+            "targets": [ 7 ],
+            "visible": false
+        },
+        {
+            "targets": [ 9 ],
+            "visible": false
+        },
+        {
+            "targets": [ 10 ],
+            "visible": false
+        },
+        {
+            "targets": [ 11 ],
+            "visible": false
+        },
+        {
+            "targets": [ 12 ],
+            "visible": false
+        },
+        {
+            "targets": [ 13 ],
+            "visible": false
+        },
+        {
+            "targets": [ 15 ],
+            "visible": false
+        }
+        ],
+
+        "createdRow": function (row, data, index) {
+            if(data.travelpass_status == "TRAVEL PASS ISSUED" || data.travelpass_status == "TRAVEL PASS RECEIVED"){
+                $('td', row).eq(3).addClass("font-bold col-green");
+            }
+            if(data.travelpass_status == "SUBMITTED" || data.travelpass_status == "PENDING"){
+                $('td', row).eq(3).addClass("font-bold col-blue");
+            }
+            if(data.travelpass_status == "ACCEPTED"){
+                $('td', row).eq(3).addClass("font-bold col-deep-orange");
+            }
+            if(data.travelpass_status == "REJECTED"){
+                $('td', row).eq(3).addClass("font-bold col-red");
+            }
+        },
+        
+        
+            
+    } );
+
+    $('#no_export_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+            buttons: [
+                'colvis'
+        ],
+        "order": [],
+
+        
+            
+    } );
+
+    $('#sellers_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('sellers.index', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'address'},
+        {data: 'nic_no'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        
+
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2]
+            },
+            title: 'List of Wholesale sellers -' + date,
+            messageTop: 'Wholesale seller details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+        "order": [],
+   
+            
+    } );
+
+    $('#workplaces_table').DataTable({
+        
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('workplaces.all', app()->getLocale()) }}",
+        
+        
+        columns: [
+        {data: 'name'},
+        {data: 'contact_no'},
+        {data: 'sellers_list'},
+        {data: 'action', name: 'action', orderable: false, searchable: false},
+
+        ],
+
+        buttons: [
+            'colvis'
+        ],
+        "order": [],
+
+        "createdRow": function (row, data, index) {
+            if(data.sellers_list == "SUBMITTED"){
+                $('td', row).eq(2).addClass("font-bold col-blue");
+            }
+            if(data.sellers_list == "APPROVED"){
+                $('td', row).eq(2).addClass("font-bold col-green");
+            }
+            if(data.sellers_list == "REJECTED"){
+                $('td', row).eq(2).addClass("font-bold col-red");
+            }
+            if(data.sellers_list == "CHANGE REQUESTED"){
+                $('td', row).eq(2).addClass("font-bold col-teal");
+            }
+        },
+   
+            
+    } );
+
+    
+
+    
+}
+
 else
-$('#table_id').DataTable({
+$('#export_table_id').DataTable({
     retrieve: true,
 } );
+
+$('#no_export_table_id').DataTable({
+        retrieve: true,
+} );
 </script>
+
+
 <script type="text/javascript">
    $('.letter_no_dropdown').select2({
-  placeholder: 'Select the Letter NO',
+  placeholder: '{{__('Select the Letter NO')}}',
   width: 'resolve'
 });
+
 $('.assign_to_dropdown').select2({
-  placeholder: 'Select Officer to Assign',
+  placeholder: '{{__('Select Officer to Assign')}}',
   width: 'resolve',
   multiple:true
+});
+
+$('.file_owner_dropdown').select2({
+  placeholder: '{{__('Select the File Owner')}}',
+  width: 'resolve'
+});
+
+$('.file_branch_dropdown').select2({
+  placeholder: '{{__('Select the File Branch')}}',
+  width: 'resolve'
 });
 </script>
 <script type="text/javascript">
   $('.task-number').countTo();
 </script>
 
+<script type="text/javascript">
+function change_regno_textbox()
+{
+    if (document.getElementById("letter_type").value === "reg_post") {
+        document.getElementById("reg_no").disabled = '';
+    } else {
+        document.getElementById("reg_no").value="";
+        document.getElementById("reg_no").disabled = 'true';
+    }
+}
+</script>
+
+<script type="text/javascript">
+        function change_travelpass_type()
+        {
+            if (document.getElementById("travelpass_type").value === "foods_goods") {
+                document.getElementById("reason_for_travel").value = "";
+                document.getElementById("reason_for_travel").disabled = true;
+                document.getElementById("travel_goods_info").disabled= false;
+                document.getElementById("comeback_goods_info").disabled= false;
+                document.getElementById("travel_goods_info").required = true;
+                document.getElementById("comeback_goods_info").required= true;
+                document.getElementById("reason_for_travel").required= false;
+
+
+            } 
+            if(document.getElementById("travelpass_type").value === "private_trans") {
+                document.getElementById("reason_for_travel").disabled= false;
+                document.getElementById("travel_goods_info").disabled= true;
+                document.getElementById("comeback_goods_info").disabled= true;
+                document.getElementById("travel_goods_info").value = "";
+                document.getElementById("comeback_goods_info").value= "";
+                document.getElementById("travel_goods_info").required = false;
+                document.getElementById("comeback_goods_info").required= false;
+                document.getElementById("reason_for_travel").required= true;
+            }
+            
+        }
+        
+</script>
 
 </body>
 

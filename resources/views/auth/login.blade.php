@@ -31,11 +31,28 @@
             <a href="javascript:void(0);">DS-<b>TTS</b></a>
             <small>{{ __('Task Tracking System - District Secretariat, Ampara') }}</small>
         </div>
+        
         <div class="card">
             <div class="body">
                 <form id="sign_in" method="POST" action="{{ route('login', app()->getLocale()) }}">
                 @csrf
                     <div class="msg">{{__('Sign in to start your session')}}</div>
+                    @if(session()->has('message'))
+                        <div class="alert alert-warning">
+                            {{ session()->get('message') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
+                    @error('active')
+                        <div class="alert alert-warning">
+                            {{ $message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @enderror
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="material-icons">person</i>

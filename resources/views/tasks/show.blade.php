@@ -1,34 +1,53 @@
 @extends('inc.layout')
 
 @section('sidebar')
-               
+         
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li >
+                    <li class="">
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
-                    <li >
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">email</i>
                             <span>{{__('Letters')}}</span>
                         </a>
                         <ul class="ml-menu">
                             
-                                    <li >
+                                    <li>
                                         <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                     </li>
-                                    <li >
+                                    <li>
                                         <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
                                     </li>
                         </ul>
                     </li>
                     @endif
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{__('Files')}}</span>
+                            
+                        </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                    </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
+                                    <li >
+                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                    </li>
+                                    @endif
+                        </ul>
+                    </li>
                     
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -43,20 +62,43 @@
                                     <li class="active">
                                         <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                     </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('div_sec'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
                                     <li >
                                         <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
                                     </li>
                                     @endif
                         </ul>
                     </li>
+                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
+                    <li class="">
+                        <a href="{{route('complaints.index', app()->getLocale())}}">
+                            <i class="material-icons">warning</i>
+                            <span>{{__('Complaints')}}</span>
+                            @if($new_complaints > 0)
+                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @endif
                     @if(Gate::allows('sys_admin'))
-                    <li >
-                        <a href="index.html">
+                    <li class="">
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
                             <span>{{__('Users')}}</span>
                         </a>
+                        <ul class="ml-menu">
+                                    
+                            <li>
+                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                            </li>
+                            <li class="">
+                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                            </li>
+                        </ul>
                     </li>
+                    @endif
+                   
+                    @if(Gate::allows('sys_admin'))
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
@@ -65,18 +107,18 @@
                         <ul class="ml-menu">
                             
                                     <li>
-                                        <a href="#">{{__('Designation')}}</a>
+                                        <a href="#">Designation</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Work Place')}}</a>
+                                        <a href="#">Work Place</a>
                                     </li>
                                     <li>
-                                        <a href="#">{{__('Services')}}</a>
+                                        <a href="#">Services</a>
                                     </li>
                         </ul>
                     </li>
                     @endif
-                    <li >
+                    <li>
                         <a href="#">
                             <i class="material-icons">help</i>
                             <span>{{__('Help')}}</span>
@@ -118,11 +160,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @if($task->letter)
                                     <tr>
                                         <td>{{__('Letter No.')}}:</td>
                                         <input type="hidden" name="task_id" class="form-control" value="{{$task->id}}" readonly> 
-                                        <td><input type="text" name="letter_no" class="form-control" value="{{$task->letter->letter_no}}" readonly> 
-                                        </td>
+                                        <td><input type="text" name="letter_no" class="form-control" value="{{$task->letter->letter_no}}" readonly></td>
                                     </tr>
                                     <tr>
                                         <td>{{__('Letter Title')}}:</td>
@@ -139,6 +181,23 @@
                                         <td><textarea name="letter_content" class="form-control" style="resize: none;" readonly>{{$task->letter->letter_content}} </textarea></td>
                                         
                                     </tr>
+                                    @else
+                                    <tr>
+                                        <td>{{__('Complaint Ref.No')}}:</td>
+                                        <input type="hidden" name="task_id" class="form-control" value="{{$task->id}}" readonly> 
+                                        <td><input type="text" name="ref_no" class="form-control" value="{{$task->complaint->ref_no}}" readonly></td>
+                                        </tr>
+                                    <tr>
+                                        <td>{{__('Complainant Name')}}:</td>
+                                        <td><input type="text" name="complainant_name" class="form-control" value="{{$task->complaint->name}}" readonly> </td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td>{{__('Complaint Content')}}:</td>
+                                        <td><textarea name="complaint_content" class="form-control" style="resize: none;" readonly>{{$task->complaint->complaint_content}} </textarea></td>
+                                        
+                                    </tr>
+                                    @endif
                                     <tr>
                                         <td>{{__('Task Assigned To')}}:</td>
                                         
@@ -166,6 +225,7 @@
                                         
                                     </tr>
                                     <tr>
+                                    @if($task->letter)
                                     <td>{{__('Letter Scanned Copy')}}:</td>
                                     @if($task->letter->letter_scanned_copy)
                                     
@@ -177,6 +237,19 @@
                                             <td>{{__('No Scanned copy was attached')}}</td>
                                         @endif   
                                     </tr>
+                                    @else
+                                    <td>{{__('Content Scanned Copy')}}:</td>
+                                    @if($task->complaint->complaint_scanned_copy)
+                                    
+                                    <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('scanned_complaints/' . $task->complaint->complaint_scanned_copy) }}" target="_blank">
+                                                    <i class="material-icons">file_download</i>
+                                                </a>{{__('Click to view attached scanned copy')}}
+                                            </td>
+                                        @else
+                                            <td>{{__('No Scanned copy was attached')}}</td>
+                                        @endif   
+                                    </tr>
+                                    @endif
                                     <tr>
                                         <td>{{__('Current Status')}}:</td>
                                         @if(count($task->histories) > 0)
@@ -201,7 +274,7 @@
                                
                                 
                             <div>
-                            @if($task->user->id == Auth::user()->id)
+                            
                                 @if(count($task->histories) > 0)
                                             @foreach($task->histories as $history)
                                                 @if($history->current==true)
@@ -247,77 +320,107 @@
                                                         <i class="material-icons">keyboard_backspace</i>
                                                         <span>{{__('BACK')}}</span>
                                                     </a>
-                                                    <button type="submit" style="margin-right:10px" name="subbutton" value="Accept" class="btn btn-success btn-xs waves-effect" >
-                                                        <i class="material-icons">check</i>
-                                                        <span>{{__('ACCEPT TASK')}}</span>
-                                                    </button>
-                                                    <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
-                                                        <i class="material-icons">close</i>
-                                                        <span>{{__('REJECT TASK')}}</span>
-                                                    </a>
-                                                    @elseif($history->status == "Completed")
-                                                    <table class="table">
-                                                    <tr>
-                                                        <td >{{__('Actions Taken for the task')}}:</td>
-                                                        <td><input type="text" name="complete_remarks" class="form-control" value="{{$history->remarks}}" readonly> </td>
-                                                    </tr>
-                                                    @if($task->task_report)
-                                                    <tr>
-                                                    <td>{{__('Task completion report')}}</td>
-                                                    <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('task_reports/' . $task->task_report) }}" target="_blank">
-                                                    <i class="material-icons">file_download</i>
-                                                    </a>{{__('Click to view attached Task report')}}
-                                                    </td>
-                                                    </tr>
-                                                    @else
-                                                    <tr>
-                                                    <td>{{__('Task completion report')}}</td>
-                                                    <td>{{__('No Task report was attached')}}</td>
-                                                    </tr>
+                                                    @if($task->user->id == Auth::user()->id)
+                                                            <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptTask" aria-expanded="false" aria-controls="acceptTask">
+                                                                <i class="material-icons">done</i>
+                                                                <span>{{__('ACCEPT TASK')}}</span>
+                                                            </button>
+                                                            @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head')) 
+                                                            <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
+                                                                <i class="material-icons">fast_forward</i>
+                                                                <span>{{__('ACCEPT & FORWARD')}}</span>
+                                                            </button>
+                                                            @endif
+                                                        <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
+                                                            <i class="material-icons">close</i>
+                                                            <span>{{__('REJECT TASK')}}</span>
+                                                        </a>
                                                     @endif
-                                                    <tr>
+                                                    @elseif($history->status == "Completed")
+                                                        <table class="table">
+                                                        <tr>
+                                                            <td >{{__('Actions Taken for the task')}}:</td>
+                                                            <td><input type="text" name="complete_remarks" class="form-control" value="{{$history->remarks}}" readonly> </td>
+                                                        </tr>
+                                                        @if($task->task_report)
+                                                        <tr>
+                                                        <td>{{__('Task completion report')}}</td>
+                                                        <td><a type="button" class="btn btn-default btn-xs waves-effect" style="margin-right:10px" href="{{ Storage::url('task_reports/' . $task->task_report) }}" target="_blank">
+                                                        <i class="material-icons">file_download</i>
+                                                        </a>{{__('Click to view attached Task report')}}
+                                                        </td>
+                                                        </tr>
+                                                        @else
+                                                        <tr>
+                                                        <td>{{__('Task completion report')}}</td>
+                                                        <td>{{__('No Task report was attached')}}</td>
+                                                        </tr>
+                                                        @endif
+                                                        <tr>
+                                                        
+                                                        </tr>
                                                     
-                                                    </tr>
-                                                
-                                                    </table>
-                                                    <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index', app()->getLocale())}}">
-                                                        <i class="material-icons">keyboard_backspace</i>
-                                                        <span>{{__('BACK')}}</span>
-                                                    </a>
+                                                        </table>
+                                                        <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index', app()->getLocale())}}">
+                                                            <i class="material-icons">keyboard_backspace</i>
+                                                            <span>{{__('BACK')}}</span>
+                                                        </a>
                                                     
                                                     
                                                     @endif
                                                 @endif
                                             @endforeach
                                 @else
-                                <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index', app()->getLocale())}}">
-                                    <i class="material-icons">keyboard_backspace</i>
-                                    <span>{{__('BACK')}}</span>
-                                </a>
-                                <button type="submit" style="margin-right:10px" name="subbutton" value="Accept" class="btn btn-success btn-xs waves-effect" >
-                                    <i class="material-icons">check</i>
-                                    <span>{{__('ACCEPT TASK')}}</span>
-                                </button>
-                                    @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head') || Gate::allows('div_sec')) 
-                                    <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
-                                        <i class="material-icons">fast_forward</i>
-                                        <span>{{__('ACCEPT & FORWARD')}}</span>
-                                    </button>
+                                    <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index', app()->getLocale())}}">
+                                        <i class="material-icons">keyboard_backspace</i>
+                                        <span>{{__('BACK')}}</span>
+                                    </a>
+                                    @if($task->user->id == Auth::user()->id)
+                                            <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptTask" aria-expanded="false" aria-controls="acceptTask">
+                                                <i class="material-icons">done</i>
+                                                <span>{{__('ACCEPT TASK')}}</span>
+                                            </button>
+                                            @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head')) 
+                                            <button type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" data-toggle="collapse" data-target="#acceptandforwardTask" aria-expanded="false" aria-controls="acceptandforwardTask">
+                                                <i class="material-icons">fast_forward</i>
+                                                <span>{{__('ACCEPT & FORWARD')}}</span>
+                                            </button>
+                                            @endif
+                                        <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
+                                            <i class="material-icons">close</i>
+                                            <span>{{__('REJECT TASK')}}</span>
+                                        </a>
                                     @endif
-                                <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTask" aria-expanded="false" aria-controls="rejectTask">
-                                    <i class="material-icons">close</i>
-                                    <span>{{__('REJECT TASK')}}</span>
-                                </a>
                                 @endif
-                            @else
-                                <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index', app()->getLocale())}}">
-                                    <i class="material-icons">keyboard_backspace</i>
-                                    <span>{{__('BACK')}}</span>
-                                </a>
-                            @endif
                                 
                             </div>
                             <br>
+                                <div class="collapse" id="acceptTask" aria-expanded="false" style="height: 0px;">
+                                        <div class="well" style="background:#03A9F4;"><table class="table">
+                                            <tr>
+                                            <td style="color:white;">{{__('Select File to place Letter')}}:</td>
+                                                <td>
+                                                    <select class="form-control" style="width:100%;" id="file_name" name="file_name">
+                                                        <option value="" @if(old('file_name')=="") selected disabled @endif>{{__('Select File No.')}}</option>
+                                                        
+                                                       @foreach($task->user->files as $files)
+                                                        <option value="{{$files->id}}" @if(old('file_name')=="{{$files->id}}") selected @endif>{{$files->file_no}} - {{$files->file_name}}</option>
+                                                       @endforeach
+                                                    </select> 
+                                                </td>
+                                                    
+                                                <td>
+                                            <button type="submit" style="margin-right:10px" name="subbutton" value="Accept" class="btn btn-danger btn-xs waves-effect" >
+                                            <i class="material-icons">check</i>
+                                            <span>{{__('SUBMIT')}}</span>
+                                            </button>
+                                            </td>
+                                            </tr>
+                                        
+                                            </table>
+                                        </div>
+                                </div>
+
                                 <div class="collapse" id="rejectTask" aria-expanded="false" style="height: 0px;">
                                     <div class="well" style="background:#a35d6a;"><table class="table">
                                         <tr>
@@ -381,7 +484,7 @@
                                     </div>
                                 </div>
                             </form>
-
+                            @if (Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head')) 
                             <div class="collapse" id="acceptandforwardTask" aria-expanded="false" style="height: 0px;">
                                 <div class="well">
                                     <div class="card">
@@ -390,6 +493,7 @@
                                             <form action="{{ route('tasks.store', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="tasks_add_form">
                                             @csrf
                                                 <div class="row clearfix">
+                                                @if($task->letter)
                                                     <div class="col-md-6">
                                                         <div class="form-group form-float">
                                                             <div class="form-line">
@@ -412,6 +516,28 @@
                                                                 <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to" value="{{ old('assigned_to') }}">
                                                                 <option value="" ></option>
                                                                 @foreach($users as $user)
+                                                                @php
+                                                                $user_workplace = \App\Workplace::find($user->workplace_id);
+                                                                @endphp
+                                                                <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i>({{$user_workplace->name}})</option>
+                                                                @endforeach
+                                                                </select>
+                                                            </div>
+                                                            
+                                                            @error('assigned_to')
+                                                                    <label class="error" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </label>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    @else
+                                                    <div class="col-md-12">
+                                                        <div class="form-group form-float">
+                                                            <div class="form-line">
+                                                                <select class="form-control assign_to_dropdown" style="width:100%;" id="assigned_to" name="assigned_to" value="{{ old('assigned_to') }}">
+                                                                <option value="" ></option>
+                                                                @foreach($users as $user)
                                                                 <option value="{{$user->id}}">{{$user->name}} - <i>{{$user->designation}}</i>({{$user->workplace}})</option>
                                                                 @endforeach
                                                                 </select>
@@ -423,7 +549,8 @@
                                                                     </label>
                                                             @enderror
                                                         </div>
-                                                    </div> 
+                                                    </div>
+                                                    @endif
                                                     
                                                 </div>
                                                 <div class="row clearfix">
@@ -478,7 +605,7 @@
                                                     
                                                     </div>
                                                 </div>
-                                                    
+                                                     
                                                 
 
                                                 
@@ -500,6 +627,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         </div>
                     </div>
         </div>

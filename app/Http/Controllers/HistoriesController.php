@@ -70,11 +70,16 @@ class HistoriesController extends Controller
         $history->task_id = $request->task_id;
 
         if($request->subbutton == "Accept"){
-            $status= "Accepted";
+            $status = "Accepted";
             
             $history->status = $status;
             $history->current = true;
             $history->save();
+
+            $letter = Letter::find($task->letter->id);
+
+            $letter->file_id = $request->file_name;
+            $letter->save();
             
             $notification = array(
                 'message' => 'Task has been Accepted successfully!', 
@@ -142,7 +147,7 @@ class HistoriesController extends Controller
         //session()->put('success','Letter has been created successfully.');
 
        
-        return redirect('/' . app()->getLocale() . '/tasks/'. $request->task_id)->with($notification);
+        return redirect('/' . app()->getLocale() . '/tasks/')->with($notification);
     }
 
     /**

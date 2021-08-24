@@ -158,7 +158,7 @@
                                         <select class="form-control workplace_type_dropdown" style="width:100%;" id="workplace_type" name="workplace_type" value="{{ old('workplace_type') }}">
                                         <option value="" @if(old('workplace_type')=='') selected disabled @endif>Select Your Work Place Type</option>
                                         @foreach($workplacetypes as $workplacetype)
-                                        <option value="{{$workplacetype->id}}" @if(old('workplace_type')=='{{$workplacetype->id}}') selected @endif>{{$workplacetype->name}} </option>
+                                        <option value="{{$workplacetype->id}}" {{ old('workplace_type') == $workplacetype->id ? "selected" :""}}>{{$workplacetype->name}} </option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -176,8 +176,16 @@
                                     <i class="material-icons">location_city</i>
                                 </span>
                                     <div class="form-line">
-                                        <select class="form-control workplace_dropdown" style="width:100%;" id="workplace" name="workplace" value="{{ old('workplace') }}">
-                                        <option value="" @if(old('workplace')=='') selected disabled @endif>Select Your Work Place</option>
+                                        <select class="form-control workplace_dropdown" style="width:100%;" id="workplace" name="workplace">
+                                        @if(old('workplace'))
+
+                                        @php
+                                        $workplace = \App\Workplace::find(old('workplace'));
+                                        @endphp
+                                        <option value="{{ old('workplace') }}" selected>{{ $workplace->name}}</option>
+                                        @else
+                                        <option value="" selected>Select your workplace</option>
+                                        @endif
                                         </select>
                                     </div>
                                     @error('workplace')
@@ -199,7 +207,7 @@
                                 <select class="form-control service_dropdown" id="service" name="service" >
                                         <option value="" @if(old('service')=='') selected disabled @endif>{{__('Select your service')}}</option>
                                         @foreach($services as $service)
-                                        <option value="{{$service->name}}" @if(old('service')=='{{$service->name}}') selected @endif>{{$service->name}} </option>
+                                        <option value="{{$service->name}}" {{ old('service') == $service->name ? "selected" : ""}}>{{$service->name}} </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -242,7 +250,7 @@
                                         <select class="form-control designation_dropdown" style="width:100%;" id="designation" name="designation" value="{{ old('designation') }}">
                                         <option value="" @if(old('designation')=='') selected disabled @endif>{{__('Select your designation')}}</option>
                                         @foreach($designations as $designation)
-                                        <option value="{{$designation->name}}" @if(old('designation')=='{{$designation->name}}') selected @endif>{{$designation->name}} </option>
+                                        <option value="{{$designation->name}}" {{ old('designation') == $designation->name ? "selected" : ""}}>{{$designation->name}} </option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -412,7 +420,7 @@ $('.service_dropdown').select2({
 </script>
 
 <script>
-    $('#workplace_type').change(function(){
+$('#workplace_type').change(function(){
   var workplaceid = $(this).val();  
   if(workplaceid){
     $.ajax({
@@ -423,7 +431,7 @@ $('.service_dropdown').select2({
         $("#workplace").empty();
         $("#workplace").append('<option>{{__('Select Your Work Place')}}</option>');
         $.each(res,function(key,value){
-          $("#workplace").append('<option value="'+value+'">'+value+'</option>');
+          $("#workplace").append('<option value="'+key+'">'+value+'</option>');
         });
       
       }else{

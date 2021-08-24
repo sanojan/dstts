@@ -20,7 +20,7 @@ class CreateHistoriesTable extends Migration
             $table->string('remarks', 150)->nullable();
             $table->boolean('current');
             $table->timestamps();
-            $table->foreign('task_id')->references('id')->on('tasks');
+            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
         });
     }
 
