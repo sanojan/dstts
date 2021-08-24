@@ -236,13 +236,14 @@
                             <i class="material-icons">check</i>
                             <span>{{__('SUBMIT LIST')}}</span>
                         </button>
-                @elseif(Auth::user()->workplace->sellers_list == "APPROVED")
+                @endif
+                @endif
+                @if(Auth::user()->workplace->sellers_list == "APPROVED")
                         <button type="submit" style="margin-right:10px" class="btn bg-teal btn-xs waves-effect" name="sellers_list" value="edit_req">
                             <i class="material-icons">edit</i>
                             <span>{{__('REQUEST CHANGES')}}</span>
                         </button>
-                    </form>
-                @endif
+                    </form> 
                 @endif
             </div>
         </div>
