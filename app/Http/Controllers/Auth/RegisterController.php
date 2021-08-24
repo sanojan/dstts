@@ -109,7 +109,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        
 
         return User::create([
             'name' => $data['name'],
@@ -122,7 +121,7 @@ class RegisterController extends Controller
             'branch' => $data['branch'],
             'service' => $data['service'],
             'class' => $data['class'],
-            'workplace' => $data['workplace'],
+            'workplace_id' => $data['workplace'],
             'password' => Hash::make($data['password']),
         ]);
 
@@ -138,7 +137,7 @@ class RegisterController extends Controller
         //return redirect($this->redirectPath());
 
         $notification = array(
-            'message' => 'Your account has been created successfully!. Once your details are verified, it will be activated.',
+            'message' => __("Your account has been created successfully!. Once your details are verified, it will be activated."),
             'alert-type' => 'warning'
         );
 

@@ -32,6 +32,25 @@
                     
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">folder</i>
+                            <span>{{__('Files')}}</span>
+                            
+                        </a>
+                        <ul class="ml-menu">
+                            
+                                    <li>
+                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                    </li>
+                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
+                                    <li >
+                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                    </li>
+                                    @endif
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">playlist_add_check</i>
                             <span>{{__('Tasks')}}</span>
                             @if($new_tasks > 0)
@@ -61,7 +80,30 @@
                         </a>
                     </li>
                     @endif
-                    
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">transfer_within_a_station</i>
+                            <span>{{__('Travel Pass')}}</span>
+                            @if(Gate::allows('admin'))
+                            @if($new_travelpasses > 0)
+                            <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
+                            @endif
+                            @elseif(Gate::allows('user'))
+                            @if($new_approved_travelpasses > 0)
+                            <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
+                            @endif
+                            @endif
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
+                            </li>
+                            
+                            <li >
+                                <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
+                            </li>    
+                        </ul>
+                    </li>
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">group</i>
@@ -158,7 +200,7 @@
                                 <tr>
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->nic}}</td>
-                                    <td>{{$user->designation}} - {{$user->workplace}}</td>
+                                    <td>{{$user->designation}} - {{$user->workplace->name}}</td>
                                     @if($user->user_type == "sys_admin")
                                         <td>System Admin</td>
                                     @elseif($user->user_type == "admin")
