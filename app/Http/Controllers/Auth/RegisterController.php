@@ -6,10 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Designation;
+use App\Workplace;
+use App\Workplacetype;
+use App\Service;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -31,7 +37,16 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    //protected $redirectTo = RouteServiceProvider::HOME;
+    public function redirectTo(){
+        if(session()->has('locale')) {
+            app()->setLocale(session('locale'));
+        } else {
+            app()->setLocale(config('app.locale'));    
+        }
+       
+        return  app()->getLocale() . '/home';
+    }
 
     /**
      * Create a new controller instance.
@@ -56,8 +71,8 @@ class RegisterController extends Controller
             'gender' => ['required'],
             'dob' => ['required', 'date', 'before:-18 years', 'after:-60 years'],
             'nic' => ['required', 'unique:users', 'max:12', 'min:10'],
-            'email' => ['string', 'email', 'max:255', 'unique:users'],
-            'mobile_no' => ['required', 'size:10', 'regex:/^[0-9]*$/'],
+            'email' => ['string', 'email', 'max:255', 'unique:users', 'nullable'],
+            'mobile_no' => ['required', 'size:10', 'unique:users', 'regex:/^[0-9]*$/'],
             'designation' => ['required'],
             'branch' => ['required'],
             'service' => ['required'],
@@ -74,7 +89,16 @@ class RegisterController extends Controller
         'terms.required' => 'You must agree to terms of usage',
         ]);
 
-        
+    }
+    protected function showRegistrationForm()
+    {
+            $designations = Designation::all()->sortBy('name');
+            $services = Service::all()->sortBy('name');
+            $workplacetypes = Workplacetype::all();
+            $workplaces = Workplace::all();
+            //Return letters show page
+
+            return view('auth.register')->with('services', $services)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('workplaces', $workplaces);
     }
     
     /**
@@ -85,7 +109,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        
 
         return User::create([
             'name' => $data['name'],
@@ -98,8 +121,26 @@ class RegisterController extends Controller
             'branch' => $data['branch'],
             'service' => $data['service'],
             'class' => $data['class'],
-            'workplace' => $data['workplace'],
+            'workplace_id' => $data['workplace'],
             'password' => Hash::make($data['password']),
         ]);
+
+        
+    }
+
+    public function register(\Illuminate\Http\Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        //return redirect($this->redirectPath());
+
+        $notification = array(
+            'message' => __("Your account has been created successfully!. Once your details are verified, it will be activated."),
+            'alert-type' => 'warning'
+        );
+
+        return redirect(app()->getLocale() . '/login')->with($notification);
     }
 }

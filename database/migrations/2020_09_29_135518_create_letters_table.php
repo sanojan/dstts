@@ -15,14 +15,17 @@ class CreateLettersTable extends Migration
     {
         Schema::create('letters', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->string('letter_no',60);
             $table->date('letter_date');
-            $table->date('letter_received_on');
+            $table->date('letter_received_on')->nullable();
             $table->string('letter_from',100);
             $table->string('letter_title');
             $table->longText('letter_content')->nullable();
             $table->string('letter_scanned_copy')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
