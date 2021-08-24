@@ -19,7 +19,7 @@ class CreateWorkplaceTable extends Migration
             $table->string('name',100);
             $table->string('address')->nullable();
             $table->string('institute_head',50)->nullable();
-            $table->string('contack_no', 10)->unique()->nullable();
+            $table->string('contact_no', 10)->unique()->nullable();
             $table->timestamps();
             $table->foreign('workplace_type_id')->references('id')->on('workplace_types')->onDelete('cascade');
         });

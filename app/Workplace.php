@@ -26,4 +26,12 @@ class Workplace extends Model
     public function files(){
         return $this->hasMany('App\File');
     }
+
+    public function travelpasses(){
+        return $this->hasMany('App\TravelPass');
+    }
+
+    public function sellers(){
+        return $this->hasMany('App\Seller');
+    }
 }

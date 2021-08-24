@@ -80,7 +80,7 @@ class LoginController extends Controller
                 return redirect()
                     ->back()
                     ->withInput($request->only($this->username(), 'remember'))
-                    ->withErrors(['active' => 'Your account is not activated!']);
+                    ->withErrors(['active' => 'Your account is not activated, Please wait...! For Technical Assistance Email: help@dsems.net']);
             }
         }
     

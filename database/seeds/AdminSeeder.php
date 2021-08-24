@@ -21,7 +21,7 @@ class AdminSeeder extends Seeder
             'designation' => 'ICT Officer',
             'service' => 'SLICTS',
             'class' => '2',
-            'workplace_id' => null,
+            'workplace_id' => '1',
             'user_type' => 'sys_admin',
             'password' => Hash::make('11111111'),
             'account_status' => true
