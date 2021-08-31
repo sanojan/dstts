@@ -6,109 +6,127 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li class="">
+                    <li >
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin'))
-                    <li >
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">email</i>
-                            <span>{{__('Letters')}}</span>
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
-                                    </li>
-                                    <li >
-                                        <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
-                                    </li>
-                        </ul>
-                    </li>
-                    
-                    
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">folder</i>
-                            <span>{{__('Files')}}</span>
-                            
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
-                                    </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
-                                    <li >
-                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
-                                    </li>
-                                    @endif
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">playlist_add_check</i>
-                            <span>{{__('Tasks')}}</span>
-                            @if($new_tasks > 0)
-                            <span class="badge bg-red">{{$new_tasks}} {{__('New')}}</span>
+                    @if(count(Auth::user()->subjects) > 0)
+                        @foreach(Auth::user()->subjects as $subject)
+                            @if($subject->subject_code == "letters")
+                                <li >
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">email</i>
+                                        <span>{{__('Letters')}}</span>
+                                    </a>
+                                    <ul class="ml-menu">
+                                                <li >
+                                                    <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
+                                                </li>
+                                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
+                                                <li >
+                                                    <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
+                                                </li>
+                                                @endif
+                                    </ul>
+                                </li>
                             @endif
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
-                                    </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                                    <li >
-                                        <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
-                                    </li>
-                                    @endif
-                        </ul>
-                    </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li class="">
-                        <a href="{{route('complaints.index', app()->getLocale())}}">
-                            <i class="material-icons">warning</i>
-                            <span>{{__('Complaints')}}</span>
-                            @if($new_complaints > 0)
-                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
-                            @endif
-                        </a>
-                    </li>
-                    @endif
-                    @endif
-                    <li class="active">
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">transfer_within_a_station</i>
-                            <span>{{__('Travel Pass')}}</span>
-                            @if(Gate::allows('admin'))
-                            @if($new_travelpasses > 0)
-                            <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
-                            @endif
-                            @elseif(Gate::allows('user'))
-                            @if($new_approved_travelpasses > 0)
-                            <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
-                            @endif
-                            @endif
-                        </a>
-                        <ul class="ml-menu">
-                            <li >
-                                <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
-                            </li>
-                            
-                            <li >
-                                <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
-                            </li>   
-                            
-                            <li class="active">
-                                <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
-                            </li>
+                        
 
-                        </ul>
-                    </li>
+                            @if($subject->subject_code == "files")
+                                <li>
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">folder</i>
+                                        <span>{{__('Files')}}</span>
+                                        
+                                    </a>
+                                    <ul class="ml-menu">
+                                        
+                                                <li>
+                                                    <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                                </li>
+                                            
+                                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head'))
+                                                <li >
+                                                    <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                                </li>
+                                                @endif
+                                            
+                                    </ul>
+                                </li>
+                            @endif
+
+                            @if($subject->subject_code == "tasks")
+                                <li >
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">playlist_add_check</i>
+                                        <span>{{__('Tasks')}}</span>
+                                        @if($new_tasks > 0)
+                                        <span class="badge bg-red">{{$new_tasks}} {{__('New')}}</span>
+                                        @endif
+                                    </a>
+                                    <ul class="ml-menu">
+                                        
+                                                <li >
+                                                    <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
+                                                </li>
+                                                
+                                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin'))
+                                                <li >
+                                                    <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
+                                                </li>
+                                                @endif
+                                            
+                                    </ul>
+                                </li>
+                            @endif
+
+                            @if($subject->subject_code == "complaints")
+                                <li class="">
+                                    <a href="{{route('complaints.index', app()->getLocale())}}">
+                                        <i class="material-icons">warning</i>
+                                        <span>{{__('Complaints')}}</span>
+                                        @if($new_complaints > 0)
+                                        <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                                        @endif
+                                    </a>
+                                </li>
+                                
+                            @endif
+
+                            @if($subject->subject_code == "travelpass")
+                                <li class="active">
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">transfer_within_a_station</i>
+                                        <span>{{__('Travel Pass')}}</span>
+                                        @if(Gate::allows('dist_admin'))
+                                        @if($new_travelpasses > 0)
+                                        <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
+                                        @endif
+                                        @elseif(Gate::allows('user'))
+                                        @if($new_approved_travelpasses > 0)
+                                        <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
+                                        @endif
+                                        @endif
+                                    </a>
+                                    <ul class="ml-menu">
+                                        <li >
+                                            <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
+                                        </li>
+                                        
+                                        <li >
+                                            <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
+                                        </li>    
+
+                                        <li class="active">
+                                            <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+                    @endforeach 
+                    @endif
                     @if(Gate::allows('sys_admin'))
                     <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -174,14 +192,14 @@
 <section class="content">
     <div class="container-fluid">
         <div class="block-header">
-            @if(Gate::allows('user'))
+            @if(Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head'))
                 <h2>{{__('VIEW WHOLESALE SELLERS')}}</h2>
-            @elseif(Gate::allows('admin') || Gate::allows('sys_admin'))
+            @elseif(Gate::allows('dist_admin') || Gate::allows('sys_admin'))
                 <h2>{{__('SELECT DIVISION TO VIEW WHOLESALE SELLERS')}}</h2>
             @endif
         </div>
         
-        @if(Gate::allows('user'))
+        @if(Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head'))
         <div class="card">
             <div class="body">
                 
@@ -249,7 +267,7 @@
         </div>
         @endif
 
-        @if(Gate::allows('admin') || Gate::allows('sys_admin'))
+        @if(Gate::allows('dist_admin') || Gate::allows('sys_admin'))
             <div class="card">
                 <div class="body">
                     

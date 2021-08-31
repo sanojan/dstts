@@ -257,7 +257,7 @@
             <!-- Footer -->
             <div class="legal">
                 <div class="copyright">
-                    &copy;2020 <a href="#">District Secretariat - Ampara</a>.
+                    &copy;2020 <a href="#">IT Unit, District Secretariat - Ampara</a>.
                 </div>
                 <div class="version">
                     <b>Version: </b> 1.0.1
@@ -798,7 +798,7 @@ if(locale == "ta"){
 }
 
 if(locale == "en"){
-    $('#export_table_id').DataTable({
+    $('#travelpass_table_id').DataTable({
         
         retrieve: true,
         dom: 'Blfrtip',
@@ -914,17 +914,88 @@ if(locale == "en"){
             
     } );
 
-    $('#no_export_table_id').DataTable({
+    $('#letters_table_id').DataTable({
         retrieve: true,
         dom: 'Blfrtip',
-            buttons: [
-                'colvis'
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3, 4]
+            },
+            title: 'List of Letters -' + date,
+            messageTop: 'Letters details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
         ],
+
         "order": [],
 
         
             
     } );
+
+    $('#files_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3, 4]
+            },
+            title: 'List of Files -' + date,
+            messageTop: 'Files details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+
+        "order": [],
+
+        
+            
+    } );
+
+    $('#tasks_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8]
+            },
+            title: 'List of Assigned Tasks -' + date,
+            messageTop: 'Tasks details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+
+        "order": [],
+
+        "columnDefs": [
+        {
+            "targets": [ 1 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 2 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 5 ],
+            "visible": false,
+        },]
+        
+   
+            
+    } );
+
+
+
 
     $('#sellers_table').DataTable({
         
@@ -1004,19 +1075,23 @@ if(locale == "en"){
             
     } );
 
+    $('#users_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+        buttons: [
+            'colvis'
+        ],
+
+        "order": [],
+
+        
+            
+    } );
+
     
 
     
 }
-
-else
-$('#export_table_id').DataTable({
-    retrieve: true,
-} );
-
-$('#no_export_table_id').DataTable({
-        retrieve: true,
-} );
 </script>
 
 
@@ -1030,6 +1105,12 @@ $('.assign_to_dropdown').select2({
   placeholder: '{{__('Select Officer to Assign')}}',
   width: 'resolve',
   multiple:true
+});
+
+$('.subjects_dropdown').select2({
+  placeholder: '{{__('Select Subjects to Add')}}',
+  width: 'resolve',
+  
 });
 
 $('.file_owner_dropdown').select2({

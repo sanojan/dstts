@@ -158,7 +158,7 @@ class HistoriesController extends Controller
      */
     public function show(History $history)
     {
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin') || Gate::allows('dist_admin')) {
         $histories = History::find();
         $letters = Letter::all();
         $users = User::all();

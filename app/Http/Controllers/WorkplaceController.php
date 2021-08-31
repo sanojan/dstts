@@ -30,35 +30,48 @@ class WorkplaceController extends Controller
 
     public function workplacesAll(Request $request)
     {
-        
-        
-        if ($request->ajax()) {
+        $sub = 0;
 
-            if (Gate::allows('admin') || Gate::allows('sys_admin')) {
-                
+        if(Gate::allows('sys_admin')){
+            if ($request->ajax()) {
+
                 $data = DB::table('workplaces')->orderBy('updated_at', 'desc')->get();
+                return Datatables::of($data)->addIndexColumn()
+            
+                ->addColumn('action', function($row){
+                    
+                $btn = '<a href=' . route("workplaces.show", [app()->getLocale(), $row->id]) . ' class="btn btn btn-success waves-effect" >VIEW</a>';
+                return $btn;
+
+            })->rawColumns(['action'])->make(true);
 
             }
 
-            return Datatables::of($data)->addIndexColumn()
-            
-            ->addColumn('action', function($row){
-
-                
-                if(Gate::allows('admin') || Gate::allows('sys_admin')){
-                    
-                    $btn = '<a href=' . route("workplaces.show", [app()->getLocale(), $row->id]) . ' class="btn btn btn-success waves-effect" >VIEW</a>';
-                    return $btn;
-                   
-                }
-
-            })
-            
-            ->rawColumns(['action'])->make(true);
-            
-
         }
+        elseif(count(Auth::user()->subjects) > 0){
+            foreach(Auth::user()->subjects as $subject){
+                $sub++;
+                if($subject->subject_code == "travelpass"){
+                    if (Gate::allows('dist_admin')) {
+                        if ($request->ajax()) {
 
+                            $data = DB::table('workplaces')->orderBy('updated_at', 'desc')->get();
+
+                            return Datatables::of($data)->addIndexColumn()
+                
+                            ->addColumn('action', function($row){
+                            $btn = '<a href=' . route("workplaces.show", [app()->getLocale(), $row->id]) . ' class="btn btn btn-success waves-effect" >VIEW</a>';
+                            return $btn;
+        
+                            })
+                
+                            ->rawColumns(['action'])->make(true);
+
+                        }
+                    }
+                }
+            }
+        }
         
 
 
@@ -93,6 +106,7 @@ class WorkplaceController extends Controller
      */
     public function show(Request $request, $lang, $id)
     {
+        //Display workplace details
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
             if(!count($task->histories) > 0){
@@ -118,42 +132,80 @@ class WorkplaceController extends Controller
             }
         }
 
-        if ($request->ajax()) {
+        $sub = 0;
+        if($workplace = Workplace::find($id)){
+            if(Gate::allows('sys_admin')){
+                if ($request->ajax()) {
+                            
+                    $data = DB::table('sellers')->where('workplace_id', '=', $id)->get();
+                    return Datatables::of($data)->addIndexColumn()
+                    ->addColumn('action', function($row){
+                            
+                        $btn = 'Test';
+                        return $btn;
 
-            if (Gate::allows('admin') || Gate::allows('sys_admin')) {
-                
-                $data = DB::table('sellers')->where('workplace_id', '=', $id)->get();
 
-            }
-
-
-            return Datatables::of($data)->addIndexColumn()
-            ->addColumn('action', function($row){
-
-                
-                if(Gate::allows('admin') || Gate::allows('sys_admin')){
-                    
-                    $btn = 'Test';
-                    return $btn;
-                   
+                    })->rawColumns(['action'])->make(true);
+                                    
                 }
 
-            })
-            
-            ->rawColumns(['action'])->make(true);
-            
-
-        }
-        
-        //Display workplace details
-        if (Gate::allows('admin') || Gate::allows('sys_admin')) {
-            
-            if($workplace = Workplace::find($id)){
                 $this->current_wp = $id;
                 
                 return view('workplaces.show')->with('workplace', $workplace)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+                
+            }
+
+            elseif(count(Auth::user()->subjects) > 0){
+                foreach(Auth::user()->subjects as $subject){
+                    $sub += 1;
+                    if($subject->subject_code == "travelpass"){
+                        if (Gate::allows('dist_admin')) {
+                            if ($request->ajax()) {
+                            
+                                $data = DB::table('sellers')->where('workplace_id', '=', $id)->get();
+                                return Datatables::of($data)->addIndexColumn()
+                                ->addColumn('action', function($row){
+                                        
+                                    $btn = 'Test';
+                                    return $btn;
+
+
+                                })->rawColumns(['action'])->make(true);
+                                                
+                            }
+
+                            $this->current_wp = $id;
+                
+                            return view('workplaces.show')->with('workplace', $workplace)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+
+                        }
+                        else{
+                            $notification = array(
+                                'message' => __('You do not have permission to view Workplaces'),
+                                'alert-type' => 'warning'
+                            );
+                            return redirect(app()->getLocale(). '/home')->with($notification);
+                        }
+                    }
+                }
+                if(count(Auth::user()->subjects) >= $sub){
+                    $notification = array(
+                        'message' => __("You do not have permission to View Workplaces"),
+                        'alert-type' => 'warning'
+                    );
+                    
+                    return redirect(app()->getLocale() . '/home')->with($notification);
+                }
             }
         }
+        else{
+            $notification = array(
+                'message' => __('Requested workplace is not available'),
+                'alert-type' => 'warning'
+            );
+            return redirect(app()->getLocale(). '/home')->with($notification);
+        }
+
     }
 
     /**

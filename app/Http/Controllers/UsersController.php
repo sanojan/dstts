@@ -12,6 +12,7 @@ use App\Workplace;
 use App\Workplacetype;
 use App\Service;
 use App\TravelPass;
+use App\Subject;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -381,6 +382,119 @@ class UsersController extends Controller
                     'alert-type' => 'success'
                 );
                 return redirect(app()->getLocale() . '/users/' . $user->id)->with($notification);
+            }
+        }
+
+        if($request->subject_button == "add_subject"){
+            if (Gate::allows('sys_admin')) {
+                
+                $existingSubjects[] = "";
+                
+                foreach($user->subjects as $key => $existingSubject){
+                    $existingSubjects[$key] = $existingSubject->subject_code;
+                }
+
+                if(count($request->subjects) > 0){
+                    foreach($request->subjects as $subject){
+                        
+                        if(in_array($subject, $existingSubjects)){
+                            continue;
+                        }
+                        else{
+                            $new_subject = new Subject;
+                            $new_subject->user_id = $user->id;
+                            $new_subject->subject_code = $subject;
+
+                            if($subject == "letters"){
+                                $new_subject->subject_name = "Letters";
+                            }
+                            else if($subject == "tasks"){
+                                $new_subject->subject_name = "Tasks";
+                            }
+                            else if($subject == "files"){
+                                $new_subject->subject_name = "Files";
+                            }
+                            else if($subject == "travelpass"){
+                                $new_subject->subject_name = "Travel Pass";
+                            }
+                            else if($subject == "complaints"){
+                                $new_subject->subject_name = "Complaints";
+                            }
+                            $new_subject->save();
+                        }
+                        
+                    }
+                
+                    $notification = array(
+                        'message' => __('User subjects have been added successfully'),
+                        'alert-type' => 'success'
+                    );
+            
+                    return redirect(app()->getLocale() . '/users/' . $id)->with($notification);
+                    
+                }
+                else{
+                    $notification = array(
+                        'message' => __('You did not select any subjects to add'),
+                        'alert-type' => 'warning'
+                    );
+            
+                    return redirect(app()->getLocale() . '/users/' . $id)->with($notification);
+                }
+                
+                
+              
+            }
+        }
+
+        if($request->subject_button == "remove_subject"){
+            if (Gate::allows('sys_admin')) {
+                
+                $existingSubjects[] = "";
+                
+                foreach($user->subjects as $key => $existingSubject){
+                    $existingSubjects[$key] = $existingSubject->subject_code;
+                }
+
+                if(count($request->subjects) > 0){
+                    foreach($request->subjects as $subject){
+                        
+                        if(in_array($subject, $existingSubjects)){
+                            
+                            foreach($user->subjects as $oldSubjects){
+                                if($oldSubjects->subject_code == $subject){
+                                    $subject_old = Subject::find($oldSubjects->id);
+                                    $subject_old->delete();
+                                }
+                            }
+                            
+                           
+                        }
+                        else{
+                            continue;
+                        }
+                        
+                    }
+                
+                    $notification = array(
+                        'message' => __('User subjects have been removed successfully'),
+                        'alert-type' => 'success'
+                    );
+            
+                    return redirect(app()->getLocale() . '/users/' . $id)->with($notification);
+                    
+                }
+                else{
+                    $notification = array(
+                        'message' => __('You did not select any subjects to remove'),
+                        'alert-type' => 'warning'
+                    );
+            
+                    return redirect(app()->getLocale() . '/users/' . $id)->with($notification);
+                }
+                
+                
+              
             }
         }
         

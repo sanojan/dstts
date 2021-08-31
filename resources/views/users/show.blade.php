@@ -12,101 +12,120 @@
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin'))
-                    <li class="">
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">email</i>
-                            <span>{{__('Letters')}}</span>
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
-                                    </li>
-                                    <li class="">
-                                        <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
-                                    </li>
-                        </ul>
-                    </li>
-                    
-                    
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">folder</i>
-                            <span>{{__('Files')}}</span>
-                            
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
-                                    </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
-                                    <li >
-                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
-                                    </li>
-                                    @endif
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">playlist_add_check</i>
-                            <span>{{__('Tasks')}}</span>
-                            @if($new_tasks > 0)
-                            <span class="badge bg-red">{{$new_tasks}} {{__('New')}}</span>
+                    @if(count(Auth::user()->subjects) > 0)
+                        @foreach(Auth::user()->subjects as $subject)
+                            @if($subject->subject_code == "letters")
+                                <li>
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">email</i>
+                                        <span>{{__('Letters')}}</span>
+                                    </a>
+                                    <ul class="ml-menu">
+                                                <li>
+                                                    <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
+                                                </li>
+                                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
+                                                <li >
+                                                    <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
+                                                </li>
+                                                @endif
+                                    </ul>
+                                </li>
                             @endif
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
-                                    </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                                    <li >
-                                        <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
-                                    </li>
-                                    @endif
-                        </ul>
-                    </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li class="">
-                        <a href="{{route('complaints.index', app()->getLocale())}}">
-                            <i class="material-icons">warning</i>
-                            <span>{{__('Complaints')}}</span>
-                            @if($new_complaints > 0)
-                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                        
+
+                            @if($subject->subject_code == "files")
+                                <li>
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">folder</i>
+                                        <span>{{__('Files')}}</span>
+                                        
+                                    </a>
+                                    <ul class="ml-menu">
+                                        
+                                                <li>
+                                                    <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                                </li>
+                                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head'))
+                                                <li >
+                                                    <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                                </li>
+                                                @endif
+                                            
+                                    </ul>
+                                </li>
                             @endif
-                        </a>
-                    </li>
+
+                            @if($subject->subject_code == "tasks")
+                                <li>
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">playlist_add_check</i>
+                                        <span>{{__('Tasks')}}</span>
+                                        @if($new_tasks > 0)
+                                        <span class="badge bg-red">{{$new_tasks}} {{__('New')}}</span>
+                                        @endif
+                                    </a>
+                                    <ul class="ml-menu">
+                                        
+                                                <li>
+                                                    <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
+                                                </li>
+                                                
+                                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin'))
+                                                <li >
+                                                    <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
+                                                </li>
+                                                @endif
+                                            
+                                    </ul>
+                                </li>
+                            @endif
+
+                            @if($subject->subject_code == "complaints")
+                                <li class="">
+                                    <a href="{{route('complaints.index', app()->getLocale())}}">
+                                        <i class="material-icons">warning</i>
+                                        <span>{{__('Complaints')}}</span>
+                                        @if($new_complaints > 0)
+                                        <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                                        @endif
+                                    </a>
+                                </li>
+                                
+                            @endif
+
+                            @if($subject->subject_code == "travelpass")
+                                <li>
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">transfer_within_a_station</i>
+                                        <span>{{__('Travel Pass')}}</span>
+                                        @if(Gate::allows('admin'))
+                                        @if($new_travelpasses > 0)
+                                        <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
+                                        @endif
+                                        @elseif(Gate::allows('user'))
+                                        @if($new_approved_travelpasses > 0)
+                                        <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
+                                        @endif
+                                        @endif
+                                    </a>
+                                    <ul class="ml-menu">
+                                        <li>
+                                            <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
+                                        </li>    
+
+                                        <li>
+                                            <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+                    @endforeach 
                     @endif
-                    @endif
-                    <li >
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">transfer_within_a_station</i>
-                            <span>{{__('Travel Pass')}}</span>
-                            @if(Gate::allows('admin'))
-                            @if($new_travelpasses > 0)
-                            <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
-                            @endif
-                            @elseif(Gate::allows('user'))
-                            @if($new_approved_travelpasses > 0)
-                            <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
-                            @endif
-                            @endif
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
-                            </li>
-                            
-                            <li >
-                                <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
-                            </li> 
-                            <li>
-                                <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
-                            </li>   
-                        </ul>
-                    </li>
                     @if(Gate::allows('sys_admin') || Auth::user()->id == $user->id)
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -114,14 +133,17 @@
                             <span>{{__('Users')}}</span>
                         </a>
                         <ul class="ml-menu">
-                        @if(Gate::allows('sys_admin'))  
+                                    
+                            @if(Gate::allows('sys_admin'))  
                             <li>
                                 <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
                             </li>
-                        @endif
+                            @endif
+                            @if(Gate::allows('sys_admin') || Auth::user()->id == $user->id)
                             <li class="active">
                                 <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
                             </li>
+                            @endif
                         </ul>
                     </li>
                     @endif
@@ -253,16 +275,24 @@
                                         <td>{{__('User Type')}}:</td>
                                         @if($user->user_type == "sys_admin")
                                         <td>System Admin</td>
-                                        @elseif($user->user_type == "admin")
-                                            <td>Admin</td>
-                                        @elseif($user->user_type == "div_sec")
-                                            <td>Divisional Secretary</td>
+                                        @elseif($user->user_type == "dist_admin")
+                                            <td>District Admin</td>
+                                        @elseif($user->user_type == "divi_admin")
+                                            <td>Division Admin</td>
                                         @elseif($user->user_type == "branch_head")
                                             <td>Branch Head</td>
                                         @elseif($user->user_type == "user")
                                             <td>Standard User</td>
                                         @endif
                                         
+                                    </tr>
+                                    <tr>
+                                        <td>Assigned Subjects:</td>
+                                        <td>
+                                            @foreach($user->subjects as $subject)
+                                                <span class="label label-primary">{{$subject->subject_name}}</span>
+                                            @endforeach
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>{{__('Account Created On')}}:</td>
@@ -301,6 +331,11 @@
                                     <a type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#changeAccountType" aria-expanded="false" aria-controls="changeAccountType">
                                         <i class="material-icons">add_to_photos</i>
                                         <span>{{__('CHANGE ACCOUNT TYPE')}}</span>
+                                    </a>
+
+                                    <a type="button" style="margin-right:10px" class="btn bg-indigo btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#modifySubjects" aria-expanded="false" aria-controls="modifySubjects">
+                                        <i class="material-icons">note_add</i>
+                                        <span>{{__('MODIFY SUBJECTS')}}</span>
                                     </a>
                                     
                                     @if($user->account_status)
@@ -372,10 +407,16 @@
                                                                 <option value="branch_head">Branch Head</option>
                                                                 @endif
 
-                                                                @if($user->user_type == "admin")
-                                                                <option value="{{$user->user_type}}" selected disabled>Admin</option>
+                                                                @if($user->user_type == "dist_admin")
+                                                                <option value="{{$user->user_type}}" selected disabled>District Admin</option>
                                                                 @else
-                                                                <option value="admin">Admin</option>
+                                                                <option value="dist_admin">District Admin</option>
+                                                                @endif
+
+                                                                @if($user->user_type == "divi_admin")
+                                                                <option value="{{$user->user_type}}" selected disabled>Division Admin</option>
+                                                                @else
+                                                                <option value="divi_admin">Division Admin</option>
                                                                 @endif
 
                                                                 @if($user->user_type == "user")
@@ -391,6 +432,59 @@
                                                                 <button type="submit" style="margin-right:10px" name="user_type_button" value="change_user_type" class="btn bg-green btn-xs waves-effect" >
                                                                 <i class="material-icons">check</i>
                                                                 <span>{{__('SUBMIT')}}</span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="collapse" id="modifySubjects" aria-expanded="false" style="height: 0px;">
+                                    <div class="well">
+                                        <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+                                            <form action="{{ route('users.update', [app()->getLocale(), $user->id] )}}" method="POST" enctype="multipart/form-data" id="user_subject_form">
+                                            {{ method_field('PUT') }}
+                                            {{ csrf_field() }}
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:200px"></th>
+                                                            <th style="width:200px"></th>
+                                                            <th style="width:50px"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                            <label class="form-label">{{__('Select the Subjects to Add')}}</label>
+                                                            </td>
+                                                            <td>
+                                                                
+                                                            <select class="form-control subjects_dropdown" style="width:100%;" id="subjects" name="subjects[]" multiple="multiple">
+                                                                
+                                                                <option value="letters">Letters</option>
+                                                                <option value="tasks" >Tasks</option>
+                                                                <option value="files">Files</option>
+                                                                <option value="travelpass" >TravelPass</option>
+                                                                <option value="complaints">Complaints</option>
+                                                                
+                                                            </select>
+                                                                    
+                                                            </td>  
+                                                            <td></td>     
+                                                            <td>
+                                                                <button type="submit" style="margin-right:10px" name="subject_button" value="add_subject" class="btn bg-green btn-xs waves-effect" >
+                                                                <i class="material-icons">check</i>
+                                                                <span>{{__('ADD')}}</span>
+                                                                </button>
+                                                            </td>
+                                                            <td>
+                                                                <button type="submit" style="margin-right:10px" name="subject_button" value="remove_subject" class="btn bg-red btn-xs waves-effect" >
+                                                                <i class="material-icons">check</i>
+                                                                <span>{{__('REMOVE')}}</span>
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -469,5 +563,6 @@
                         </div>
                     </div>
         </div>
+        
 </section>
 @endsection

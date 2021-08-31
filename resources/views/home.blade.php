@@ -12,103 +12,120 @@
                             <span>{{__('Dashboard')}}</span>
                         </a>
                     </li>
-                    @if(Gate::allows('sys_admin'))
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">email</i>
-                            <span>{{__('Letters')}}</span>
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
-                                    </li>
-                                    <li >
-                                        <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
-                                    </li>
-                        </ul>
-                    </li>
-                    
-                    
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">folder</i>
-                            <span>{{__('Files')}}</span>
-                            
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
-                                    </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin') || Gate::allows('branch_head'))
-                                    <li >
-                                        <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
-                                    </li>
-                                    @endif
-                        </ul>
-                    </li>
+                    @if(count(Auth::user()->subjects) > 0)
+                        @foreach(Auth::user()->subjects as $subject)
+                            @if($subject->subject_code == "letters")
+                                <li>
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">email</i>
+                                        <span>{{__('Letters')}}</span>
+                                    </a>
+                                    <ul class="ml-menu">
+                                                <li>
+                                                    <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
+                                                </li>
+                                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
+                                                <li >
+                                                    <a href="{{route('letters.create', app()->getLocale())}}">{{__('Add Letter')}}</a>
+                                                </li>
+                                                @endif
+                                    </ul>
+                                </li>
+                            @endif
+                        
 
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">playlist_add_check</i>
-                            <span>{{__('Tasks')}}</span>
-                            @if($new_tasks > 0)
-                            <span class="badge bg-red">{{$new_tasks}} {{__('New')}}</span>
+                            @if($subject->subject_code == "files")
+                                <li>
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">folder</i>
+                                        <span>{{__('Files')}}</span>
+                                        
+                                    </a>
+                                    <ul class="ml-menu">
+                                        
+                                                <li>
+                                                    <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
+                                                </li>
+                                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head'))
+                                                <li >
+                                                    <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
+                                                </li>
+                                                @endif
+                                            
+                                    </ul>
+                                </li>
                             @endif
-                        </a>
-                        <ul class="ml-menu">
-                            
-                                    <li>
-                                        <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
-                                    </li>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                                    <li >
-                                        <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
-                                    </li>
-                                    @endif
-                        </ul>
-                    </li>
-                    @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-                    <li class="">
-                        <a href="{{route('complaints.index', app()->getLocale())}}">
-                            <i class="material-icons">warning</i>
-                            <span>{{__('Complaints')}}</span>
-                            @if($new_complaints > 0)
-                            <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
-                            @endif
-                        </a>
-                    </li>
-                    @endif
-                    @endif
-                    <li class="">
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">transfer_within_a_station</i>
-                            <span>{{__('Travel Pass')}}</span>
-                            @if(Gate::allows('admin'))
-                            @if($new_travelpasses > 0)
-                            <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
-                            @endif
-                            @elseif(Gate::allows('user'))
-                            @if($new_approved_travelpasses > 0)
-                            <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
-                            @endif
-                            @endif
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
-                            </li>
-                            
-                            <li>
-                                <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
-                            </li>    
 
-                            <li>
-                                <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
-                            </li>
-                        </ul>
-                    </li>
+                            @if($subject->subject_code == "tasks")
+                                <li>
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">playlist_add_check</i>
+                                        <span>{{__('Tasks')}}</span>
+                                        @if($new_tasks > 0)
+                                        <span class="badge bg-red">{{$new_tasks}} {{__('New')}}</span>
+                                        @endif
+                                    </a>
+                                    <ul class="ml-menu">
+                                        
+                                                <li>
+                                                    <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
+                                                </li>
+                                                
+                                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin'))
+                                                <li >
+                                                    <a href="{{route('tasks.create', app()->getLocale())}}">{{__('Assign Task')}}</a>
+                                                </li>
+                                                @endif
+                                            
+                                    </ul>
+                                </li>
+                            @endif
+
+                            @if($subject->subject_code == "complaints")
+                                <li class="">
+                                    <a href="{{route('complaints.index', app()->getLocale())}}">
+                                        <i class="material-icons">warning</i>
+                                        <span>{{__('Complaints')}}</span>
+                                        @if($new_complaints > 0)
+                                        <span class="badge bg-red">{{$new_complaints}} {{__('New')}}</span>
+                                        @endif
+                                    </a>
+                                </li>
+                                
+                            @endif
+
+                            @if($subject->subject_code == "travelpass")
+                                <li>
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">transfer_within_a_station</i>
+                                        <span>{{__('Travel Pass')}}</span>
+                                        @if(Gate::allows('admin'))
+                                        @if($new_travelpasses > 0)
+                                        <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
+                                        @endif
+                                        @elseif(Gate::allows('user'))
+                                        @if($new_approved_travelpasses > 0)
+                                        <span class="badge bg-red">{{$new_approved_travelpasses}} {{__('New')}}</span>
+                                        @endif
+                                        @endif
+                                    </a>
+                                    <ul class="ml-menu">
+                                        <li>
+                                            <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
+                                        </li>    
+
+                                        <li>
+                                            <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+                    @endforeach 
+                    @endif
                     @if(Gate::allows('sys_admin'))
                     <li class="">
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -176,152 +193,169 @@
             <div class="block-header">
             <h2>{{__('DASHBOARD')}}</h2>
             </div>
-            <div class="block-header">
-            <h2>{{__('TOTAL STATISTICS')}}</h2>
-            </div>
-           <div class="row clearfix">
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-red hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">close</i>
+            @if(count(Auth::user()->subjects) > 0)
+                
+                @foreach(Auth::user()->subjects as $subject)
+                
+                    @if($subject->subject_code == "travelpass")
+            
+                        <div class="block-header">
+                        <h2>{{__('TOTAL STATISTICS')}}</h2>
                         </div>
-                        <div class="content">
-                            <div class="text">{{__('REJECTED APPLICATIONS')}}</div>
-                            <div class="number count-to task-number" data-from="0" data-to="{{$rejected_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
-                        </div>
-                    </div>
-                </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <div class="info-box bg-red hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="material-icons">close</i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">{{__('REJECTED APPLICATIONS')}}</div>
+                                        <div class="number count-to task-number" data-from="0" data-to="{{$rejected_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-orange hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">check</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">{{__('ACCEPTED APPLICATIONS')}}</div>
-                            <div class="number count-to task-number" data-from="0" data-to="{{$accepted_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
-                        </div>
-                    </div>
-                </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <div class="info-box bg-orange hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="material-icons">check</i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">{{__('ACCEPTED APPLICATIONS')}}</div>
+                                        <div class="number count-to task-number" data-from="0" data-to="{{$accepted_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-green hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">assignment_turned_in</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">{{__('ISSUED TRAVEL PASSES')}}</div>
-                            <div class="number count-to task-number" data-from="0" data-to="{{$issued_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
-                        </div>
-                    </div>
-                </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <div class="info-box bg-green hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="material-icons">assignment_turned_in</i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">{{__('ISSUED TRAVEL PASSES')}}</div>
+                                        <div class="number count-to task-number" data-from="0" data-to="{{$issued_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-light-blue hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">list</i>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <div class="info-box bg-light-blue hover-expand-effect">
+                                    <div class="icon">
+                                        <i class="material-icons">list</i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="text">{{__('TRAVEL PASS APPLICATIONS')}}</div>
+                                        <div class="number count-to task-number" data-from="0" data-to="{{$tot_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="content">
-                            <div class="text">{{__('TRAVEL PASS APPLICATIONS')}}</div>
-                            <div class="number count-to task-number" data-from="0" data-to="{{$tot_travelpass}}" data-speed="1000" data-fresh-interval="20">125</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @if(Gate::allows('sys_admin') || Gate::allows('admin'))
-            <div class="block-header">
-                @php
-                $dt = Carbon\Carbon::now();
-                @endphp
-            <h2>{{__('TODAY SUMMARY')}} ({{$dt->format('d/m/Y')}})</h2>
-            </div>
-            <div class="row clearfix">
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-red hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">close</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">{{__('REJECTED APPLICATIONS')}}</div>
-                            @php
-                            $short_code[] = "";
-                            $rejected_today = 0;
-                            $accepted_today = 0;
-                            $issued_today = 0;
-                            $total_today = 0;
-        
-                            foreach(\App\TravelPass::all() as $travelpass){
-                                if($travelpass->created_at->isToday()){
-                                    if($travelpass->travelpass_status == "REJECTED"){
-                                        $rejected_today += 1;
-                                    }
-                                    elseif($travelpass->travelpass_status == "ACCEPTED"){
-                                        $accepted_today += 1;
-                                    }
-                                    elseif(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
-                                        $issued_today += 1;
-                                    }
-                                }
-                            }
+                    @endif
+                @endforeach
+            @endif
+            @if(Gate::allows('sys_admin') || Gate::allows('dist_admin'))
+                @if(count(Auth::user()->subjects) > 0)
+                
+                    @foreach(Auth::user()->subjects as $subject)
+                
+                        @if($subject->subject_code == "travelpass")
+                            <div class="block-header">
+                                @php
+                                $dt = Carbon\Carbon::now();
+                                @endphp
+                            <h2>{{__('TODAY SUMMARY')}} ({{$dt->format('d/m/Y')}})</h2>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                    <div class="info-box bg-red hover-expand-effect">
+                                        <div class="icon">
+                                            <i class="material-icons">close</i>
+                                        </div>
+                                        <div class="content">
+                                            <div class="text">{{__('REJECTED APPLICATIONS')}}</div>
+                                            @php
+                                            $short_code[] = "";
+                                            $rejected_today = 0;
+                                            $accepted_today = 0;
+                                            $issued_today = 0;
+                                            $total_today = 0;
+                        
+                                            foreach(\App\TravelPass::all() as $travelpass){
+                                                if($travelpass->created_at->isToday()){
+                                                    if($travelpass->travelpass_status == "REJECTED"){
+                                                        $rejected_today += 1;
+                                                    }
+                                                    elseif($travelpass->travelpass_status == "ACCEPTED"){
+                                                        $accepted_today += 1;
+                                                    }
+                                                    elseif(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
+                                                        $issued_today += 1;
+                                                    }
+                                                }
+                                            }
 
-                            
-                            $total_today = $issued_today + $accepted_today + $rejected_today;
-                            
-                            
-                            @endphp
-                            <div class="number count-to task-number" data-from="0" data-to="{{$rejected_today}}" data-speed="1000" data-fresh-interval="20">125</div>
-                        </div>
-                    </div>
-                </div>
-                           
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-orange hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">check</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">{{__('ACCEPTED APPLICATIONS')}}</div>
-                            <div class="number count-to task-number" data-from="0" data-to="{{$accepted_today}}" data-speed="1000" data-fresh-interval="20">125</div>
-                        </div>
-                    </div>
-                </div>
+                                            
+                                            $total_today = $issued_today + $accepted_today + $rejected_today;
+                                            
+                                            
+                                            @endphp
+                                            <div class="number count-to task-number" data-from="0" data-to="{{$rejected_today}}" data-speed="1000" data-fresh-interval="20">125</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                        
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                    <div class="info-box bg-orange hover-expand-effect">
+                                        <div class="icon">
+                                            <i class="material-icons">check</i>
+                                        </div>
+                                        <div class="content">
+                                            <div class="text">{{__('ACCEPTED APPLICATIONS')}}</div>
+                                            <div class="number count-to task-number" data-from="0" data-to="{{$accepted_today}}" data-speed="1000" data-fresh-interval="20">125</div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-green hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">assignment_turned_in</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">{{__('ISSUED TRAVEL PASSES')}}</div>
-                            <div class="number count-to task-number" data-from="0" data-to="{{$issued_today}}" data-speed="1000" data-fresh-interval="20">125</div>
-                        </div>
-                    </div>
-                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                    <div class="info-box bg-green hover-expand-effect">
+                                        <div class="icon">
+                                            <i class="material-icons">assignment_turned_in</i>
+                                        </div>
+                                        <div class="content">
+                                            <div class="text">{{__('ISSUED TRAVEL PASSES')}}</div>
+                                            <div class="number count-to task-number" data-from="0" data-to="{{$issued_today}}" data-speed="1000" data-fresh-interval="20">125</div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box bg-light-blue hover-expand-effect">
-                        <div class="icon">
-                            <i class="material-icons">list</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">{{__('TRAVEL PASS APPLICATIONS')}}</div>
-                            <div class="number count-to task-number" data-from="0" data-to="{{$total_today}}" data-speed="1000" data-fresh-interval="20">125</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                    <div class="info-box bg-light-blue hover-expand-effect">
+                                        <div class="icon">
+                                            <i class="material-icons">list</i>
+                                        </div>
+                                        <div class="content">
+                                            <div class="text">{{__('TRAVEL PASS APPLICATIONS')}}</div>
+                                            <div class="number count-to task-number" data-from="0" data-to="{{$total_today}}" data-speed="1000" data-fresh-interval="20">125</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-            <div class="card">
-                <div class="header">
-                    <h2>DAILY REPORT ({{date('d/m/Y')}})</h2>
-                </div>
-                <div class="body"><iframe class="chartjs-hidden-iframe" style="width: 100%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; inset: 0px;"></iframe>
-                <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{route('travelpass.report', app()->getLocale())}}">
-                    <i class="material-icons">download</i>
-                    <span>{{__('DOWNLOAD REPORT')}}</span>
-                </a>
-                </div>
-            </div>
+                            <div class="card">
+                                <div class="header">
+                                    <h2>DAILY REPORT ({{date('d/m/Y')}})</h2>
+                                </div>
+                                <div class="body"><iframe class="chartjs-hidden-iframe" style="width: 100%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; inset: 0px;"></iframe>
+                                <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{route('travelpass.report', app()->getLocale())}}">
+                                    <i class="material-icons">download</i>
+                                    <span>{{__('DOWNLOAD REPORT')}}</span>
+                                </a>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                @endif
             @endif
 
 
@@ -346,7 +380,7 @@
             
             
         </div>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
         <script >
         @if(session()->has('message'))

@@ -57,4 +57,8 @@ class User extends Authenticatable
     public function files(){
         return $this->hasMany('App\File');
     }
+
+    public function subjects(){
+        return $this->hasMany('App\Subject');
+    }
 }

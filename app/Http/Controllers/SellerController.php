@@ -47,34 +47,83 @@ class SellerController extends Controller
             }
         }
 
-        if ($request->ajax()) {
+        $sub = 0;
 
-            if (Gate::allows('user')) {
-                
+        if(Gate::allows('sys_admin')){
+            if ($request->ajax()) {
                 $data = DB::table('sellers')->where('workplace_id', '=', Auth::user()->workplace->id)->get();
 
-            }
-
-            return Datatables::of($data)->addIndexColumn()
+                return Datatables::of($data)->addIndexColumn()
             
                 ->addColumn('action', function($row){
-
-                    
-                    if(Gate::allows('user')){
-                        if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
-                            $btn_edit = '<a href=' . route("sellers.edit", [app()->getLocale(), $row->id]) . ' class="btn btn btn-primary waves-effect" >EDIT</a>';
-                            return $btn_edit;
-                        }
-                    }
-
+                        
+                $btn_edit = '<a href=' . route("sellers.edit", [app()->getLocale(), $row->id]) . ' class="btn btn btn-primary waves-effect" >EDIT</a>';
+                return $btn_edit;
+                        
                 })
                 
                 ->rawColumns(['action'])->make(true);
-            
+            }
 
+            return view('sellers.index')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
         }
 
-        return view('sellers.index')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+        elseif(count(Auth::user()->subjects) > 0){
+            foreach(Auth::user()->subjects as $subject){
+                $sub++;
+                if($subject->subject_code == "travelpass"){
+                    if (Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head')) {
+                        
+                        if ($request->ajax()) {
+
+                            $data = DB::table('sellers')->where('workplace_id', '=', Auth::user()->workplace->id)->get();
+
+                            return Datatables::of($data)->addIndexColumn()
+                        
+                            ->addColumn('action', function($row){
+
+                        
+                            if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
+                                $btn_edit = '<a href=' . route("sellers.edit", [app()->getLocale(), $row->id]) . ' class="btn btn btn-primary waves-effect" >EDIT</a>';
+                                return $btn_edit;
+                            }
+                            
+                            })
+                    
+                            ->rawColumns(['action'])->make(true);
+                        }
+
+                        return view('sellers.index')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+                    }
+                    else{
+                        $notification = array(
+                            'message' => __('You do not have permission to view Wholesale Sellers'),
+                            'alert-type' => 'warning'
+                        );
+                        return redirect(app()->getLocale() . '/letters')->with($notification);
+                    }
+                }
+            }
+            if(count(Auth::user()->subjects) >= $sub){
+                $notification = array(
+                    'message' => __("You do not have permission to View Wholesale Sellers"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
+            }
+        }
+        else{
+            $notification = array(
+                'message' => __("You do not have any subjects assigned"),
+                'alert-type' => 'warning'
+            );
+            
+            return redirect(app()->getLocale() . '/home')->with($notification);
+        }
+
+
+    
     }
 
     /**
@@ -109,17 +158,57 @@ class SellerController extends Controller
                 $new_approved_travelpasses += 1;
             }
         }
-        if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
+
+        $sub = 0;
+        if(Gate::allows('sys_admin')){
+
             return view('sellers.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
-        
-        }else{
+            
+        }
+        elseif(count(Auth::user()->subjects) > 0){
+            foreach(Auth::user()->subjects as $subject){
+                $sub++;
+                if($subject->subject_code == "travelpass"){
+                    if (Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head')) {
+
+                        if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
+                            return view('sellers.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+                        
+                        }else{
+                            $notification = array(
+                                'message' => __('Your wholesale sellers list is in approved or submitted state'),
+                                'alert-type' => 'warning'
+                            );
+                            return redirect(app()->getLocale() . '/sellers')->with($notification);
+                        }
+
+                    }
+                    else{
+                        $notification = array(
+                            'message' => __('You do not have permission to Create Sellers List'),
+                            'alert-type' => 'warning'
+                        );
+                        return redirect(app()->getLocale() . '/letters')->with($notification);
+                    }
+                }
+            }
+            if(count(Auth::user()->subjects) >= $sub){
+                $notification = array(
+                    'message' => __("You do not have permission to Create Sellers List"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
+            }
+        }
+        else{
             $notification = array(
-                'message' => __('Your wholesale sellers list is in approved or submitted state'),
+                'message' => __("You do not have any subjects assigned"),
                 'alert-type' => 'warning'
             );
-            return redirect(app()->getLocale() . '/sellers')->with($notification);
+            
+            return redirect(app()->getLocale() . '/home')->with($notification);
         }
-
     }
 
     /**
@@ -131,8 +220,9 @@ class SellerController extends Controller
     public function store(Request $request)
     {
         //Save records to Sellers table
-        if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
-        
+
+        $sub = 0;
+        if(Gate::allows('sys_admin')){
 
             $this->validate($request, [
                 'seller_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
@@ -160,13 +250,79 @@ class SellerController extends Controller
             );
 
             return redirect(app()->getLocale() . '/sellers')->with($notification);
-        }else{
+
+        }
+        elseif(count(Auth::user()->subjects) > 0){
+            foreach(Auth::user()->subjects as $subject){
+                $sub++;
+                if($subject->subject_code == "travelpass"){
+                    if (Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head')) {
+                        if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
+        
+
+                            $this->validate($request, [
+                                'seller_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
+                                'seller_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:150'],
+                                'nic_no' => ['required', 'unique:sellers', 'max:12', 'min:10']
+                            ],
+                
+                            ['seller_name.regex' => 'Seller name cannot contain special characters',
+                            'seller_address.regex' => 'Seller address cannot contain special characters',
+                            'nic_no.max' => 'NIC No. Cannot contain more than 12 characters',
+                            'nic_no.min' => 'NIC No. must have minimum 10 characters']);
+                
+                            //Create an instance of sellers model
+                            $seller = new Seller;
+                            $seller->workplace_id = Auth::user()->workplace->id;
+                            $seller->name = $request->seller_name;
+                            $seller->address = $request->seller_address;
+                            $seller->nic_no = $request->nic_no;
+                
+                            $seller->save();
+                
+                            $notification = array(
+                                'message' => __('Wholesale seller details has been added successfully!'), 
+                                'alert-type' => 'success'
+                            );
+                
+                            return redirect(app()->getLocale() . '/sellers')->with($notification);
+                        }else{
+                            $notification = array(
+                                'message' => __('Your wholesale sellers list is in approved or submitted state'),
+                                'alert-type' => 'warning'
+                            );
+                            return redirect(app()->getLocale() . '/sellers')->with($notification);
+                        }
+                    }
+                    else{
+                        $notification = array(
+                            'message' => __('You do not have permission to Create Sellers'),
+                            'alert-type' => 'warning'
+                        );
+                        return redirect(app()->getLocale() . '/letters')->with($notification);
+                    }
+                }
+            }
+            if(count(Auth::user()->subjects) >= $sub){
+                $notification = array(
+                    'message' => __("You do not have permission to Create Sellers"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
+            }
+        }
+        else{
             $notification = array(
-                'message' => __('Your wholesale sellers list is in approved or submitted state'),
+                'message' => __("You do not have any subjects assigned"),
                 'alert-type' => 'warning'
             );
-            return redirect(app()->getLocale() . '/sellers')->with($notification);
+            
+            return redirect(app()->getLocale() . '/home')->with($notification);
         }
+
+
+        
 
 
     }
@@ -216,34 +372,73 @@ class SellerController extends Controller
             }
         }
 
+        $sub = 0;
         if($seller = Seller::find($id)){
-            if($seller->workplace->id == Auth::user()->workplace->id){
-                if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
 
-                    return view('sellers.edit')->with('seller', $seller)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
-                }else{
+            if(Gate::allows('sys_admin')){
+                return view('sellers.edit')->with('seller', $seller)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+            }
+            elseif(count(Auth::user()->subjects) > 0){
+                foreach(Auth::user()->subjects as $subject){
+                    $sub += 1;
+                    if($subject->subject_code == "travelpass"){
+                        if (Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head')) {
+                            if($seller->workplace->id == Auth::user()->workplace->id){
+                                if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
+                
+                                    return view('sellers.edit')->with('seller', $seller)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
+                                }else{
+                                    $notification = array(
+                                        'message' => __('Your wholesale sellers list is in approved or submitted state'),
+                                        'alert-type' => 'warning'
+                                    );
+                                    return redirect(app()->getLocale() . '/sellers')->with($notification);
+                                }
+                            
+                            }else{
+                                $notification = array(
+                                    'message' => __('You do not have permission to edit this Seller information'),
+                                    'alert-type' => 'warning'
+                                );
+                                return redirect(app()->getLocale() . '/sellers' . $id)->with($notification);
+                            }
+                        }
+                        else{
+                            $notification = array(
+                                'message' => __('You do not have permission to edit this Seller Information'),
+                                'alert-type' => 'warning'
+                            );
+                            return redirect(app()->getLocale(). '/travelpasses')->with($notification);
+                        }
+                    }
+                }
+                if(count(Auth::user()->subjects) >= $sub){
                     $notification = array(
-                        'message' => __('Your wholesale sellers list is in approved or submitted state'),
+                        'message' => __("You do not have permission to Edit Sellers"),
                         'alert-type' => 'warning'
                     );
-                    return redirect(app()->getLocale() . '/sellers')->with($notification);
+                    
+                    return redirect(app()->getLocale() . '/home')->with($notification);
                 }
-            
-            }else{
+            }
+            else{
                 $notification = array(
-                    'message' => __('You do not have permission to edit this Seller information'),
+                    'message' => __("You do not have any subjects assigned"),
                     'alert-type' => 'warning'
                 );
-                return redirect(app()->getLocale() . '/sellers' . $id)->with($notification);
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
             }
-    
-        }else{
+        }
+        else{
             $notification = array(
                 'message' => __('Requested Seller is not available'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/sellers')->with($notification);
         }
+
+        
     }
 
     /**
@@ -256,58 +451,120 @@ class SellerController extends Controller
     public function update(Request $request, $lang, $id)
     {
         //edit records to Sellers table
-
-        
-
+        $sub = 0;
         if($seller = Seller::find($id)){
-            $this->validate($request, [
-                'seller_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
-                'seller_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:150'],
-                'nic_no' => ['required', Rule::unique('sellers')->ignore($seller->id), 'max:12', 'min:10']
-            ],
-    
-            ['seller_name.regex' => 'Seller name cannot contain special characters',
-            'seller_address.regex' => 'Seller address cannot contain special characters',
-            'nic_no.max' => 'NIC No. Cannot contain more than 12 characters',
-            'nic_no.min' => 'NIC No. must have minimum 10 characters']);
 
+            if(Gate::allows('sys_admin')){
+                $this->validate($request, [
+                    'seller_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
+                    'seller_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:150'],
+                    'nic_no' => ['required', Rule::unique('sellers')->ignore($seller->id), 'max:12', 'min:10']
+                ],
+        
+                ['seller_name.regex' => 'Seller name cannot contain special characters',
+                'seller_address.regex' => 'Seller address cannot contain special characters',
+                'nic_no.max' => 'NIC No. Cannot contain more than 12 characters',
+                'nic_no.min' => 'NIC No. must have minimum 10 characters']);
 
-            if($seller->workplace->id == Auth::user()->workplace->id){
-                if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
+                $seller->name = $request->seller_name;
+                $seller->address = $request->seller_address;
+                $seller->nic_no = $request->nic_no;
+
+                $seller->save();
+
+                $notification = array(
+                    'message' => __('Wholesale seller details has been updated successfully!'), 
+                    'alert-type' => 'success'
+                );
+
+                return redirect(app()->getLocale() . '/sellers')->with($notification);
+
                 
-                    $seller->name = $request->seller_name;
-                    $seller->address = $request->seller_address;
-                    $seller->nic_no = $request->nic_no;
 
-                    $seller->save();
+            }
+            elseif(count(Auth::user()->subjects) > 0){
+                foreach(Auth::user()->subjects as $subject){
+                    $sub += 1;
+                    if($subject->subject_code == "travelpass"){
+                        if (Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head')) {
+                            $this->validate($request, [
+                                'seller_name' => ['bail', 'required', 'regex:/^[a-zA-Z .]*$/', 'max:80'],
+                                'seller_address' => ['nullable', 'regex:/^[\/#.0-9a-zA-Z\s\W,-]+$/', 'max:150'],
+                                'nic_no' => ['required', Rule::unique('sellers')->ignore($seller->id), 'max:12', 'min:10']
+                            ],
+                    
+                            ['seller_name.regex' => 'Seller name cannot contain special characters',
+                            'seller_address.regex' => 'Seller address cannot contain special characters',
+                            'nic_no.max' => 'NIC No. Cannot contain more than 12 characters',
+                            'nic_no.min' => 'NIC No. must have minimum 10 characters']);
+                
+                
+                            if($seller->workplace->id == Auth::user()->workplace->id){
+                                if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
+                                
+                                    $seller->name = $request->seller_name;
+                                    $seller->address = $request->seller_address;
+                                    $seller->nic_no = $request->nic_no;
+                
+                                    $seller->save();
+                
+                                    $notification = array(
+                                        'message' => __('Wholesale seller details has been updated successfully!'), 
+                                        'alert-type' => 'success'
+                                    );
+                
+                                    return redirect(app()->getLocale() . '/sellers')->with($notification);
+                                }else{
+                                    $notification = array(
+                                        'message' => __('Your wholesale sellers list is in approved or submitted state'),
+                                        'alert-type' => 'warning'
+                                    );
+                                    return redirect(app()->getLocale() . '/sellers')->with($notification);
+                                }
+                            }else{
+                                $notification = array(
+                                    'message' => __('You do not have permission to update this Seller information'),
+                                    'alert-type' => 'warning'
+                                );
+                                return redirect(app()->getLocale() . '/sellers')->with($notification);
+                            }
+                        }
+                        else{
+                            $notification = array(
+                                'message' => __('You do not have permission to Update Seller Information'),
+                                'alert-type' => 'warning'
+                            );
+                            return redirect(app()->getLocale(). '/travelpasses')->with($notification);
+                        }
 
+                    }
+                }
+                if(count(Auth::user()->subjects) >= $sub){
                     $notification = array(
-                        'message' => __('Wholesale seller details has been updated successfully!'), 
-                        'alert-type' => 'success'
-                    );
-
-                    return redirect(app()->getLocale() . '/sellers')->with($notification);
-                }else{
-                    $notification = array(
-                        'message' => __('Your wholesale sellers list is in approved or submitted state'),
+                        'message' => __("You do not have permission to Edit Sellers"),
                         'alert-type' => 'warning'
                     );
-                    return redirect(app()->getLocale() . '/sellers')->with($notification);
+                    
+                    return redirect(app()->getLocale() . '/home')->with($notification);
                 }
-            }else{
+            }
+            else{
                 $notification = array(
-                    'message' => __('You do not have permission to update this Seller information'),
+                    'message' => __("You do not have any subjects assigned"),
                     'alert-type' => 'warning'
                 );
-                return redirect(app()->getLocale() . '/sellers')->with($notification);
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
             }
-        }else{
+        }
+        else{
             $notification = array(
                 'message' => __('Requested Seller is not available'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/sellers')->with($notification);
         }
+                    
     }
 
     /**
@@ -319,38 +576,89 @@ class SellerController extends Controller
     public function destroy($lang, $id)
     {
         //Delete Seller
-        if($seller = Seller::find($id)){
-            if($seller->workplace->id == Auth::user()->workplace->id){
-                if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
-                    $seller->delete();
-                    
-                    $notification = array(
-                        'message' => __('Seller has been deleted successfully!'),
-                        'alert-type' => 'success'
-                    );
-                }else{
-                    $notification = array(
-                        'message' => __('Your wholesale sellers list is in approved or submitted state'),
-                        'alert-type' => 'warning'
-                    );
-                    return redirect(app()->getLocale() . '/sellers')->with($notification);
-                }
 
-                return redirect(app()->getLocale() . '/sellers')->with($notification);
-            }else{
+        $sub = 0;
+        if($seller = Seller::find($id)){
+
+            if(Gate::allows('sys_admin')){
+                $seller->delete();
+                                    
                 $notification = array(
-                    'message' => __('You do not have permission to delete this Seller information'),
-                    'alert-type' => 'warning'
+                    'message' => __('Seller has been deleted successfully!'),
+                    'alert-type' => 'success'
                 );
                 return redirect(app()->getLocale() . '/sellers')->with($notification);
+                
+
             }
-        }else{
+            elseif(count(Auth::user()->subjects) > 0){
+                foreach(Auth::user()->subjects as $subject){
+                    $sub += 1;
+                    if($subject->subject_code == "travelpass"){
+                        if (Gate::allows('divi_admin') || Gate::allows('branch_head') || Gate::allows('user')) {
+                            if($seller->workplace->id == Auth::user()->workplace->id){
+                                if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list){
+                                    $seller->delete();
+                                    
+                                    $notification = array(
+                                        'message' => __('Seller has been deleted successfully!'),
+                                        'alert-type' => 'success'
+                                    );
+                                    return redirect(app()->getLocale() . '/sellers')->with($notification);
+                                }else{
+                                    $notification = array(
+                                        'message' => __('Your wholesale sellers list is in approved or submitted state'),
+                                        'alert-type' => 'warning'
+                                    );
+                                   
+                                }
+                
+                                return redirect(app()->getLocale() . '/sellers')->with($notification);
+                            }else{
+                                $notification = array(
+                                    'message' => __('You do not have permission to delete this Seller information'),
+                                    'alert-type' => 'warning'
+                                );
+                                return redirect(app()->getLocale() . '/sellers')->with($notification);
+                            }
+                        }
+                        else{
+                            $notification = array(
+                                'message' => __('You do not have permission to Update Seller Information'),
+                                'alert-type' => 'warning'
+                            );
+                            return redirect(app()->getLocale(). '/travelpasses')->with($notification);
+                        }
+
+                    }
+                }
+                if(count(Auth::user()->subjects) >= $sub){
+                    $notification = array(
+                        'message' => __("You do not have permission to Delete Sellers"),
+                        'alert-type' => 'warning'
+                    );
+                    
+                    return redirect(app()->getLocale() . '/home')->with($notification);
+                }
+            }
+            else{
+                $notification = array(
+                    'message' => __("You do not have any subjects assigned"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
+            }
+        }
+        else{
             $notification = array(
                 'message' => __('Requested Seller is not available'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale() . '/sellers')->with($notification);
         }
+
+
     }
 
     public function getSellers(Request $request)

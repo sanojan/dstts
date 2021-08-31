@@ -34,52 +34,70 @@ class FileController extends Controller
                 $new_complaints += 1;
             }
         }
+        $sub = 0;
 
-        if (Gate::allows('sys_admin')) {
+        if(Gate::allows('sys_admin')){
 
             $files = File::all();
             return view('files.index')->with('files', $files)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
 
-
         }
-        else if(Gate::allows('admin')){
+        elseif(count(Auth::user()->subjects) > 0){
+            foreach(Auth::user()->subjects as $subject){
+                $sub++;
+                if($subject->subject_code == "files"){
+                    if (Gate::allows('dist_admin') || Gate::allows('divi_admin')) {
+                        
+                        $files = DB::table('users')->join('files', function ($join) {
+                            $join->on('users.id', '=', 'files.user_id')
+                             ->where('users.workplace_id', '=', Auth::user()->workplace->id);
+                            })->get();
             
-            $files = DB::table('users')->join('files', function ($join) {
-                $join->on('users.id', '=', 'files.user_id')
-                 ->where('users.workplace_id', '=', Auth::user()->workplace->id);
-                })->get();
+                        return view('files.index')->with('files', $files)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                    }
 
-            return view('files.index')->with('files', $files)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                    else if(Gate::allows('branch_head')){
 
-        }
-        else if(Gate::allows('branch_head')){
+                        $files = DB::table('users')->join('files', function ($join) {
+                            $join->on('users.id', '=', 'files.user_id')
+                             ->where('users.workplace_id', '=', Auth::user()->workplace->id)
+                             ->where('users.branch', '=', Auth::user()->branch);
+                            })->get();
             
-            $files = DB::table('users')->join('files', function ($join) {
-                $join->on('users.id', '=', 'files.user_id')
-                 ->where('users.workplace_id', '=', Auth::user()->workplace->id)
-                 ->where('users.branch', '=', Auth::user()->branch);
-                })->get();
+                        return view('files.index')->with('files', $files)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                    }
+                    else if(Gate::allows('user')){
 
-            return view('files.index')->with('files', $files)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-
-        }
-        else if(Gate::allows('user')){
-            
-            $files = Auth::user()->files;
-
-            return view('files.index')->with('files', $files)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-
+                        $files = Auth::user()->files;
+                        return view('files.index')->with('files', $files)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                    }
+                    else{
+                        $notification = array(
+                            'message' => __("You do not have permission to view files"),
+                            'alert-type' => 'warning'
+                        );
+                        return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks);
+                    }
+                }
+            }
+            if(count(Auth::user()->subjects) >= $sub){
+                $notification = array(
+                    'message' => __("You do not have permission to View Files"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
+            }
         }
         else{
-            
             $notification = array(
-                'message' => __("You do not have permission to view files"),
+                'message' => __("You do not have any subjects assigned"),
                 'alert-type' => 'warning'
             );
-            return redirect(app()->getLocale() . '/home')->with($notification)->with('new_tasks', $new_tasks);
             
+            return redirect(app()->getLocale() . '/home')->with($notification);
         }
-        
+                        
     }
 
     /**
@@ -104,32 +122,57 @@ class FileController extends Controller
             }
         }
 
-        if (Gate::allows('sys_admin')) {
+        $sub = 0;
+        if(Gate::allows('sys_admin')){
 
             $owners = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
             return view('files.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners);
-        
-        }
-        else if(Gate::allows('admin')){
-            $owners = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->get();
-            return view('files.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners);
-        }
-        else if(Gate::allows('branch_head')){
 
-            $owners = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->where('branch', Auth::user()->branch)->get();
-
-            return view('files.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners);
         }
-        
-        else{
+        elseif(count(Auth::user()->subjects) > 0){
+            foreach(Auth::user()->subjects as $subject){
+                $sub++;
+                if($subject->subject_code == "files"){
+                    if (Gate::allows('dist_admin') || Gate::allows('divi_admin')) {
+
+                        $owners = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->get();
+                        return view('files.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners);
+                    }
+                    else if(Gate::allows('branch_head')){
+
+                        $owners = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->where('branch', Auth::user()->branch)->get();
+                        return view('files.create')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners);
+                    }
+                    else{
             
+                        $notification = array(
+                            'message' => __("You do not have permission to create files"),
+                            'alert-type' => 'warning'
+                        );
+                        return redirect(app()->getLocale() . '/files')->with($notification)->with('new_tasks', $new_tasks);
+                    }
+                }
+                
+            }
+            if(count(Auth::user()->subjects) >= $sub){
+                $notification = array(
+                    'message' => __("You do not have permission to Create Files"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
+            }
+        }
+        else{
             $notification = array(
-                'message' => __("You do not have permission to create files"),
+                'message' => __("You do not have any subjects assigned"),
                 'alert-type' => 'warning'
             );
-            return redirect(app()->getLocale() . '/files')->with($notification)->with('new_tasks', $new_tasks);
             
+            return redirect(app()->getLocale() . '/home')->with($notification);
         }
+
+        
     }
 
     /**
@@ -142,52 +185,81 @@ class FileController extends Controller
     {
         //Storing files to database
 
-        if (Gate::allows('admin') || Gate::allows('branch_head')) {
-            //Create letters
-            $this->validate($request, [
-                'file_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
-                'file_owner' => 'required',
-                'file_name' => 'required',
-                'file_desc' => 'required|max:150|nullable'
+
+        $sub = 0;
+        if(count(Auth::user()->subjects) > 0){
+            foreach(Auth::user()->subjects as $subject){
+                $sub++;
+                if($subject->subject_code == "files"){
+                    if (Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head')) {
+                        //Create files
+                        $this->validate($request, [
+                            'file_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
+                            'file_owner' => 'required',
+                            'file_name' => 'required',
+                            'file_desc' => 'required|max:150|nullable'
+                
+                        ],
+                        ['file_no.regex' => 'file number cannot contain special characters',
+                        'file_desc.max' => 'File Description may not be greater than 150 characters.']);
+
+                        $file = new File;
+
+                        $file->workplace_id = Auth::user()->workplace->id;
+                        $file->file_no = $request->file_no;
+                        $file->file_name = $request->file_name;
+                        $file->file_desc = $request->file_desc;
+                        
+                        if(Gate::allows('dist_admin') || Gate::allows('divi_admin')){
+                            $file->file_branch = $request->file_branch;
+                        }else if(Gate::allows('branch_head')){
+                            $file->file_branch = Auth::user()->branch;
+                        }
+                        
+                        if($request->file_owner){
+                            $file->user_id = $request->file_owner;
+                        }
+
+                        $file->save();
+
+                        $notification = array(
+                            'message' => __('File has been created successfully!'), 
+                            'alert-type' => 'success'
+                        );
     
-            ],
-            ['file_no.regex' => 'file number cannot contain special characters',
-            'file_desc.max' => 'File Description may not be greater than 150 characters.']);
-
-            $file = new File;
-
-            $file->workplace_id = Auth::user()->workplace->id;
-            $file->file_no = $request->file_no;
-            $file->file_name = $request->file_name;
-            $file->file_desc = $request->file_desc;
-            
-            if(Gate::allows('admin')){
-                $file->file_branch = $request->file_branch;
-            }else if(Gate::allows('branch_head')){
-                $file->file_branch = Auth::user()->branch;
+                        return redirect(app()->getLocale() . '/files')->with($notification);
+                    }
+                    else{
+                        $notification = array(
+                            'message' => __("You do not have permission to create files"),
+                            'alert-type' => 'warning'
+                        );
+                        
+                        return redirect(app()->getLocale() .'/home')->with($notification);
+                    }
+                }
             }
-            
-            if($request->file_owner){
-                $file->user_id = $request->file_owner;
+            if(count(Auth::user()->subjects) >= $sub){
+                $notification = array(
+                    'message' => __("You do not have permission to Create Files"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
             }
-
-            $file->save();
-
-            $notification = array(
-                'message' => __('File has been created successfully!'), 
-                'alert-type' => 'success'
-            );
-    
-            return redirect(app()->getLocale() . '/files')->with($notification);
         }
         else{
             $notification = array(
-                'message' => __("You do not have permission to create files"),
+                'message' => __("You do not have any subjects assigned"),
                 'alert-type' => 'warning'
             );
             
-            return redirect(app()->getLocale() .'/home')->with($notification);
+            return redirect(app()->getLocale() . '/home')->with($notification);
         }
+
+
+        
+        
     }
 
     /**
@@ -214,86 +286,114 @@ class FileController extends Controller
             }
         }
 
-        if($file = File::find($id)){
+        $sub = 0;
 
-            if (Gate::allows('sys_admin')) {
+        if($file = File::find($id)){
+            if(Gate::allows('sys_admin')){
 
                 $users = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
                 $tasks = Task::all();
                 return view('files.show')->with('file', $file)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('tasks', $tasks);
-
             }
-            else if (Gate::allows('admin')) {
 
+            elseif(count(Auth::user()->subjects) > 0){
+                foreach(Auth::user()->subjects as $subject){
+                    $sub += 1;
+                    if($subject->subject_code == "files"){
+                        if (Gate::allows('dist_admin') || Gate::allows('divi_admin')) {
+                            $users = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->get();
+                            $tasks = DB::table('users')->join('tasks', function ($join) {
+                                $join->on('users.id', '=', 'tasks.user_id')
+                                ->where('users.workplace_id', '=', Auth::user()->workplace->id);
+                                })->get();
+
+                            if($file->workplace->id == Auth::user()->workplace->id){
+                                //Return letters show page
+                                //dd($lang, $id, $letter);
+                                return view('files.show')->with('file', $file)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('tasks', $tasks);
+
+                            }else{
+                                $notification = array(
+                                    'message' => __('This file does not belong to your workplace'),
+                                    'alert-type' => 'warning'
+                                );
+                                return redirect(app()->getLocale(). '/files')->with($notification);
+                            }
+                        }
+                        else if (Gate::allows('branch_head')) {
+
+                            $users = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->where('branch', Auth::user()->branch)->get();
+            
+                            $tasks = DB::table('users')->join('tasks', function ($join) {
+                                $join->on('users.id', '=', 'tasks.user_id')
+                                 ->where('users.workplace_id', '=', Auth::user()->workplace->id)
+                                 ->where('users.branch', '=', Auth::user()->branch);
+                                })->get();
+            
+                            if($file->workplace->name == Auth::user()->workplace->name && $file->file_branch == Auth::user()->branch){
+                               
+                                return view('files.show')->with('file', $file)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('tasks', $tasks);
+            
+                            }else{
+                                $notification = array(
+                                    'message' => __('This file does not belong to your branch'),
+                                    'alert-type' => 'warning'
+                                );
+                                return redirect(app()->getLocale(). '/files')->with($notification);
+                            }
+                        }
+                        else if (Gate::allows('user')) {
+
+
+                            $tasks = Auth::user()->tasks;
+            
+                            if($file->user->id == Auth::user()->id){
+                               
+                                return view('files.show')->with('file', $file)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('tasks', $tasks);
+            
+                            }else{
+                                $notification = array(
+                                    'message' => __('This file does not belong to you'),
+                                    'alert-type' => 'warning'
+                                );
+                                return redirect(app()->getLocale(). '/files')->with($notification);
+                            }
+                        }
+                        else{
+                            $notification = array(
+                                'message' => __('Requested file is not avaialble'),
+                                'alert-type' => 'warning'
+                            );
+                            return redirect(app()->getLocale(). '/files')->with($notification);
+                        }
+
+                    }
+                }
+                if(count(Auth::user()->subjects) >= $sub){
+                    $notification = array(
+                        'message' => __("You do not have permission to View Files"),
+                        'alert-type' => 'warning'
+                    );
+                    
+                    return redirect(app()->getLocale() . '/home')->with($notification);
+                }
+            }
+            else{
+                $notification = array(
+                    'message' => __("You do not have any subjects assigned"),
+                    'alert-type' => 'warning'
+                );
                 
-                $users = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->get();
-                $tasks = DB::table('users')->join('tasks', function ($join) {
-                    $join->on('users.id', '=', 'tasks.user_id')
-                     ->where('users.workplace_id', '=', Auth::user()->workplace->id);
-                    })->get();
-
-                if($file->workplace->name == Auth::user()->workplace->name){
-                    //Return letters show page
-                    //dd($lang, $id, $letter);
-                    return view('files.show')->with('file', $file)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('tasks', $tasks);
-
-                }else{
-                    $notification = array(
-                        'message' => __('You do not have permission to view this file'),
-                        'alert-type' => 'warning'
-                    );
-                    return redirect(app()->getLocale(). '/files')->with($notification);
-                }
+                return redirect(app()->getLocale() . '/home')->with($notification);
             }
-            else if (Gate::allows('branch_head')) {
-
-                
-                $users = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->where('branch', Auth::user()->branch)->get();
-
-                $tasks = DB::table('users')->join('tasks', function ($join) {
-                    $join->on('users.id', '=', 'tasks.user_id')
-                     ->where('users.workplace_id', '=', Auth::user()->workplace->id)
-                     ->where('users.branch', '=', Auth::user()->branch);
-                    })->get();
-
-                if($file->workplace->name == Auth::user()->workplace->name && $file->file_branch == Auth::user()->branch){
-                   
-                    return view('files.show')->with('file', $file)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('tasks', $tasks);
-
-                }else{
-                    $notification = array(
-                        'message' => __('You do not have permission to view this file'),
-                        'alert-type' => 'warning'
-                    );
-                    return redirect(app()->getLocale(). '/files')->with($notification);
-                }
-            }
-            else if (Gate::allows('user')) {
-
-
-                $tasks = Auth::user()->tasks;
-
-                if($file->user->id == Auth::user()->id){
-                   
-                    return view('files.show')->with('file', $file)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('tasks', $tasks);
-
-                }else{
-                    $notification = array(
-                        'message' => __('You do not have permission to view this file'),
-                        'alert-type' => 'warning'
-                    );
-                    return redirect(app()->getLocale(). '/files')->with($notification);
-                }
-            }
-
-
-        }else{
-            $notification = array(
-                'message' => __('Requested file is not avaialble'),
-                'alert-type' => 'warning'
-            );
-            return redirect(app()->getLocale(). '/files')->with($notification);
         }
+        $notification = array(
+            'message' => __('Requested File is not available'),
+            'alert-type' => 'warning'
+        );
+        return redirect(app()->getLocale(). '/letters')->with($notification);
+
+
     }
 
     /**
@@ -319,40 +419,66 @@ class FileController extends Controller
             }
         }
 
+        $sub = 0;
         if($file = File::find($id)){
-            if (Gate::allows('sys_admin')) {
+
+            if(Gate::allows('sys_admin')){
 
                 $owners = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
                 return view('files.edit')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners)->with('file', $file);
-            
             }
-            else if(Gate::allows('admin')){
-                $owners = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->get();
-                return view('files.edit')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners)->with('file', $file);
-            }
-            else if(Gate::allows('branch_head')){
+            elseif(count(Auth::user()->subjects) > 0){
+                foreach(Auth::user()->subjects as $subject){
+                    $sub += 1;
+                    if($subject->subject_code == "files"){
+                        if (Gate::allows('dist_admin') || Gate::allows('divi_admin')) {
+                            
+                            $owners = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->get();
+                            return view('files.edit')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners)->with('file', $file);
+                        }
+                        else if(Gate::allows('branch_head')){
 
-                $owners = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->where('branch', Auth::user()->branch)->get();
-
-                return view('files.edit')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners)->with('file', $file);
-            }
-            
-            else{
+                            $owners = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->where('branch', Auth::user()->branch)->get();
+                            return view('files.edit')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('owners', $owners)->with('file', $file);
+                        }
+                        else{
                 
+                            $notification = array(
+                                'message' => __("You do not have permission to edit files"),
+                                'alert-type' => 'warning'
+                            );
+                            return redirect(app()->getLocale() . '/files')->with($notification)->with('new_tasks', $new_tasks);
+                            
+                        }
+                    }
+                }
+                if(count(Auth::user()->subjects) >= $sub){
+                    $notification = array(
+                        'message' => __("You do not have permission to View Files"),
+                        'alert-type' => 'warning'
+                    );
+                    
+                    return redirect(app()->getLocale() . '/home')->with($notification);
+                }
+            }
+            else{
                 $notification = array(
-                    'message' => __("You do not have permission to edit files"),
+                    'message' => __("You do not have any subjects assigned"),
                     'alert-type' => 'warning'
                 );
-                return redirect(app()->getLocale() . '/files')->with($notification)->with('new_tasks', $new_tasks);
                 
+                return redirect(app()->getLocale() . '/home')->with($notification);
             }
-        }else{
+        }
+        else{
             $notification = array(
                 'message' => __('Requested file is not avaialble'),
                 'alert-type' => 'warning'
             );
             return redirect(app()->getLocale(). '/files')->with($notification);
         }
+
+        
     }
 
     /**
@@ -367,126 +493,184 @@ class FileController extends Controller
            
         //Update File details
         //Storing files to database
-        if (Gate::allows('admin') || Gate::allows('branch_head')) {
+        $sub = 0;
+        if($file = File::find($id)){
 
-            if($request->change_owner_button == "change_owner")
-            {
-                if($file = File::find($id)){
+            if(Gate::allows('sys_admin')){
 
-                    $file->user_id = $request->users_name;
-                    
-                    if($file->save()){
+                $this->validate($request, [
+                    'file_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
+                    'file_name' => 'required',
+                    'file_desc' => 'required|max:150|nullable'
+        
+                ],
+                ['file_no.regex' => 'file number cannot contain special characters',
+                'file_desc.max' => 'File Description may not be greater than 150 characters.']);
 
-                        $notification = array(
-                            'message' => __('File owner has been changed successfully!'), 
-                            'alert-type' => 'success'
-                        );
-                        return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
-                    }else{
-                        $notification = array(
-                            'message' => __('There was an error in updating File owner!'), 
-                            'alert-type' => 'danger'
-                        );
-                        
-                        return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
-                    }
-                }else{
-                    $notification = array(
-                        'message' => __('There was an error in updating File owner!'), 
-                        'alert-type' => 'danger'
-                    );
-                    
-                    return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
-                }
+                $file = File::find($id);
 
-            }
-
-            if($request->add_letter_button == "add_letter")
-            {
-                if($letter = Letter::find($request->letters_name)){
-
-                    $letter->file_id = $id;
-                    
-                    if($letter->save()){
-
-                        $notification = array(
-                            'message' => __('Letter has been added successfully!'), 
-                            'alert-type' => 'success'
-                        );
-                        return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
-                    }else{
-                        $notification = array(
-                            'message' => __('There was an error in adding the letter!'), 
-                            'alert-type' => 'danger'
-                        );
-                        
-                        return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
-                    }
-                }else{
-                    $notification = array(
-                        'message' => __('There was an error in adding the letter!'), 
-                        'alert-type' => 'danger'
-                    );
-                    
-                    return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
-                }
-
-            }
-
-            //Create letters
-            $this->validate($request, [
-                'file_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
-                'file_name' => 'required',
-                'file_desc' => 'required|max:150|nullable'
-    
-            ],
-            ['file_no.regex' => 'file number cannot contain special characters',
-            'file_desc.max' => 'File Description may not be greater than 150 characters.']);
-
-            $file = File::find($id);
-
-            $file->file_no = $request->file_no;
-            $file->file_name = $request->file_name;
-            $file->file_desc = $request->file_desc;
-            
-            if(Gate::allows('admin')){
+                $file->file_no = $request->file_no;
+                $file->file_name = $request->file_name;
+                $file->file_desc = $request->file_desc;
+                
+                
                 $file->file_branch = $request->file_branch;
-            }else if(Gate::allows('branch_head')){
-                $file->file_branch = Auth::user()->branch;
+                
+                
+                
+                if($file->save()){
+                    $notification = array(
+                        'message' => __('File has been updated successfully!'), 
+                        'alert-type' => 'success'
+                    );
+            
+                    return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+                }else{
+                    $notification = array(
+                        'message' => __('There was a problem in updating the file'), 
+                        'alert-type' => 'danger'
+                    );
+            
+                    return redirect(app()->getLocale() . '/files')->with($notification);
+                }
+                //Update File owner details
+
             }
-            
-            if($file->save()){
-                $notification = array(
-                    'message' => __('File has been updated successfully!'), 
-                    'alert-type' => 'success'
-                );
-        
-                return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
-            }else{
-                $notification = array(
-                    'message' => __('There was a problem in updating the file'), 
-                    'alert-type' => 'danger'
-                );
-        
-                return redirect(app()->getLocale() . '/files')->with($notification);
+            elseif(count(Auth::user()->subjects) > 0){
+                foreach(Auth::user()->subjects as $subject){
+                    $sub += 1;
+                    if($subject->subject_code == "files"){
+                        
+                        if($request->change_owner_button == "change_owner"){
+
+                            if (Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head')) {
+                                $file->user_id = $request->users_name;
+                        
+                                if($file->save()){
+
+                                $notification = array(
+                                    'message' => __('File owner has been changed successfully!'), 
+                                    'alert-type' => 'success'
+                                );
+                                return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+
+                                }
+                                else{
+                                $notification = array(
+                                    'message' => __('There was an error in updating File owner!'), 
+                                    'alert-type' => 'danger'
+                                );
+                                
+                                return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+                                }
+                            }
+                        }
+
+                        
+                        if($request->add_letter_button == "add_letter"){
+                            if (Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head') || Gate::allows('user')) {
+
+                                if($letter = Letter::find($request->letters_name)){
+
+                                    $letter->file_id = $id;
+                                    
+                                    if($letter->save()){
+
+                                        $notification = array(
+                                            'message' => __('Letter has been added successfully!'), 
+                                            'alert-type' => 'success'
+                                        );
+                                        return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+                                    }else{
+                                        $notification = array(
+                                            'message' => __('There was an error in adding the letter!'), 
+                                            'alert-type' => 'danger'
+                                        );
+                                        
+                                        return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+                                    }
+                                }else{
+                                    $notification = array(
+                                        'message' => __('Requested Letter is not available'), 
+                                        'alert-type' => 'danger'
+                                    );
+                                    
+                                    return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+                                }
+                            }
+
+                        }
+
+                        if (Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head')) {
+                            $this->validate($request, [
+                                'file_no' => 'bail|required|regex:/^[a-z .\'\/ - 0-9]+$/i',
+                                'file_name' => 'required',
+                                'file_desc' => 'required|max:150|nullable'
+                    
+                            ],
+                            ['file_no.regex' => 'file number cannot contain special characters',
+                            'file_desc.max' => 'File Description may not be greater than 150 characters.']);
+
+                            $file = File::find($id);
+
+                            $file->file_no = $request->file_no;
+                            $file->file_name = $request->file_name;
+                            $file->file_desc = $request->file_desc;
+                            
+                            if(Gate::allows('dist_admin') || Gate::allows('divi_admin')){
+                                $file->file_branch = $request->file_branch;
+                            }else if(Gate::allows('branch_head')){
+                                $file->file_branch = Auth::user()->branch;
+                            }
+                            
+                            if($file->save()){
+                                $notification = array(
+                                    'message' => __('File has been updated successfully!'), 
+                                    'alert-type' => 'success'
+                                );
+                        
+                                return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+                            }else{
+                                $notification = array(
+                                    'message' => __('There was a problem in updating the file'), 
+                                    'alert-type' => 'danger'
+                                );
+                        
+                                return redirect(app()->getLocale() . '/files')->with($notification);
+                            }
+                            //Update File owner details
+                        }
+                        else{
+                
+                            $notification = array(
+                                'message' => __("You do not have permission to edit files"),
+                                'alert-type' => 'warning'
+                            );
+                            return redirect(app()->getLocale() . '/files')->with($notification)->with('new_tasks', $new_tasks);
+                            
+                        }
+                        
+                        
+                    }
+                }
+                if(count(Auth::user()->subjects) >= $sub){
+                    $notification = array(
+                        'message' => __("You do not have permission to Update Files"),
+                        'alert-type' => 'warning'
+                    );
+                    
+                    return redirect(app()->getLocale() . '/home')->with($notification);
+                }
             }
-
-
-            //Update File owner details
-            
-
+            else{
+                $notification = array(
+                    'message' => __("You do not have any subjects assigned"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
+            }
         }
-        else{
-            $notification = array(
-                'message' => __("You do not have permission to edit files"),
-                'alert-type' => 'warning'
-            );
-            
-            return redirect(app()->getLocale() .'/home')->with($notification);
-        }
-
-        
-        
 
     }
 
@@ -500,25 +684,77 @@ class FileController extends Controller
     {
         //Delete file
 
-        if (Gate::allows('sys_admin')) {
-            //Delete file
-            $file = File::find($id);
-            $file->delete();
+        $sub = 0;
+        if($file = File::find($id)){
+
+            if(Gate::allows('sys_admin')){
+
+                $file->delete();
             
-            $notification = array(
-                'message' => __('File has been deleted successfully!'),
-                'alert-type' => 'success'
-            );
-    
-            return redirect(app()->getLocale() . '/files')->with($notification);
+                $notification = array(
+                    'message' => __('File has been deleted successfully!'),
+                    'alert-type' => 'success'
+                );
+        
+                return redirect(app()->getLocale() . '/files')->with($notification);
+
+            }
+            elseif(count(Auth::user()->subjects) > 0){
+                foreach(Auth::user()->subjects as $subject){
+                    $sub += 1;
+                    if($subject->subject_code == "files"){
+                        if (Gate::allows('dist_admin') || Gate::allows('divi_admin')) {
+                            if($file->workplace->id == Auth::user()->workplace->id){
+                                $file->delete();
+            
+                                $notification = array(
+                                    'message' => __('File has been deleted successfully!'),
+                                    'alert-type' => 'success'
+                                );
+                        
+                                return redirect(app()->getLocale() . '/files')->with($notification);
+                            }
+                            else{
+                                $notification = array(
+                                    'message' => __('This file does not belong to your workplace'),
+                                    'alert-type' => 'warning'
+                                );
+                        
+                                return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+                            }
+
+                        }
+                        else{
+                            $notification = array(
+                                'message' => __('You do not have permission to delete this file'),
+                                'alert-type' => 'warning'
+                            );
+                    
+                            return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+                        }
+                    }
+                }
+                if(count(Auth::user()->subjects) >= $sub){
+                    $notification = array(
+                        'message' => __("You do not have permission to Delete Files"),
+                        'alert-type' => 'warning'
+                    );
+                    
+                    return redirect(app()->getLocale() . '/home')->with($notification);
+                }
             }
             else{
-            $notification = array(
-                'message' => __('You do not have permission to delete this file'),
-                'alert-type' => 'warning'
-            );
-    
-            return redirect(app()->getLocale() . '/files/' . $id)->with($notification);
+                $notification = array(
+                    'message' => __("You do not have any subjects assigned"),
+                    'alert-type' => 'warning'
+                );
+                
+                return redirect(app()->getLocale() . '/home')->with($notification);
             }
+            
+        }
+
+        
+            
     }
 }

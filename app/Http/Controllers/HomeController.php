@@ -40,41 +40,48 @@ class HomeController extends Controller
         $accepted_travelpass = 0;
         $issued_travelpass = 0;
 
-        
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        $sub = 0;
 
-           
-            foreach(TravelPass::all() as $travelpass){
-                if(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
-                    $issued_travelpass += 1;
-                }
-                elseif($travelpass->travelpass_status == "ACCEPTED"){
-                    $accepted_travelpass += 1;
-                }
-                elseif($travelpass->travelpass_status == "REJECTED"){
-                    $rejected_travelpass += 1;
-                }
-                
-            }
-            $tot_travelpass = $issued_travelpass + $accepted_travelpass + $rejected_travelpass;
-        }
-        else{
-            
-            foreach(Auth::user()->workplace->travelpasses as $travelpass){
-                if(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
-                    $issued_travelpass += 1;
-                }
-                elseif($travelpass->travelpass_status == "ACCEPTED"){
-                    $accepted_travelpass += 1;
-                }
-                elseif($travelpass->travelpass_status == "REJECTED"){
-                    $rejected_travelpass += 1;
-                }
-               
-            }
-            $tot_travelpass = $issued_travelpass + $accepted_travelpass + $rejected_travelpass;
-        }
+        if(Gate::allows('sys_admin')){
 
+        }
+        elseif(count(Auth::user()->subjects) > 0){
+            foreach(Auth::user()->subjects as $subject){
+                $sub++;
+                if($subject->subject_code == "travelpass"){
+                    if (Gate::allows('dist_admin')) {
+                        foreach(TravelPass::all() as $travelpass){
+                            if(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
+                                $issued_travelpass += 1;
+                            }
+                            elseif($travelpass->travelpass_status == "ACCEPTED"){
+                                $accepted_travelpass += 1;
+                            }
+                            elseif($travelpass->travelpass_status == "REJECTED"){
+                                $rejected_travelpass += 1;
+                            }
+                            
+                        }
+                        $tot_travelpass = $issued_travelpass + $accepted_travelpass + $rejected_travelpass;
+                    }
+                    elseif(Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head')){
+                        foreach(Auth::user()->workplace->travelpasses as $travelpass){
+                            if(($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")){
+                                $issued_travelpass += 1;
+                            }
+                            elseif($travelpass->travelpass_status == "ACCEPTED"){
+                                $accepted_travelpass += 1;
+                            }
+                            elseif($travelpass->travelpass_status == "REJECTED"){
+                                $rejected_travelpass += 1;
+                            }
+                           
+                        }
+                        $tot_travelpass = $issued_travelpass + $accepted_travelpass + $rejected_travelpass;
+                    }
+                }
+            }
+        }
 
         foreach(Auth::user()->tasks as $task){
             if(count($task->histories) > 0){

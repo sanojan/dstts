@@ -95,7 +95,7 @@
                 {{ __("Task Tracking System") }}
                 </div>
                 <div class="m-b-md"><h2>
-                {{ __("District Secretariat - Ampara") }}</h2>
+                {{ __("IT Unit, District Secretariat - Ampara") }}</h2>
                 </div>
                 <div class="m-b-md"><h5>
                 &copy;2020 <a href="#">District Secretariat - Ampara</a>.</h5>
