@@ -340,7 +340,9 @@
                                                         <th>{{__('Letter Date')}}</th>
                                                         <th>{{__('Letter From')}}</th>
                                                         <th>{{__('Created On')}}</th>
+                                                        @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head'))
                                                         <th>{{__('Action')}}</th>
+                                                        @endif
                                                     </tr>
                                                 </thead>
                                                 @if(count($file->letters) > 0)
@@ -352,11 +354,13 @@
                                                         <td>{{$letter->letter_date}}</td>
                                                         <td>{{$letter->letter_from}}</td>
                                                         <td>{{$letter->created_at}}</td>
+                                                        @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head'))
                                                         <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('letters.show', [app()->getLocale(), $letter->id]) }}">
                                                                 <i class="material-icons">pageview</i>
                                                                     <span>{{__('VIEW')}}</span>
                                                             </a>
                                                         </td>
+                                                        @endif
                                                     </tr>
                                                     @endforeach
                                                 </tbody>

@@ -446,10 +446,10 @@
                                     <div class="form-line">
                                     <select class="form-control service_dropdown" id="user_type" name="user_type" >
                                         <option value="" @if(old('user_type')=='') selected disabled @endif>{{__('Select User Type')}}</option>
-                                        <option value="user" @if(old('user_type')=='user') selected @endif >{{__('Normal User')}}</option>
+                                        <option value="user" @if(old('user_type')=='user') selected @endif >{{__('User')}}</option>
                                         <option value="branch_head" @if(old('user_type')=='branch_head') selected @endif >{{__('Branch Head')}}</option>
-                                        <option value="div_sec" @if(old('user_type')=='div_sec') selected @endif >{{__('Divisional Secretary')}}</option>
-                                        <option value="admin" @if(old('user_type')=='admin') selected @endif >{{__('Admin')}}</option>
+                                        <option value="div_sec" @if(old('user_type')=='divi_admin') selected @endif >{{__('Division Admin')}}</option>
+                                        <option value="admin" @if(old('user_type')=='dist_admin') selected @endif >{{__('District Admin')}}</option>
                                         <option value="sys_admin" @if(old('user_type')=='sys_admin') selected @endif >{{__('System Admin')}}</option>
                                     </select>
                                         <label class="form-label">{{__('Select User Type')}}</label>
@@ -500,7 +500,7 @@
                 </div>
             </div>
         </div>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type="text/javascript">
     $('#workplace_type').change(function(){
         var workplaceid = $(this).val();  

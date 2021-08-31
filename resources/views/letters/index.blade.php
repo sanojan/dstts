@@ -217,9 +217,9 @@
                             </tr>
                         </thead>
                             @if(count($letters) > 0)
-                            @php $unique = $letters->unique('key') @endphp
+                            
                             <tbody>
-                                @foreach($unique as $letter)
+                                @foreach($letters as $letter)
                                 
                                 <tr>
                                     <td>{{$letter->letter_no}}</td>
