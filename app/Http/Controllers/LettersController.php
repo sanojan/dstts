@@ -328,15 +328,7 @@ class LettersController extends Controller
 
                         
                     }
-                    else if(count($letter->tasks) > 0){
-                        foreach($letter->tasks as $task){
-                            if($task->user->id == Auth::user()->id){
-                                $users = false;
-                                return view('letters.show')->with('letter', $letter)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
-                            }
-                        }
-                        
-                    }
+                    
 
                 }
                 if(count(Auth::user()->subjects) >= $sub){

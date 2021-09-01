@@ -55,6 +55,9 @@ class ServiceSeeder extends Seeder
             array(
                 'name' => 'Sri Lanka Technological Service'
             ),
+            array(
+                'name' => 'Registrar Service'
+            ),
         ));
     }
 }

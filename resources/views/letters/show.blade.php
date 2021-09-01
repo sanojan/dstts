@@ -432,6 +432,12 @@
                                                     <li>This Task was {{$history->status}} by {{$history->task->user->name}} on {{$history->created_at}}</li>
                                                     @if($history->remarks)
                                                         <ul><li>Remarks: {{$history->remarks}}</li></ul>
+                                                        @if($history->status == "Completed")
+                                                            @if($task->task_report)
+                                                                <ul><li>Task Report: <a href="{{ Storage::url('task_reports/' . $task->task_report) }}" target="_blank">Click Here to View</a> </li></ul>
+                                                            @endif
+                                                        @endif
+
                                                     @endif
                                                     @endforeach
                                                 </ul>

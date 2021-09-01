@@ -228,7 +228,7 @@
                                     <td>{{$letter->letter_from}}</td>
                                     <td>{{$letter->created_at}}</td>
                                     <td>
-                                    @if(Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
+                                    @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
                                         <a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('letters.show', [app()->getLocale(), $letter->id]) }}">
                                             <i class="material-icons">pageview</i>
                                                 <span>{{__('VIEW')}}</span>
