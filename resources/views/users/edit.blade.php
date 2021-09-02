@@ -389,18 +389,26 @@
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                     <select class="form-control branch_dropdown" id="branch" name="branch" >
-                                        <option value="" @if(old('branch')== '') selected @elseif($user->branch=='') selected @endif>{{__('Select the branch')}}</option>
-                                        <option value="Administration"@if(old('branch')== 'Administration') selected @elseif($user->branch=='Administration') selected @endif>{{__('Administration Division')}}</option>
-                                        <option value="Accounts" @if(old('branch')== 'Accounts') selected @elseif($user->branch=='Accounts') selected @endif>{{__('Accounts Division')}}</option>
-                                        <option value="Engineering" @if(old('branch')== 'Engineering') selected @elseif($user->branch=='Engineering') selected @endif>{{__('Engineering Division')}}</option>
-                                        <option value="Field Branch" @if(old('branch')== 'Field Branch') selected @elseif($user->branch=='Field Branch') selected @endif>{{__('Field Division')}}</option>
-                                        <option value="Internal Audit" @if(old('branch')== 'Internal Audit') selected @elseif($user->branch=='Internal Audit') selected @endif>{{__('Internal Audit Division')}}</option>
-                                        <option value="Land" @if(old('branch')== 'Land') selected @elseif($user->branch=='Land') selected @endif>{{__('Land Division')}}</option>
-                                        <option value="NIC Branch" @if(old('branch')== 'NIC Branch') selected @elseif($user->branch=='NIC Branch') selected @endif>{{__('NIC Division')}}</option>
-                                        <option value="Planning" @if(old('branch')== 'Planning') selected @elseif($user->branch=='Planning') selected @endif>{{__('Planning Division')}}</option> 
-                                        <option value="Registrar" @if(old('branch')== 'Registrar') selected @elseif($user->branch=='Registrar') selected @endif>{{__('Registrar Division')}}</option>
-                                        <option value="Samurdhy" @if(old('branch')== 'Samurdhy') selected @elseif($user->branch=='Samurdhy') selected @endif>{{__('Samurdhy Division')}}</option>
-                                        <option value="Social Service" @if(old('branch')== 'Social Service') selected @elseif($user->branch=='Social Service') selected @endif>{{__('Social Service Division')}}</option>
+                                    <option value="" @if(old('branch')=='') selected disabled @endif>{{__('Select your branch')}}</option>
+                                        <option value="Administration" @if(old('branch')=='Administration') selected @endif>{{__('Administration Division')}}</option>
+                                        <option value="Accounts" @if(old('branch')=='Accounts') selected @endif>{{__('Accounts Division')}}</option>
+                                        <option value="Engineering" @if(old('branch')=='Engineering') selected @endif>{{__('Engineering Division')}}</option>
+                                        <option value="Field Branch" @if(old('branch')=='Field Branch') selected @endif>{{__('Field Division')}}</option>
+                                        <option value="Internal Audit" @if(old('branch')=='Internal Audit') selected @endif>{{__('Internal Audit Division')}}</option>
+                                        <option value="Land" @if(old('branch')=='Land') selected @endif>{{__('Land Division')}}</option>
+                                        <option value="NIC Branch" @if(old('branch')=='NIC Branch') selected @endif>{{__('NIC Division')}}</option>
+                                        <option value="Planning" @if(old('branch')=='Planning') selected @endif>{{__('Planning Division')}}</option> 
+                                        <option value="Registrar" @if(old('branch')=='Registrar') selected @endif>{{__('Registrar Division')}}</option>
+                                        <option value="Samurdhy" @if(old('branch')=='Samurdhy') selected @endif>{{__('Samurdhy Division')}}</option>
+                                        <option value="Social Service" @if(old('branch')=='Social Service') selected @endif>{{__('Social Service Division')}}</option>
+                                        <option value="Rural Development Division" @if(old('branch')=='Rural Development Division') selected @endif>{{__('Rural Development Division')}}</option>
+                                        <option value="Business Development Service Division" @if(old('branch')=='Business Development Service Division') selected @endif>{{__('Business Development Service Division')}}</option>
+                                        <option value="Agriculture Division" @if(old('branch')=='Agriculture Division') selected @endif>{{__('Agriculture Division')}}</option>
+                                        <option value="ICT Division" @if(old('branch')=='ICT Division') selected @endif>{{__('ICT Division')}}</option>
+                                        <option value="Women and Child Division" @if(old('branch')=='Women and Child Division') selected @endif>{{__('Women and Child Division')}}</option>
+                                        <option value="Vidatha Resource Center" @if(old('branch')=='Vidatha Resource Center') selected @endif>{{__('Vidatha Resource Center')}}</option>
+                                        <option value="Multipurpose Development Task Force" @if(old('branch')=='Multipurpose Development Task Force') selected @endif>{{__('Multipurpose Development Task Force')}}</option>
+                                        <option value="Grama Niladhari Division" @if(old('branch')=='Grama Niladhari Division') selected @endif>{{__('Grama Niladhari Division')}}</option>
 
                                     </select>
                                         <label class="form-label">{{__('Select the Branch')}}</label>

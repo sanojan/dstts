@@ -283,6 +283,16 @@
                                         <option value="Registrar" @if(old('branch')=='Registrar') selected @endif>{{__('Registrar Division')}}</option>
                                         <option value="Samurdhy" @if(old('branch')=='Samurdhy') selected @endif>{{__('Samurdhy Division')}}</option>
                                         <option value="Social Service" @if(old('branch')=='Social Service') selected @endif>{{__('Social Service Division')}}</option>
+                                        <option value="Rural Development Division" @if(old('branch')=='Rural Development Division') selected @endif>{{__('Rural Development Division')}}</option>
+                                        <option value="Business Development Service Division" @if(old('branch')=='Business Development Service Division') selected @endif>{{__('Business Development Service Division')}}</option>
+                                        <option value="Agriculture Division" @if(old('branch')=='Agriculture Division') selected @endif>{{__('Agriculture Division')}}</option>
+                                        <option value="ICT Division" @if(old('branch')=='ICT Division') selected @endif>{{__('ICT Division')}}</option>
+                                        <option value="Women and Child Division" @if(old('branch')=='Women and Child Division') selected @endif>{{__('Women and Child Division')}}</option>
+                                        <option value="Vidatha Resource Center" @if(old('branch')=='Vidatha Resource Center') selected @endif>{{__('Vidatha Resource Center')}}</option>
+                                        <option value="Multipurpose Development Task Force" @if(old('branch')=='Multipurpose Development Task Force') selected @endif>{{__('Multipurpose Development Task Force')}}</option>
+                                        <option value="Grama Niladhari Division" @if(old('branch')=='Grama Niladhari Division') selected @endif>{{__('Grama Niladhari Division')}}</option>
+
+                                        
 
                                     </select>
                                 </div>

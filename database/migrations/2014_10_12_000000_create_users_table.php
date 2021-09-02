@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('designation',50);
             $table->string('service', 150);
             $table->char('class');
-            $table->string('branch',15)->nullable();
+            $table->string('branch',100)->nullable();
             $table->string('subject',30)->nullable();
             $table->string('user_type',15)->default('user');
             $table->string('password');
