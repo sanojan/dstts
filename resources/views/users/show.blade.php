@@ -13,7 +13,9 @@
                         </a>
                     </li>
                     @if(count(Auth::user()->subjects) > 0)
+                        @php $userSubject = false; @endphp
                         @foreach(Auth::user()->subjects as $subject)
+                            
                             @if($subject->subject_code == "letters")
                                 <li>
                                     <a href="javascript:void(0);" class="menu-toggle">
@@ -124,29 +126,47 @@
                                     </ul>
                                 </li>
                             @endif
-                    @endforeach 
-                    @endif
-                    @if(Gate::allows('sys_admin') || Auth::user()->id == $user->id)
-                    <li class="active">
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">group</i>
-                            <span>{{__('Users')}}</span>
-                        </a>
-                        <ul class="ml-menu">
-                                    
-                            @if(Gate::allows('sys_admin'))  
-                            <li>
-                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
-                            </li>
-                            @endif
-                            @if(Gate::allows('sys_admin') || Auth::user()->id == $user->id)
+
+                            @if($subject->subject_code == "users")
+                                <li class="active">
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">group</i>
+                                        <span>{{__('Users')}}</span>
+                                    </a>
+                                    <ul class="ml-menu">
+                                        
+                                        <li>
+                                            <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                                        </li>
+                                        <li class="active">
+                                            <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </li>  
+                                @php $userSubject = true; @endphp
+                            @endif 
+                        @endforeach 
+
+                        @if(!$userSubject)
+
                             <li class="active">
-                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    <i class="material-icons">group</i>
+                                    <span>{{__('Users')}}</span>
+                                </a>
+                                <ul class="ml-menu">
+                            
+                                    <li class="active">
+                                        <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>  
+                                    
+                        @endif
                     @endif
+                    
                    
                     @if(Gate::allows('sys_admin'))
                     <li>
@@ -327,7 +347,13 @@
                                         <span>{{__('CHANGE PASSWORD')}}</span>
                                     </a>
                                     @endif
-                                    @if(Gate::allows('sys_admin'))
+                                    @php 
+                                    $user_subjects[] = "";
+                                    foreach(Auth::user()->subjects as $key => $subject){
+                                        $user_subjects[$key] = $subject->subject_code; 
+                                    }
+                                    @endphp
+                                    @if(Gate::allows('sys_admin') || in_array("users", $user_subjects))
                                     <a type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#changeAccountType" aria-expanded="false" aria-controls="changeAccountType">
                                         <i class="material-icons">add_to_photos</i>
                                         <span>{{__('CHANGE ACCOUNT TYPE')}}</span>
@@ -395,16 +421,12 @@
                                                             </td>
                                                             <td>
                                                                 <select class="form-control" style="width:100%;" id="user_type" name="user_type">
+                                                                @if(Gate::allows('sys_admin'))
+                                                                
                                                                 @if($user->user_type == "sys_admin")
                                                                 <option value="{{$user->user_type}}" selected disabled>System Admin</option>
                                                                 @else
                                                                 <option value="sys_admin">System Admin</option>
-                                                                @endif
-
-                                                                @if($user->user_type == "branch_head")
-                                                                <option value="{{$user->user_type}}" selected disabled>Branch Head</option>
-                                                                @else
-                                                                <option value="branch_head">Branch Head</option>
                                                                 @endif
 
                                                                 @if($user->user_type == "dist_admin")
@@ -413,10 +435,18 @@
                                                                 <option value="dist_admin">District Admin</option>
                                                                 @endif
 
+                                                                @endif
+
                                                                 @if($user->user_type == "divi_admin")
                                                                 <option value="{{$user->user_type}}" selected disabled>Division Admin</option>
                                                                 @else
                                                                 <option value="divi_admin">Division Admin</option>
+                                                                @endif
+
+                                                                @if($user->user_type == "branch_head")
+                                                                <option value="{{$user->user_type}}" selected disabled>Branch Head</option>
+                                                                @else
+                                                                <option value="branch_head">Branch Head</option>
                                                                 @endif
 
                                                                 @if($user->user_type == "user")
@@ -470,6 +500,7 @@
                                                                 <option value="files">Files</option>
                                                                 <option value="travelpass" >TravelPass</option>
                                                                 <option value="complaints">Complaints</option>
+                                                                <option value="users">Users</option>
                                                                 
                                                             </select>
                                                                     

@@ -125,26 +125,29 @@
                                     </ul>
                                 </li>
                             @endif
+                            @if($subject->subject_code == "users")
+                                <li class="">
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">group</i>
+                                        <span>{{__('Users')}}</span>
+                                    </a>
+                                    <ul class="ml-menu">
+                                       
+                                        <li>
+                                            <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                                        </li>
+                                        
+                                        
+                                            <li >
+                                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                                            </li>
+                                        
+                                    </ul>
+                                </li>
+                            @endif
                     @endforeach 
                     @endif
-                    @if(Gate::allows('sys_admin'))
-                    <li class="">
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">group</i>
-                            <span>{{__('Users')}}</span>
-                        </a>
-                        <ul class="ml-menu">
-                                    
-                            <li>
-                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
-                            </li>
-                            <li class="">
-                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
-                            </li>
-                        </ul>
-                    </li>
-                    @endif
-                   
+                    
                     @if(Gate::allows('sys_admin'))
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">

@@ -958,6 +958,29 @@ if(locale == "en"){
             
     } );
 
+    $('#complaints_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+        buttons: [
+            {
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3, 4]
+            },
+            title: 'List of Files -' + date,
+            messageTop: 'Complaints details report generated from DS-TTS',
+            messageBottom: 'All rights reserved District Secretariat - Ampara \u00A92020'
+            },
+            'colvis'
+        ],
+
+        "order": [],
+
+        
+            
+    } );
+
+
     $('#tasks_table_id').DataTable({
         retrieve: true,
         dom: 'Blfrtip',

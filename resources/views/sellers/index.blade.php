@@ -58,7 +58,7 @@
                             @endif
 
                             @if($subject->subject_code == "tasks")
-                                <li >
+                                <li>
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">playlist_add_check</i>
                                         <span>{{__('Tasks')}}</span>
@@ -68,7 +68,7 @@
                                     </a>
                                     <ul class="ml-menu">
                                         
-                                                <li >
+                                                <li>
                                                     <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                                 </li>
                                                 
@@ -100,7 +100,7 @@
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">transfer_within_a_station</i>
                                         <span>{{__('Travel Pass')}}</span>
-                                        @if(Gate::allows('dist_admin'))
+                                        @if(Gate::allows('admin'))
                                         @if($new_travelpasses > 0)
                                         <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
                                         @endif
@@ -111,11 +111,11 @@
                                         @endif
                                     </a>
                                     <ul class="ml-menu">
-                                        <li >
+                                        <li>
                                             <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
                                         </li>
                                         
-                                        <li >
+                                        <li>
                                             <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
                                         </li>    
 
@@ -125,25 +125,29 @@
                                     </ul>
                                 </li>
                             @endif
+                            @if($subject->subject_code == "users")
+                                <li class="">
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">group</i>
+                                        <span>{{__('Users')}}</span>
+                                    </a>
+                                    <ul class="ml-menu">
+                                       
+                                        <li>
+                                            <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                                        </li>
+                                        
+                                        
+                                            <li >
+                                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                                            </li>
+                                        
+                                    </ul>
+                                </li>
+                            @endif
                     @endforeach 
                     @endif
-                    @if(Gate::allows('sys_admin'))
-                    <li class="">
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">group</i>
-                            <span>{{__('Users')}}</span>
-                        </a>
-                        <ul class="ml-menu">
-                                    
-                            <li>
-                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
-                            </li>
-                            <li class="">
-                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
-                            </li>
-                        </ul>
-                    </li>
-                    @endif
+                   
                    
                     @if(Gate::allows('sys_admin'))
                     <li>

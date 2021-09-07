@@ -38,7 +38,7 @@ class ComplaintController extends Controller
             }
         }
 
-        if (Gate::allows('admin') || Gate::allows('div_sec')) {
+        if (Gate::allows('dist_admin') || Gate::allows('divi_admin')) {
         //$letters = Letter::all();
         //$users = User::all();
         
@@ -51,6 +51,15 @@ class ComplaintController extends Controller
             $complaints = Complaint::all();
 
             return view('complaints.index')->with('complaints', $complaints)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+        }
+        else{
+           
+            $notification = array(
+                'message' => __("You do not have permission to view Complaints"),
+                'alert-type' => 'warning'
+            );
+
+            return redirect(app()->getLocale() .'/home')->with($notification);
         }
         
     }
@@ -189,7 +198,7 @@ class ComplaintController extends Controller
 
         
 
-            if (Gate::allows('admin')) {
+            if (Gate::allows('dist_admin')) {
                 
                 
                 $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
@@ -215,7 +224,7 @@ class ComplaintController extends Controller
                 }
             
             }
-            elseif(Gate::allows('div_sec')){
+            elseif(Gate::allows('divi_admin')){
 
                 $matchThese = [['workplace', '=', Auth::user()->workplace], ['id', '!=', Auth::user()->id]];
                 $orThose = ['designation' => 'District Secretary'];

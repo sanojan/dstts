@@ -124,25 +124,30 @@
                                     </ul>
                                 </li>
                             @endif
+
+                            @if($subject->subject_code == "users")
+                                <li class="active">
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">group</i>
+                                        <span>{{__('Users')}}</span>
+                                    </a>
+                                    <ul class="ml-menu">
+                                        
+                                        <li  class="active">
+                                            <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
+                                        </li>
+                                       
+                                        
+                                        <li>
+                                            <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
+                                        </li>
+                                       
+                                    </ul>
+                                </li>
+                            @endif
                     @endforeach 
                     @endif
-                    @if(Gate::allows('sys_admin'))
-                    <li class="active">
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">group</i>
-                            <span>{{__('Users')}}</span>
-                        </a>
-                        <ul class="ml-menu">
-                                    
-                            <li class="active">
-                                <a href="{{route('users.create', app()->getLocale())}}">Create User</a>
-                            </li>
-                            <li >
-                                <a href="{{route('users.index', app()->getLocale())}}">View Users</a>
-                            </li>
-                        </ul>
-                    </li>
-                    @endif
+                    
                    
                     @if(Gate::allows('sys_admin'))
                     <li>
@@ -287,6 +292,7 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-md-4">
+                            @if(Gate::allows('sys_admin'))
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                     <select class="form-control" style="width:100%;" id="workplace_type" name="workplace_type" value="{{ old('workplace_type') }}">
@@ -303,8 +309,11 @@
                                             </label>
                                     @enderror
                                 </div>
+                            @endif
                             </div>
+
                             <div class="col-md-4">
+
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                     <select class="form-control" style="width:100%;" id="workplace" name="workplace">
@@ -315,7 +324,10 @@
                                         @endphp
                                         <option value="{{ old('workplace') }}" selected>{{ $workplace->name}}</option>
                                         @else
-                                        <option value="" selected></option>
+                                        <option value=""></option>
+                                        @endif
+                                        @if(Gate::denies('sys_admin'))
+                                            <option value="{{Auth::user()->workplace->id}}" selected>{{Auth::user()->workplace->name}}</option>
                                         @endif
                                         </select>
                                     <label class="form-label">{{__('Select the workplace')}}</label> 
@@ -458,8 +470,10 @@
                                         <option value="user" @if(old('user_type')=='user') selected @endif >{{__('User')}}</option>
                                         <option value="branch_head" @if(old('user_type')=='branch_head') selected @endif >{{__('Branch Head')}}</option>
                                         <option value="div_sec" @if(old('user_type')=='divi_admin') selected @endif >{{__('Division Admin')}}</option>
+                                        @if(Gate::allows('sys_admin'))
                                         <option value="admin" @if(old('user_type')=='dist_admin') selected @endif >{{__('District Admin')}}</option>
                                         <option value="sys_admin" @if(old('user_type')=='sys_admin') selected @endif >{{__('System Admin')}}</option>
+                                        @endif
                                     </select>
                                         <label class="form-label">{{__('Select User Type')}}</label>
                                     </div>
