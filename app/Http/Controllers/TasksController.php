@@ -179,10 +179,142 @@ class TasksController extends Controller
         $sub = 0;
         if(Gate::allows('sys_admin')){
 
-            $letters = Letter::all();
+            if($request->task_from_letter_button == "task_from_letter"){
+                $this->validate($request, [
+                    'letter_no' => 'bail|required',
+                    'assigned_to' => 'required|array|min:2',
+                    'deadline' => 'nullable|after:today',
+                    'remarks' => 'nullable|max:150',
         
-            $users = DB::table('users')->where('id', '!=', Auth::user()->id)->get();
-            return view('tasks.create')->with('letters', $letters)->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                ],
+                ['letter_no.regex' => 'letter number cannot contain special characters',
+                'deadline.after' => 'Deadline can not be a previous day',
+                'remarks.max' => 'Max 150 charectors',
+                'assigned_to.min' => 'Select atleast one officer name to assign task']);
+    
+                if(count($request->assigned_to) > 0){
+                    foreach($request->assigned_to as $recipients){
+                        if($recipients == "")
+                            continue;
+                        $task = new Task;
+                        $task->letter_id = $request->letter_no;
+                        $task->assigned_by= Auth::user()->id;
+                        $task->user_id = $recipients;
+                        $task->deadline = $request->deadline;
+                        $task->remarks = $request->remarks;
+                        $task->complaint_id = null;
+    
+                        $task->save();
+                    }
+                }
+            }
+
+            if($request->accept_and_forward_button == "accept_and_forward"){
+
+                $this->validate($request, [
+                    'letter_no' => 'bail|required',
+                    'assigned_to' => 'required|array|min:2',
+                    'deadline' => 'nullable|after:today',
+                    'remarks' => 'nullable|max:150',
+        
+                ],
+                ['letter_no.regex' => 'letter number cannot contain special characters',
+                'deadline.after' => 'Deadline can not be a previous day',
+                'remarks.max' => 'Max 150 charectors',
+                'assigned_to.min' => 'Select atleast one officer name to assign task']);
+
+                $tasks = Task::find($request->old_task_id);
+                
+
+                foreach($tasks->histories as $history){
+
+                    if($history->current == true){
+                        $history1 = History::find($history->id);
+                        $history1->task_id = $history->task_id;
+                        $history1->status = $history->status;
+                        $history1->remarks = $history->remarks;
+                        $history1->current = false;
+                        $history1->save();
+                    }
+                }
+                $status='Forwarded';
+
+                //Create history
+                $history = new History;
+                $history->task_id = $request->old_task_id;
+                $history->status= $status;
+                $history->current= true;
+                //$history->remarks = $request->reject_remarks;
+                $history->save();
+
+                
+
+                if(count($request->assigned_to) > 0){
+                    foreach($request->assigned_to as $recipients){
+                        if($recipients == "")
+                            continue;
+                        $new_task = new Task;
+                        $new_task->previous_task = $request->old_task_id;
+                        $new_task->letter_id = $request->letter_no;
+                        $new_task->assigned_by= Auth::user()->id;
+                        $new_task->user_id = $recipients;
+                        $new_task->deadline = $request->deadline;
+                        $new_task->remarks = $request->remarks;
+            
+                        $new_task->save();
+                    }
+                }
+
+
+                
+                //session()->put('success','Letter has been created successfully.');
+
+                $notification = array(
+                    'message' => __('Task has been Forwarded successfully!'), 
+                    'alert-type' => 'success'
+                );
+                return redirect(app()->getLocale() . '/tasks/' . $request->task_id)->with($notification);
+            }
+
+            if($request->task_from_complaint_button == "task_from_complaint"){
+                $this->validate($request, [
+                    'assigned_to' => 'required|array|min:2',
+                    'deadline' => 'nullable|after:today',
+                    'remarks' => 'nullable|max:150',
+        
+                ],
+                ['deadline.after' => 'Deadline can not be a previous day',
+                'remarks.max' => 'Max 150 charectors',
+                'assigned_to.min' => 'Select atleast one officer name to assign task']);
+    
+                if(count($request->assigned_to) > 0){
+                    foreach($request->assigned_to as $recipients){
+                        if($recipients == "")
+                            continue;
+                        $task = new Task;
+                        $task->letter_id = null;
+                        $task->assigned_by= Auth::user()->id;
+                        $task->user_id = $recipients;
+                        $task->deadline = $request->deadline;
+                        $task->remarks = $request->remarks;
+                        $task->complaint_id = $request->complaint_id;
+        
+                        $task->save();
+                    }
+                }
+    
+                $complaint = Complaint::find($request->complaint_id);
+                $complaint->status = "On Process";
+                $complaint->save();            
+                
+            }
+
+            $notification = array(
+                'message' => __('Task has been created successfully!'), 
+                'alert-type' => 'success'
+            );
+    
+            return redirect('/' . app()->getLocale() .'/tasks')->with($notification);
 
         }
         elseif(count(Auth::user()->subjects) > 0){

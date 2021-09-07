@@ -291,6 +291,7 @@
                                         <option value="Vidatha Resource Center" @if(old('branch')=='Vidatha Resource Center') selected @endif>{{__('Vidatha Resource Center')}}</option>
                                         <option value="Multipurpose Development Task Force" @if(old('branch')=='Multipurpose Development Task Force') selected @endif>{{__('Multipurpose Development Task Force')}}</option>
                                         <option value="Grama Niladhari Division" @if(old('branch')=='Grama Niladhari Division') selected @endif>{{__('Grama Niladhari Division')}}</option>
+                                        <option value="Productivity Division" @if(old('branch')=='Productivity Division') selected @endif>{{__('Productivity Division')}}</option>
 
                                         
 

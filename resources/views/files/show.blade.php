@@ -250,11 +250,12 @@
                                 </tbody>    
                             </table>
                             <div>
+                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head'))
                                 <a type="button" style="margin-right:10px" class="btn btn-success btn-xs waves-effect" href="{{route('files.edit', [app()->getLocale(), $file->id])}}">
                                     <i class="material-icons">mode_edit</i>
                                     <span>{{__('EDIT FILE')}}</span>
                                 </a>
-                                @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head'))
+                               
                                 <button type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect collapsed" data-toggle="collapse" data-target="#changeOwner" aria-expanded="false" aria-controls="changeOwner">
                                     <i class="material-icons">person</i>
                                     <span>{{__('CHANGE OWNER')}}</span>
@@ -395,10 +396,16 @@
                                                                 <select class="form-control" style="width:100%;" id="letters_name" name="letters_name">
                                                                 
                                                                 <option value="" @if(old('users')=="") selected disabled @endif>{{__('Select Letter')}}</option>
-                                                                @php $unique = $tasks->unique('key') @endphp
+                                                                @php $unique = $tasks->unique('key');
+                                                                $task_letter=""; 
+                                                                @endphp
                                                                 @foreach($unique as $task)
                                                                     @php
-                                                                    $task_letter = \App\Letter::find($task->letter_id);
+                                                                    if(\App\Letter::find($task->letter_id)){
+                                                                        $task_letter = \App\Letter::find($task->letter_id);
+                                                                    }else{
+                                                                        $task_letter = "";
+                                                                    }
                                                                     @endphp
                                                                     <option value="{{$task->letter_id}}" @if(old('task')=="{{$task->letter_id}}") selected @endif>{{$task_letter->letter_no}} - {{$task_letter->letter_title}}</option>
                                                                 @endforeach
@@ -408,16 +415,18 @@
                                                                     
                                                             </td>  <td></td>     
                                                             <td>
-                                                            @if($task_letter->file)
-                                                                <button type="submit" style="margin-right:10px" name="add_letter_button" value="add_letter" class="btn bg-green btn-xs waves-effect" onclick="return confirm('This letter will be moved from {{ $task_letter->file->file_no }} ({{$task_letter->file->file_name}}) to this file. Do you want to continue?')">
-                                                                <i class="material-icons">check</i>
-                                                                <span>{{__('SUBMIT')}}</span>
-                                                                </button>
-                                                            @else
-                                                                <button type="submit" style="margin-right:10px" name="add_letter_button" value="add_letter" class="btn bg-green btn-xs waves-effect">
-                                                                <i class="material-icons">check</i>
-                                                                <span>{{__('SUBMIT')}}</span>
-                                                                </button>
+                                                            @if($task_letter != "")
+                                                                @if($task_letter->file)
+                                                                    <button type="submit" style="margin-right:10px" name="add_letter_button" value="add_letter" class="btn bg-green btn-xs waves-effect" onclick="return confirm('This letter will be moved from {{ $task_letter->file->file_no }} ({{$task_letter->file->file_name}}) to this file. Do you want to continue?')">
+                                                                    <i class="material-icons">check</i>
+                                                                    <span>{{__('SUBMIT')}}</span>
+                                                                    </button>
+                                                                @else
+                                                                    <button type="submit" style="margin-right:10px" name="add_letter_button" value="add_letter" class="btn bg-green btn-xs waves-effect">
+                                                                    <i class="material-icons">check</i>
+                                                                    <span>{{__('SUBMIT')}}</span>
+                                                                    </button>
+                                                                @endif
                                                             @endif
                                                             </td>
                                                         </tr>

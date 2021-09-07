@@ -227,7 +227,11 @@
                                     <td>{{$current_file->file_name}}</td>
                                     <td>{{$current_file->workplace->name}}</td>
                                     <td>{{$current_file->file_branch}}</td>
+                                    @if($current_file->user)
                                     <td>{{$current_file->user->name}} - {{$current_file->user->designation}}</td>
+                                    @else
+                                    <td>No Owner</td>
+                                    @endif
                                     <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('files.show', [app()->getLocale(), $current_file->id]) }}">
                                             <i class="material-icons">pageview</i>
                                                 <span>{{__('VIEW')}}</span>

@@ -69,6 +69,7 @@ class TravelPassController extends Controller
                     ->rawColumns(['action'])->make(true);
     
             }
+            return view('travelpasses.index')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_travelpasses', $new_travelpasses)->with('new_approved_travelpasses', $new_approved_travelpasses);
             
         }
         elseif(count(Auth::user()->subjects) > 0){

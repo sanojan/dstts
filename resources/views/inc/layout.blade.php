@@ -975,21 +975,6 @@ if(locale == "en"){
         ],
 
         "order": [],
-
-        "columnDefs": [
-        {
-            "targets": [ 1 ],
-            "visible": false,
-        },
-        {
-            "targets": [ 2 ],
-            "visible": false,
-        },
-        {
-            "targets": [ 5 ],
-            "visible": false,
-        },]
-        
    
             
     } );
