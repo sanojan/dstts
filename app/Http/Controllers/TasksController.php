@@ -11,6 +11,8 @@ use App\Complaint;
 use Illuminate\Support\Facades\Auth;
 use Gate;
 use DB;
+use App\Notifications\NewTask;
+use App\Notifications\UpdateTask;
 
 class TasksController extends Controller
 {
@@ -349,6 +351,10 @@ class TasksController extends Controller
                                     $task->complaint_id = null;
                 
                                     $task->save();
+
+                                    $assignedUser = User::find($task->user->id);
+
+                                    $assignedUser->notify(new NewTask($task, Auth::user()));
                                 }
                             }
                         }
@@ -367,10 +373,10 @@ class TasksController extends Controller
                             'remarks.max' => 'Max 150 charectors',
                             'assigned_to.min' => 'Select atleast one officer name to assign task']);
 
-                            $tasks = Task::find($request->old_task_id);
+                            $task = Task::find($request->old_task_id);
                             
 
-                            foreach($tasks->histories as $history){
+                            foreach($task->histories as $history){
 
                                 if($history->current == true){
                                     $history1 = History::find($history->id);
@@ -391,6 +397,10 @@ class TasksController extends Controller
                             //$history->remarks = $request->reject_remarks;
                             $history->save();
 
+                            $assignedByUser = User::find($task->assigned_by);
+
+                            $assignedByUser->notify(new UpdateTask($task, $history));
+
                             
 
                             if(count($request->assigned_to) > 0){
@@ -406,6 +416,10 @@ class TasksController extends Controller
                                     $new_task->remarks = $request->remarks;
                         
                                     $new_task->save();
+
+                                    $assignedUser = User::find($new_task->user->id);
+
+                                    $assignedUser->notify(new NewTask($new_task, Auth::user()));
                                 }
                             }
 

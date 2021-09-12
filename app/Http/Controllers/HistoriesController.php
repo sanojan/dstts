@@ -8,6 +8,7 @@ use App\Letter;
 use App\User;
 use App\Task;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\UpdateTask;
 
 class HistoriesController extends Controller
 {
@@ -80,6 +81,10 @@ class HistoriesController extends Controller
 
             $letter->file_id = $request->file_name;
             $letter->save();
+
+            $assignedByUser = User::find($task->assigned_by);
+
+            $assignedByUser->notify(new UpdateTask($task, $history));
             
             $notification = array(
                 'message' => 'Task has been Accepted successfully!', 
@@ -93,6 +98,10 @@ class HistoriesController extends Controller
             $history->remarks = $request->reject_remarks;
             $history->current = true;
             $history->save();
+
+            $assignedByUser = User::find($task->assigned_by);
+
+            $assignedByUser->notify(new UpdateTask($task, $history));
             
             $notification = array(
                 'message' => 'Task has been Rejected successfully!', 
@@ -121,6 +130,10 @@ class HistoriesController extends Controller
             
             $history->save();
 
+            $assignedByUser = User::find($task->assigned_by);
+
+            $assignedByUser->notify(new UpdateTask($task, $history));
+
             $notification = array(
                 'message' => 'Task has been Completed successfully!', 
                 'alert-type' => 'success'
@@ -134,6 +147,10 @@ class HistoriesController extends Controller
             $history->remarks = $request->cancel_remarks;
             $history->current= true;
             $history->save();
+
+            $assignedByUser = User::find($task->assigned_by);
+
+            $assignedByUser->notify(new UpdateTask($task, $history));
 
             $notification = array(
                 'message' => 'Task has been Canceled successfully!', 

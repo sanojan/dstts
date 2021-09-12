@@ -307,7 +307,14 @@
                                             @foreach($task->histories as $history)
                                                 @if($history->current==true)
                                                     @if($history->status == "Forwarded")
-                                                    <td><input type="text" name="current_status" class="form-control" value="{{$history->status}} by {{$task->user->name}}" readonly> </td>
+                                                    @php 
+                                                    $new_tasks = App\Task::where('previous_task', $task->id)->get();
+                                                    foreach($new_tasks as $task){
+                                                       $new_task_user = $task->user->name;
+                                                    }
+
+                                                    @endphp
+                                                    <td><input type="text" name="current_status" class="form-control" value="{{$history->status}} to {{$new_task_user}}" readonly> </td>
                                                     @else
                                                     <td><input type="text" name="current_status" class="form-control" value="{{$history->status}} on {{$history->created_at}} " readonly> </td>
                                                     @endif
@@ -330,18 +337,20 @@
                                             @foreach($task->histories as $history)
                                                 @if($history->current==true)
                                                     @if($history->status=='Accepted')
-                                                    <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index', app()->getLocale())}}">
-                                                        <i class="material-icons">keyboard_backspace</i>
-                                                        <span>{{__('BACK')}}</span>
-                                                    </a>
-                                                    <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#cancelTask" aria-expanded="false" aria-controls="rejectTask">
-                                                        <i class="material-icons">undo</i>
-                                                        <span>{{__('CANCEL TASK')}}</span>
-                                                    </a>
-                                                    <a type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect" data-toggle="collapse" data-target="#completeTask" aria-expanded="false" aria-controls="completeTask">
-                                                        <i class="material-icons">done</i>
-                                                        <span>{{__('COMPLETE TASK')}}</span>
-                                                    </a>
+                                                        <a type="button" style="margin-right:10px" class="btn bg-grey btn-xs waves-effect" href="{{route('tasks.index', app()->getLocale())}}">
+                                                            <i class="material-icons">keyboard_backspace</i>
+                                                            <span>{{__('BACK')}}</span>
+                                                        </a>
+                                                        @if($task->user->id == Auth::user()->id)
+                                                            <a type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#cancelTask" aria-expanded="false" aria-controls="rejectTask">
+                                                                <i class="material-icons">undo</i>
+                                                                <span>{{__('CANCEL TASK')}}</span>
+                                                            </a>
+                                                            <a type="button" style="margin-right:10px" class="btn btn-primary btn-xs waves-effect" data-toggle="collapse" data-target="#completeTask" aria-expanded="false" aria-controls="completeTask">
+                                                                <i class="material-icons">done</i>
+                                                                <span>{{__('COMPLETE TASK')}}</span>
+                                                            </a>
+                                                        @endif
                                                     @elseif($history->status == "Rejected")
                                                     <table class="table">
                                                     <tr>

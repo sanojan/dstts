@@ -148,28 +148,134 @@
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">notifications</i>
-                            <span class="label-count"></span>
+                            @if(count(Auth::user()->unreadNotifications) > 0)
+                            <span class="label-count">{{count(Auth::user()->unreadNotifications)}}</span>
+                            @endif
                         </a>
                         
                         <ul class="dropdown-menu">
                             <li class="header">NOTIFICATIONS</li>
                             <li class="body">
                                 <ul class="menu">
-                                <!--
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="icon-circle bg-light-green">
-                                                <i class="material-icons">person_add</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4>12 new members joined</h4>
-                                                <p>
-                                                    <i class="material-icons">access_time</i> 14 mins ago
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                -->
+                                    @forelse(Auth::user()->unreadNotifications as $notification)
+                                        @if(class_basename($notification->type) == "NewTask")
+                                            <li id="notification" onclick="markNotificationAsRead('{{$notification->id}}');">
+                                                <a href="{{ route('tasks.show', [app()->getLocale(), $notification->data['task']['id']]) }}" >   
+                                                    <div class="icon-circle bg-light-blue">
+                                                        <i class="material-icons">playlist_add_check</i>
+                                                    </div>
+                                                    <div class="menu-info">
+                                                        <h4>New Task from {{$notification->data['assigned_by']['name']}}</h4>
+                                                        <p>
+                                                            <i class="material-icons">access_time</i> {{\Carbon\Carbon::parse($notification->data['task']['created_at'])->diffForHumans()}}
+                                                        </p>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        @endif
+
+                                        @if(class_basename($notification->type) == "UpdateTask")
+                                            @if($notification->data['history']['status'] == "Accepted")
+                                                <li id="notification" onclick="markNotificationAsRead('{{$notification->id}}');">
+                                                    <a href="{{ route('tasks.show', [app()->getLocale(), $notification->data['task']['id']]) }}" >   
+                                                        <div class="icon-circle bg-green">
+                                                            <i class="material-icons">done</i>
+                                                        </div>
+                                                        <div class="menu-info">
+                                                            <h4>Your task has been Accepted!</h4>
+                                                            <p>
+                                                                <i class="material-icons">access_time</i> {{\Carbon\Carbon::parse($notification->data['history']['created_at'])->diffForHumans()}}
+                                                            </p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            @endif
+                                            @if($notification->data['history']['status'] == "Rejected")
+                                                <li id="notification" onclick="markNotificationAsRead('{{$notification->id}}');">
+                                                    <a href="{{ route('tasks.show', [app()->getLocale(), $notification->data['task']['id']]) }}" >   
+                                                        <div class="icon-circle bg-red">
+                                                            <i class="material-icons">close</i>
+                                                        </div>
+                                                        <div class="menu-info">
+                                                            <h4>Your task has been Rejected!</h4>
+                                                            <p>
+                                                                <i class="material-icons">access_time</i> {{\Carbon\Carbon::parse($notification->data['history']['created_at'])->diffForHumans()}}
+                                                            </p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            @endif
+                                            @if($notification->data['history']['status'] == "Forwarded")
+                                                <li id="notification" onclick="markNotificationAsRead('{{$notification->id}}');">
+                                                    <a href="{{ route('tasks.show', [app()->getLocale(), $notification->data['task']['id']]) }}" >   
+                                                        <div class="icon-circle bg-deep-purple">
+                                                            <i class="material-icons">fast_forward</i>
+                                                        </div>
+                                                        <div class="menu-info">
+                                                            <h4>Your task has been Forwarded!</h4>
+                                                            <p>
+                                                                <i class="material-icons">access_time</i> {{\Carbon\Carbon::parse($notification->data['history']['created_at'])->diffForHumans()}}
+                                                            </p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            @endif
+                                            @if($notification->data['history']['status'] == "Completed")
+                                                <li id="notification" onclick="markNotificationAsRead('{{$notification->id}}');">
+                                                    <a href="{{ route('tasks.show', [app()->getLocale(), $notification->data['task']['id']]) }}" >   
+                                                        <div class="icon-circle bg-blue">
+                                                            <i class="material-icons">stars</i>
+                                                        </div>
+                                                        <div class="menu-info">
+                                                            <h4>Your task has been Completed!</h4>
+                                                            <p>
+                                                                <i class="material-icons">access_time</i> {{\Carbon\Carbon::parse($notification->data['history']['created_at'])->diffForHumans()}}
+                                                            </p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            @endif
+                                            @if($notification->data['history']['status'] == "Cancelled")
+                                                <li id="notification" onclick="markNotificationAsRead('{{$notification->id}}');">
+                                                    <a href="{{ route('tasks.show', [app()->getLocale(), $notification->data['task']['id']]) }}" >   
+                                                        <div class="icon-circle bg-orange">
+                                                            <i class="material-icons">cancel</i>
+                                                        </div>
+                                                        <div class="menu-info">
+                                                            <h4>Your task has been Cancelled!</h4>
+                                                            <p>
+                                                                <i class="material-icons">access_time</i> {{\Carbon\Carbon::parse($notification->data['history']['created_at'])->diffForHumans()}}
+                                                            </p>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            @endif
+
+                                        @endif
+                                        @if(class_basename($notification->type) == "NewUser")
+                                            <li id="notification" onclick="markNotificationAsRead('{{$notification->id}}');">
+                                                <a href="{{ route('users.show', [app()->getLocale(), $notification->data['user']['id']]) }}" >   
+                                                    <div class="icon-circle bg-green">
+                                                        <i class="material-icons">person_add</i>
+                                                    </div>
+                                                    <div class="menu-info">
+                                                        <h4>New User has been registered</h4>
+                                                        <p>
+                                                            <i class="material-icons">access_time</i> {{\Carbon\Carbon::parse($notification->data['user']['created_at'])->diffForHumans()}}
+                                                        </p>
+                                                    </div>
+                                                </a>
+                                            </li>
+
+                                        @endif
+
+                                    @empty
+                                       
+                                        <div class="menu-info">
+                                            <h4>No Unread Notifications</h4>
+                                        </div>
+                                     
+                                    @endforelse
                                 </ul>
                             </li>
                             <li class="footer">
@@ -177,6 +283,7 @@
                             </li>
                         </ul>
                     </li>
+                    
 
                     <!-- #END# Notifications -->
                     <!-- Tasks -->
@@ -1100,6 +1207,13 @@ if(locale == "en"){
 
     
 }
+</script>
+
+<script>
+    function markNotificationAsRead(id){
+        var path = '/en/markAsRead/' + id;
+        $.get(path);
+    }
 </script>
 
 

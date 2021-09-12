@@ -64,6 +64,14 @@ Route::group(['prefix' => '{language}'], function () {
         Artisan::call('storage:link');
     });
 
+    Route::get('/markAsRead/{id}', function($lang, $id){
+        foreach(Auth::user()->unreadNotifications as $notification){
+            if($notification->id == $id){
+                $notification->markAsRead();
+            }
+        }
+    });
+
 
     //Route::resource('workplace', 'WorkplaceController');
 
