@@ -1028,7 +1028,7 @@ if(locale == "en"){
             {
             extend: 'excelHtml5',
             exportOptions: {
-                columns: [ 0, 1, 2, 3, 4]
+                columns: [ 0, 1, 2, 3, 4, 5]
             },
             title: 'List of Letters -' + date,
             messageTop: 'Letters details report generated from DS-TTS',
@@ -1036,11 +1036,7 @@ if(locale == "en"){
             },
             'colvis'
         ],
-
         "order": [],
-
-        
-            
     } );
 
     $('#files_table_id').DataTable({

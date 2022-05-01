@@ -217,36 +217,37 @@
                                 <th>{{__('Letter Date')}}</th>
                                 <th>{{__('Letter From')}}</th>
                                 <th>{{__('Created On')}}</th>
+                                <th>Signature</th>
                                 <th>{{__('Action')}}</th>
                             </tr>
                         </thead>
                             @if(count($letters) > 0)
-                            
-                            <tbody>
-                                @foreach($letters as $letter)
-                                
-                                <tr>
-                                    <td>{{$letter->letter_no}}</td>
-                                    <td>{{$letter->letter_title}}</td>
-                                    <td>{{$letter->letter_date}}</td>
-                                    <td>{{$letter->letter_from}}</td>
-                                    <td>{{$letter->created_at}}</td>
-                                    <td>
-                                    @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
-                                        <a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('letters.show', [app()->getLocale(), $letter->id]) }}">
-                                            <i class="material-icons">pageview</i>
-                                                <span>{{__('VIEW')}}</span>
-                                        </a>
-                                    @elseif(Gate::allows('branch_head'))
-                                        <a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('letters.show', [app()->getLocale(), $letter->letter_id]) }}">
-                                            <i class="material-icons">pageview</i>
-                                                <span>{{__('VIEW')}}</span>
-                                        </a>
-                                    @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
+                                <tbody>
+                                    @foreach($letters as $letter)
+                                    
+                                        <tr>
+                                            <td>{{$letter->letter_no}}</td>
+                                            <td>{{$letter->letter_title}}</td>
+                                            <td>{{$letter->letter_date}}</td>
+                                            <td>{{$letter->letter_from}}</td>
+                                            <td>{{$letter->created_at}}</td>
+                                            <td></td>
+                                            <td>
+                                            @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
+                                                <a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('letters.show', [app()->getLocale(), $letter->id]) }}">
+                                                    <i class="material-icons">pageview</i>
+                                                        <span>{{__('VIEW')}}</span>
+                                                </a>
+                                            @elseif(Gate::allows('branch_head'))
+                                                <a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('letters.show', [app()->getLocale(), $letter->letter_id]) }}">
+                                                    <i class="material-icons">pageview</i>
+                                                        <span>{{__('VIEW')}}</span>
+                                                </a>
+                                            @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
                             @endif
                         
                     </table>
