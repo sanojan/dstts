@@ -39,6 +39,12 @@ class UsersController extends Controller
                 $new_complaints += 1;
             }
         }
+        $new_approved_travelpasses = 0;
+        foreach(Auth::user()->workplace->travelpasses as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
 
         $sub = 0;
         
@@ -47,7 +53,7 @@ class UsersController extends Controller
             //$users = User::all();
             $users = User::all();
 
-            return view('users.index')->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+            return view('users.index')->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_approved_travelpasses', $new_approved_travelpasses);
         }
 
         elseif(count(Auth::user()->subjects) > 0){
@@ -57,7 +63,7 @@ class UsersController extends Controller
 
                     $users = User::where('workplace_id', Auth::user()->workplace->id)->get();
 
-                    return view('users.index')->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                    return view('users.index')->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_approved_travelpasses', $new_approved_travelpasses);
                 }
             }
 
@@ -99,6 +105,12 @@ class UsersController extends Controller
                 $new_complaints += 1;
             }
         }
+        $new_approved_travelpasses = 0;
+        foreach(Auth::user()->workplace->travelpasses as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
 
         $sub = 0;
         
@@ -109,7 +121,7 @@ class UsersController extends Controller
             $workplacetypes = Workplacetype::all();
             
 
-            return view('users.create')->with('services', $services)->with('users', $users)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+            return view('users.create')->with('services', $services)->with('users', $users)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_approved_travelpasses', $new_approved_travelpasses);
         }
         elseif(count(Auth::user()->subjects) > 0){
             foreach(Auth::user()->subjects as $subject){
@@ -121,7 +133,7 @@ class UsersController extends Controller
                     $workplacetypes = Workplacetype::all();
                     
 
-                    return view('users.create')->with('services', $services)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                    return view('users.create')->with('services', $services)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_approved_travelpasses', $new_approved_travelpasses);
 
                 }
             }
@@ -394,6 +406,12 @@ class UsersController extends Controller
                 $new_complaints += 1;
             }
         }
+        $new_approved_travelpasses = 0;
+        foreach(Auth::user()->workplace->travelpasses as $travelpass){
+            if($travelpass->travelpass_status == "TRAVEL PASS ISSUED"){
+                $new_approved_travelpasses += 1;
+            }
+        }
         $sub = 0;
 
         if($user = User::find($id)){
@@ -405,7 +423,7 @@ class UsersController extends Controller
                 $workplacetypes = Workplacetype::all();
                 
 
-                return view('users.edit')->with('services', $services)->with('user', $user)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                return view('users.edit')->with('services', $services)->with('user', $user)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_approved_travelpasses', $new_approved_travelpasses);
             }
                 
             elseif(count(Auth::user()->subjects) > 0){
@@ -419,7 +437,7 @@ class UsersController extends Controller
                             
                             
 
-                            return view('users.edit')->with('services', $services)->with('user', $user)->with('designations', $designations)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints);
+                            return view('users.edit')->with('services', $services)->with('user', $user)->with('designations', $designations)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_approved_travelpasses', $new_approved_travelpasses);
                         }
                         else{
                     
