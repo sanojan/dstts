@@ -119,7 +119,7 @@ class TravelPassController extends Controller
                             'message' => __('You do not have permission to view Travel Passes'),
                             'alert-type' => 'warning'
                         );
-                        return redirect(app()->getLocale() . '/letters')->with($notification);
+                        return redirect(app()->getLocale() . '/home')->with($notification);
                     }
 
 
@@ -841,7 +841,7 @@ class TravelPassController extends Controller
      * @param  \App\TravelPass  $travelPass
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TravelPass $travelPass)
+    public function destroy($lang, $id)
     {
         //Delete Travel Pass
         $sub = 0;
@@ -2082,7 +2082,7 @@ class TravelPassController extends Controller
 
     public function appliPDF($lang, $id){
 
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin') || Gate::allows('dist_admin')) {
 
             $travelpass = TravelPass::find($id);
 

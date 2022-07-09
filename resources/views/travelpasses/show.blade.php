@@ -317,48 +317,49 @@
                                     <span>{{__('SUBMIT APPLICATION')}}</span>
                                 </button>
                                 @endif
+                            </form>
                                 @if(Gate::allows('dist_admin'))
-                                @if($travelpass->travelpass_status == "SUBMITTED")
-                                
+                                    @if($travelpass->travelpass_status == "SUBMITTED")
                                     
-                                <button type="submit" style="margin-right:10px" class="btn bg-blue btn-xs waves-effect" name="subbutton" value="accept">
-                                    <i class="material-icons">check</i>
-                                    <span>{{__('ACCEPT APPLICATION')}}</span>
-                                </button>
-                                <button type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTravelPass" aria-expanded="false" aria-controls="rejectTravelPass">
-                                    <i class="material-icons">close</i>
-                                    <span>{{__('REJECT APPLICATION')}}</span>
-                                </button>
-                                <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.appli', [app()->getLocale(), $travelpass->id] )}}">
-                                    <i class="material-icons">remove_red_eye</i>
-                                    <span>{{__('PREVIEW APPLICATION')}}</span>
-                                </a>
-                                @elseif($travelpass->travelpass_status == "ACCEPTED")
-                                <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.pdf', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
-                                    <i class="material-icons">file_download</i>
-                                    <span>{{__('DOWNLOAD APPLICATION')}}</span>
-                                </a>
-                                <a type="button" style="margin-right:10px" class="btn bg-indigo btn-xs waves-effect" href="{{ route('travelpass.preview', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
-                                    <i class="material-icons">remove_red_eye</i>
-                                    <span>{{__('PREVIEW TRAVEL PASS')}}</span>
-                                </a>
-                                <button type="submit" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" name="subbutton" value="send">
-                                    <i class="material-icons">send</i>
-                                    <span>{{__('SEND TRAVEL PASS')}}</span>
-                                </button>
-                                @elseif((($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")) && Gate::allows('dist_admin'))
-                                <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.pdf', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
-                                    <i class="material-icons">file_download</i>
-                                    <span>{{__('DOWNLOAD APPLICATION')}}</span>
-                                </a>
-                                <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{ route('travelpass.final', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
-                                    <i class="material-icons">file_download</i>
-                                    <span>{{__('DOWNLOAD TRAVEL PASS')}}</span>
-                                </a>
+                                    <form action="{{ route('travelpasses.update', [app()->getLocale(), $travelpass->id] )}}" method="POST" enctype="multipart/form-data" id="travelpass_accept_form">
+                                        <button type="submit" style="margin-right:10px" class="btn bg-blue btn-xs waves-effect" name="subbutton" value="accept">
+                                            <i class="material-icons">check</i>
+                                            <span>{{__('ACCEPT APPLICATION')}}</span>
+                                        </button>
+                                        <button type="button" style="margin-right:10px" class="btn btn-danger btn-xs waves-effect" data-toggle="collapse" data-target="#rejectTravelPass" aria-expanded="false" aria-controls="rejectTravelPass">
+                                            <i class="material-icons">close</i>
+                                            <span>{{__('REJECT APPLICATION')}}</span>
+                                        </button>
+                                        <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.appli', [app()->getLocale(), $travelpass->id] )}}">
+                                            <i class="material-icons">remove_red_eye</i>
+                                            <span>{{__('PREVIEW APPLICATION')}}</span>
+                                        </a>
+                                        @elseif($travelpass->travelpass_status == "ACCEPTED")
+                                        <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.pdf', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
+                                            <i class="material-icons">file_download</i>
+                                            <span>{{__('DOWNLOAD APPLICATION')}}</span>
+                                        </a>
+                                        <a type="button" style="margin-right:10px" class="btn bg-indigo btn-xs waves-effect" href="{{ route('travelpass.preview', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
+                                            <i class="material-icons">remove_red_eye</i>
+                                            <span>{{__('PREVIEW TRAVEL PASS')}}</span>
+                                        </a>
+                                        <button type="submit" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" name="subbutton" value="send">
+                                            <i class="material-icons">send</i>
+                                            <span>{{__('SEND TRAVEL PASS')}}</span>
+                                        </button>
+                                        @elseif((($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")) && Gate::allows('dist_admin'))
+                                        <a type="button" style="margin-right:10px" class="btn bg-deep-purple btn-xs waves-effect" href="{{ route('travelpass.pdf', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
+                                            <i class="material-icons">file_download</i>
+                                            <span>{{__('DOWNLOAD APPLICATION')}}</span>
+                                        </a>
+                                        <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{ route('travelpass.final', [app()->getLocale(), $travelpass->id] )}}" target="_blank">
+                                            <i class="material-icons">file_download</i>
+                                            <span>{{__('DOWNLOAD TRAVEL PASS')}}</span>
+                                        </a>
+                                    </form>
+                                    @endif
+                                @endif
 
-                                </form>
-                                @endif
-                                @endif
                                 @if((($travelpass->travelpass_status == "TRAVEL PASS ISSUED") || ($travelpass->travelpass_status == "TRAVEL PASS RECEIVED")) && (Gate::allows('divi_admin') || Gate::allows('branch_head') || Gate::allows('user')))
                                 
                                 <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{ route('travelpass.final', [app()->getLocale(), $travelpass->id] )}}" target="_blank">

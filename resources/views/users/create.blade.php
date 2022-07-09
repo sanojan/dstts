@@ -469,9 +469,9 @@
                                         <option value="" @if(old('user_type')=='') selected disabled @endif>{{__('Select User Type')}}</option>
                                         <option value="user" @if(old('user_type')=='user') selected @endif >{{__('User')}}</option>
                                         <option value="branch_head" @if(old('user_type')=='branch_head') selected @endif >{{__('Branch Head')}}</option>
-                                        <option value="div_sec" @if(old('user_type')=='divi_admin') selected @endif >{{__('Division Admin')}}</option>
+                                        <option value="divi_admin" @if(old('user_type')=='divi_admin') selected @endif >{{__('Division Admin')}}</option>
                                         @if(Gate::allows('sys_admin'))
-                                        <option value="admin" @if(old('user_type')=='dist_admin') selected @endif >{{__('District Admin')}}</option>
+                                        <option value="dist_admin" @if(old('user_type')=='dist_admin') selected @endif >{{__('District Admin')}}</option>
                                         <option value="sys_admin" @if(old('user_type')=='sys_admin') selected @endif >{{__('System Admin')}}</option>
                                         @endif
                                     </select>
