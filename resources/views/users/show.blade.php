@@ -380,6 +380,14 @@
                                     </button>
                                     @endif
                                     @endif
+                                    @if(Gate::allows('sys_admin'))
+                                    <button type="submit" style="margin-right:10px" class="btn bg-blue-grey btn-xs waves-effect" name="reset_password_button" value="reset_password" onclick="return confirm('{{__('This will reset the password to 11111111. Do you want to continue?.')}}')">
+                                        <i class="material-icons">settings_backup_restore</i>
+                                        <span>
+                                            {{__('RESET PASSWORD')}}
+                                        </span>
+                                    </button>
+                                    @endif
                             </form>
                                     
                                    
@@ -387,6 +395,7 @@
                                 
                                 <br /><br />
                                 @if(Gate::allows('sys_admin'))
+                                    
                                 <form method="POST" action="{{ route('users.destroy', [app()->getLocale(), $user->id]) }}">
                                     {{ csrf_field() }}
                                     {{ method_field('DELETE') }}

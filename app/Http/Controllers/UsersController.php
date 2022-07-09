@@ -964,6 +964,19 @@ class UsersController extends Controller
                     }
                 }
             }
+            if($request->reset_password_button == "reset_password"){
+                if (Gate::allows('sys_admin')) {
+                    $user->password = Hash::make('11111111');
+                    $user->save();
+                }
+                $notification = array(
+                    'message' => __('Password has been reset successfully'),
+                    'alert-type' => 'success'
+                );
+        
+                return redirect(app()->getLocale() . '/users/' . $id)->with($notification);
+            }
+
         }
         else{
             $notification = array(
