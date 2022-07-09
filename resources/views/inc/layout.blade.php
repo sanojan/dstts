@@ -1189,13 +1189,56 @@ if(locale == "en"){
     $('#users_table_id').DataTable({
         retrieve: true,
         dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('users.index', app()->getLocale()) }}",
+
+        columns: [
+        {data: 'name'},
+        {data: 'nic'},
+        {data: 'designation'},
+        {data: 'workplace'},
+        {data: 'user_type'},
+        {data: 'created_at'},
+        {data: 'account_status'},
+        
+
+        {data: 'action', name: 'action', orderable: false, searchable: false}],
+
         buttons: [
             'colvis'
         ],
 
         "order": [],
 
-        
+        "createdRow": function (row, data, index) {
+            if(data.user_type == "sys_admin"){
+                $('td', row).eq(4).text("System Admin");
+            }
+            if(data.user_type == "dist_admin"){
+                $('td', row).eq(4).text("District Admin");
+            }
+            if(data.user_type == "divi_admin"){
+                $('td', row).eq(4).text("Divisional Admin");
+            }
+            if(data.user_type == "branch_head"){
+                $('td', row).eq(4).text("Branch Head");
+            }
+            if(data.user_type == "user"){
+                $('td', row).eq(4).text("Normal User");
+            }
+            if(data.account_status == "1"){
+                $('td', row).eq(6).text("ENABLED");
+                $('td', row).eq(6).addClass("font-bold col-green");
+            }
+            if(data.account_status == "0"){
+                $('td', row).eq(6).text("DISABLED");
+                $('td', row).eq(6).addClass("font-bold col-red");
+            }
+            
+            
+        },
             
     } );
 

@@ -201,14 +201,6 @@
             <div class="block-header">
                 <h2>VIEW USERS</h2>
             </div>
-            @if(session()->has('message'))
-                <div class="alert alert-{{session()->get('alert-type')}}">
-                    {{ session()->get('message') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            @endif
             <div class="card">
                 <div class="body">
                     
@@ -217,51 +209,31 @@
                             <tr>
                                 <th>Name</th>
                                 <th>NIC</th>
-                                <th>Designation & Workplace</th>
+                                <th>Designation</th>
+                                <th>Workplace</th>
                                 <th>User Type</th>
                                 <th>Created On</th>
                                 <th>Account Status</th>
                                 <th>Action</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @if(count($users) > 0)
-                                @foreach($users as $user)
-                                <tr>
-                                    <td>{{$user->name}}</td>
-                                    <td>{{$user->nic}}</td>
-                                    <td>{{$user->designation}} - {{$user->workplace->name}}</td>
-                                    @if($user->user_type == "sys_admin")
-                                        <td>System Admin</td>
-                                    @elseif($user->user_type == "dist_admin")
-                                        <td>District Admin</td>
-                                    @elseif($user->user_type == "divi_admin")
-                                        <td>Division Admin</td>
-                                    @elseif($user->user_type == "branch_head")
-                                        <td>Branch Head</td>
-                                    @elseif($user->user_type == "user")
-                                        <td>Standard User</td>
-                                    @endif
-                                    <td>{{$user->created_at}}</td>
-                                    @if($user->account_status)
-                                    <td class="font-bold col-green">ENABLED</td>
-                                    @else
-                                    <td class="font-bold col-red">DISABLED</td>
-                                    @endif
-                                    <td><a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('users.show', [app()->getLocale(), $user->id]) }}">
-                                            <i class="material-icons">pageview</i>
-                                                <span>VIEW</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            @else
-                                <tr>No records found</tr>
-                            @endif
-                        </tbody>
+                        </thead>        
                     </table>
                 </div>
             </div>
         </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+        <script >
+            @if(session()->has('message'))
+                $.notify({
+                    message: '{{ session()->get('message') }}'
+                },{
+                    type: '{{session()->get('alert-type')}}',
+                    delay: 5000,
+                    offset: {x: 50, y:100}
+                },
+                );
+            @endif
+        </script>
 </section>
 @endsection

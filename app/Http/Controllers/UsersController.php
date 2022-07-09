@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Rules\MatchOldPassword;
+use DataTables;
 
 class UsersController extends Controller
 {
@@ -25,7 +26,7 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $new_tasks = 0;
         foreach(Auth::user()->tasks as $task){
@@ -49,6 +50,25 @@ class UsersController extends Controller
         $sub = 0;
         
         if (Gate::allows('sys_admin')) {
+            if ($request->ajax()) {
+                $data = DB::table('users')->orderBy('created_at', 'desc')->get();
+                return Datatables::of($data)->addIndexColumn()
+                
+                    ->addColumn('action', function($row){
+    
+                        $btn = '<a href=' . route("users.show", [app()->getLocale(), $row->id]) . ' class="btn bg-green btn-block btn-sm">View</a>';
+    
+                        return $btn;
+    
+                    })->addColumn('workplace', function($row){
+    
+                        $btn2 = Workplace::find($row->workplace_id)->name;
+    
+                        return $btn2;
+    
+                    })->rawColumns(['action', 'workplace'])->make(true);
+                
+            }
             //$letters = Letter::all();
             //$users = User::all();
             $users = User::all();
@@ -60,10 +80,28 @@ class UsersController extends Controller
             foreach(Auth::user()->subjects as $subject){
                 $sub++;
                 if($subject->subject_code == "users"){
+                    if ($request->ajax()) {
+                        $data = DB::table('users')->where('workplace_id', Auth::user()->workplace->id)->orderBy('created_at', 'desc')->get();
+                        return Datatables::of($data)->addIndexColumn()
+                
+                        ->addColumn('action', function($row){
+    
+                        $btn = '<a href=' . route("users.show", [app()->getLocale(), $row->id]) . ' class="btn bg-green btn-block btn-sm">View</a>';
+    
+                        return $btn;
+    
+                        })->addColumn('workplace', function($row){
+    
+                        $btn2 = Workplace::find($row->workplace_id)->name;
+    
+                        return $btn2;
+    
+                        })->rawColumns(['action', 'workplace'])->make(true);
 
-                    $users = User::where('workplace_id', Auth::user()->workplace->id)->get();
+                    }
 
-                    return view('users.index')->with('users', $users)->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_approved_travelpasses', $new_approved_travelpasses);
+    
+                    return view('users.index')->with('new_tasks', $new_tasks)->with('new_complaints', $new_complaints)->with('new_approved_travelpasses', $new_approved_travelpasses);
                 }
             }
 
