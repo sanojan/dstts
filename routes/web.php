@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/en');
 Route::redirect('/home', 'en/home');
 
-Route::group(['prefix' => '{language}'], function () {
+Route::group(['prefix' => '{language}',
+'where' => ['language' => '[a-zA-Z]{2}']], function () {
 
     Route::get('/', function () {
         return view('welcome');

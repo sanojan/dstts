@@ -80,7 +80,7 @@ class LoginController extends Controller
                 return redirect()
                     ->back()
                     ->withInput($request->only($this->username(), 'remember'))
-                    ->withErrors(['active' => 'Your account is not activated, Please wait...! For Technical Assistance Email: help@dsems.net']);
+                    ->withErrors(['active' => 'Your account is not activated, Please wait...! For Technical Assistance Email: ampdissec@gmail.com']);
             }
         }
     
@@ -97,6 +97,11 @@ class LoginController extends Controller
         //$this->guard()->logout();
         $request->session()->invalidate();
         $request->session()->regenerate();
+        if(session()->has('locale')) {
+            app()->setLocale(session('locale'));
+        } else {
+            app()->setLocale(config('app.locale'));    
+        }
         return redirect('/');
     }
 }

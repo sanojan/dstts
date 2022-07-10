@@ -28,7 +28,7 @@
 <body class="login-page">
     <div class="login-box">
         <div class="logo">
-            <a href="javascript:void(0);">DS-<b>TTS</b></a>
+            <a href="{{ route('home', app()->getLocale()) }}">DS-<b>TTS</b></a>
             <small>{{ __('Task Tracking System - District Secretariat, Ampara') }}</small>
         </div>
         
@@ -98,7 +98,7 @@
                             <a href="{{route('register', app()->getLocale())}}">{{__('Register Now!') }}</a>
                         </div>
                         <div class="col-xs-6 align-right">
-                            <a href="#">{{__('Forgot Password?')}}</a>
+                            <a href="{{ route('password.request', app()->getLocale()) }}">{{__('Forgot Password?')}}</a>
                         </div>
                     </div>
                 </form>

@@ -6,6 +6,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use App\Notifications\ResetPassword;
+
 
 class User extends Authenticatable
 {
@@ -61,4 +63,10 @@ class User extends Authenticatable
     public function subjects(){
         return $this->hasMany('App\Subject');
     }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPassword($token));
+    }
+
 }

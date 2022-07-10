@@ -92,13 +92,13 @@ class RegisterController extends Controller
     }
     protected function showRegistrationForm()
     {
-            $designations = Designation::all()->sortBy('name');
-            $services = Service::all()->sortBy('name');
-            $workplacetypes = Workplacetype::all();
-            $workplaces = Workplace::all();
-            //Return letters show page
+        $designations = Designation::all()->sortBy('name');
+        $services = Service::all()->sortBy('name');
+        $workplacetypes = Workplacetype::all();
+        $workplaces = Workplace::all();
+        //Return letters show page
 
-            return view('auth.register')->with('services', $services)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('workplaces', $workplaces);
+        return view('auth.register')->with('services', $services)->with('designations', $designations)->with('workplacetypes', $workplacetypes)->with('workplaces', $workplaces);
     }
     
     /**
