@@ -45,6 +45,7 @@ Route::group(['prefix' => '{language}',
     Route::resource('travelpasses', 'TravelPassController')->middleware('auth');
     Route::resource('sellers', 'SellerController')->middleware('auth');
     Route::resource('workplaces', 'WorkplaceController')->middleware('auth');
+    Route::resource('vehicles', 'VehicleController')->middleware('auth');
     Route::resource('complaints', 'ComplaintController');
 
     Route::get('get-workplaces-table','WorkplaceController@workplacesAll')->name('workplaces.all');

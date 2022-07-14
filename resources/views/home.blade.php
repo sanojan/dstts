@@ -146,9 +146,31 @@
                                 </li>
                             @endif
 
+                            @if($subject->subject_code == "fuel")
+                                <li class="">
+                                    <a href="javascript:void(0);" class="menu-toggle">
+                                        <i class="material-icons">local_gas_station</i>
+                                        <span>{{__('Fuel Supply')}}</span>
+                                    </a>
+                                    <ul class="ml-menu">
+                                        <li>
+                                            <a href="{{route('vehicles.index', app()->getLocale())}}">Vehicles List</a>
+                                        </li>
+                                        <li >
+                                            <a href="#">Fuel Sheds List</a>
+                                        </li>
+                                        <li >
+                                            <a href="#">Duty List</a>
+                                        </li>
+                                
+                                    </ul>
+                                </li>
+                            @endif
+
                         @endforeach 
                     @endif
-                   
+
+                    
                    
                     @if(Gate::allows('sys_admin'))
                     <li>

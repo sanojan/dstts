@@ -34,4 +34,7 @@ class Workplace extends Model
     public function sellers(){
         return $this->hasMany('App\Seller');
     }
+    public function vehicles(){
+        return $this->hasMany('App\Vehicle');
+    }
 }

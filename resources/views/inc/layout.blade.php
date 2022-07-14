@@ -364,10 +364,10 @@
             <!-- Footer -->
             <div class="legal">
                 <div class="copyright">
-                    &copy;2020 <a href="#">IT Unit, District Secretariat - Ampara</a>.
+                    &copy;2022 <a href="#">IT Unit, District Secretariat - Ampara</a>.
                 </div>
                 <div class="version">
-                    <b>Version: </b> 1.0.1
+                    <b>Version: </b> 2.1.0
                 </div>
             </div>
             <!-- #Footer -->
@@ -407,9 +407,6 @@
 
 <!-- Morris Plugin Js -->
 
-
-
-
 <!-- Flot Charts Plugin Js -->
 <script src="{{asset('plugins/flot-charts/jquery.flot.js')}}"></script>
 <script src="{{asset('plugins/flot-charts/jquery.flot.resize.js')}}"></script>
@@ -424,7 +421,7 @@
 <script src="{{asset('js/admin.js')}}"></script>
 
 <!-- Demo Js -->
-<script src="{{asset('js/demo.js')}}"></script>
+
 
 <!-- Input Mask Plugin Js -->
 
@@ -1242,7 +1239,77 @@ if(locale == "en"){
             
     } );
 
-    
+    $('#vehicles_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "#",
+
+        columns: [
+        {data: 'refno'},
+        {data: 'vehicle_no'},
+        {data: 'vehicle_type'},
+        {data: 'fuel_type'},
+        {data: 'owner_name'},
+        {data: 'owner_gender'},
+        {data: 'owner_nic'},
+        {data: 'owner_job'},
+        {data: 'owner_workplace'},
+        {data: 'perm_address'},
+        {data: 'perm_district'},
+        {data: 'temp_address'},
+        {data: 'qrcode'},
+        {data: 'consumer_type'},
+        {data: 'status'},
+        {data: 'print_lock'},
+
+        {data: 'action', name: 'action', orderable: false, searchable: false}],
+
+        buttons: [
+            'colvis'
+        ],
+
+        "order": [],
+
+        "columnDefs": [
+        {
+            "targets": [ 2 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 5 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 7 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 8 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 10 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 11 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 12 ],
+            "visible": false,
+        },
+        {
+            "targets": [ 14 ],
+            "visible": false,
+        }],
+
+        
+            
+    } );
 
     
 }
@@ -1328,7 +1395,7 @@ function change_regno_textbox()
         }
         
 </script>
-
+@yield('scripts')
 </body>
 
 </html>

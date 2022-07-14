@@ -790,6 +790,9 @@ class UsersController extends Controller
                                 else if($subject == "users"){
                                     $new_subject->subject_name = "Users";
                                 }
+                                else if($subject == "fuel"){
+                                    $new_subject->subject_name = "Fuel Supply";
+                                }
                                 $new_subject->save();
                             }
                             

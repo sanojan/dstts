@@ -503,14 +503,15 @@
                                                             <td>
                                                                 
                                                             <select class="form-control subjects_dropdown" style="width:100%;" id="subjects" name="subjects[]" multiple="multiple">
-                                                                
-                                                                <option value="letters">Letters</option>
-                                                                <option value="tasks" >Tasks</option>
-                                                                <option value="files">Files</option>
-                                                                <option value="travelpass" >TravelPass</option>
-                                                                <option value="complaints">Complaints</option>
-                                                                <option value="users">Users</option>
-                                                                
+                                                                @if(Gate::allows('sys_admin'))
+                                                                    <option value="users">Users</option>
+                                                                    <option value="letters">Letters</option>
+                                                                    <option value="tasks" >Tasks</option>
+                                                                    <option value="files">Files</option>
+                                                                    <option value="complaints">Complaints</option>
+                                                                @endif
+                                                                    <option value="travelpass" >Travel Pass</option>
+                                                                    <option value="fuel">Fuel Supply</option>
                                                             </select>
                                                                     
                                                             </td>  
