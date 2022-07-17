@@ -46,6 +46,7 @@ Route::group(['prefix' => '{language}',
     Route::resource('sellers', 'SellerController')->middleware('auth');
     Route::resource('workplaces', 'WorkplaceController')->middleware('auth');
     Route::resource('vehicles', 'VehicleController')->middleware('auth');
+    Route::resource('fuelstations', 'FuelStationsController')->middleware('auth');
     Route::resource('complaints', 'ComplaintController');
 
     Route::get('get-workplaces-table','WorkplaceController@workplacesAll')->name('workplaces.all');
@@ -55,6 +56,9 @@ Route::group(['prefix' => '{language}',
     Route::get('/travelpasses/{id}/application_pdf','TravelPassController@appliPDF')->name('travelpass.appli');
     Route::get('report','TravelPassController@reportExport')->name('travelpass.report');
     
+    Route::get('/vehicles/{id}/qrcard','VehicleController@downloadQRCard')->name('vehicle.qrcard');
+
+
     Route::get('get-workplaces-table','WorkplaceController@workplacesAll')->name('workplaces.all');
     Route::get('get-workplaces-list','WorkplacetypeController@getWorkplaces');
     Route::get('get-sellers-list','SellerController@getSellers');

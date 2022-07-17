@@ -32,8 +32,7 @@
                                     </ul>
                                 </li>
                             @endif
-                        
-
+            
                             @if($subject->subject_code == "files")
                                 <li>
                                     <a href="javascript:void(0);" class="menu-toggle">
@@ -58,7 +57,7 @@
                             @endif
 
                             @if($subject->subject_code == "tasks")
-                                <li>
+                                <li >
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">playlist_add_check</i>
                                         <span>{{__('Tasks')}}</span>
@@ -68,7 +67,7 @@
                                     </a>
                                     <ul class="ml-menu">
                                         
-                                                <li>
+                                                <li >
                                                     <a href="{{route('tasks.index', app()->getLocale())}}">{{__('View Task(s)')}}</a>
                                                 </li>
                                                 
@@ -96,11 +95,11 @@
                             @endif
 
                             @if($subject->subject_code == "travelpass")
-                                <li class="active">
+                                <li >
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">transfer_within_a_station</i>
                                         <span>{{__('Travel Pass')}}</span>
-                                        @if(Gate::allows('admin'))
+                                        @if(Gate::allows('dist_admin'))
                                         @if($new_travelpasses > 0)
                                         <span class="badge bg-red">{{$new_travelpasses}} {{__('New')}}</span>
                                         @endif
@@ -115,16 +114,17 @@
                                             <a href="{{route('travelpasses.index', app()->getLocale())}}">{{__('View Travel Pass Entries')}}</a>
                                         </li>
                                         
-                                        <li>
+                                        <li >
                                             <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
                                         </li>    
 
-                                        <li class="active">
+                                        <li>
                                             <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
                                         </li>
                                     </ul>
                                 </li>
                             @endif
+
                             @if($subject->subject_code == "users")
                                 <li class="">
                                     <a href="javascript:void(0);" class="menu-toggle">
@@ -145,8 +145,9 @@
                                     </ul>
                                 </li>
                             @endif
+
                             @if($subject->subject_code == "fuel")
-                                <li class="">
+                                <li class="active">
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">local_gas_station</i>
                                         <span>{{__('Fuel Supply')}}</span>
@@ -156,7 +157,7 @@
                                             <li>
                                                 <a href="{{route('vehicles.index', app()->getLocale())}}">Vehicles List</a>
                                             </li>
-                                            <li>
+                                            <li class="active">
                                                 <a href="{{route('fuelstations.index', app()->getLocale())}}">Fuel Sheds List</a>
                                             </li>
                                         @endif
@@ -169,7 +170,7 @@
                             @endif
                     @endforeach 
                     @endif
-                   
+                    
                    
                     @if(Gate::allows('sys_admin'))
                     <li>
@@ -213,107 +214,131 @@
                 </ul>
             </div>
 @endsection
-
 @section('content')
 <section class="content">
-        <div class="container-fluid">
-            <div class="block-header">
-                <h2>{{__('EDIT WHOLESALE SELLER')}}</h2>
-            </div>
-            <div class="card">
-                
-                <div class="body">
-                    <form action="{{ route('sellers.update', [app()->getLocale(), $seller->id]) }}" method="POST" enctype="multipart/form-data" id="sellers_edit_form">
-                    {{ csrf_field() }}
-                    {{ method_field('PATCH') }} 
-                        <div class="row clearfix">
-                            
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="applicant_name" class="form-control" name="seller_name" value="{{ $seller->name }}">
-                                        <label class="form-label">{{__('Seller Name')}}</label>
-                                    </div>
-                                    @error('seller_name')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>{{__('ADD NEW FUEL STATION')}}</h2>
+        </div>
+        <div class="card">
+            <div class="body">
+                <form action="{{ route('fuelstations.store', app()->getLocale()) }}" method="POST" enctype="multipart/form-data" id="vehicles_add_form">
+                    @csrf
+                    <div class="row clearfix">
+                        <div class="col-md-4">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input type="text" id="name" class="name form-control" style="text-transform: uppercase" name="name" value="{{ old('name') }}" required>
+                                    <label class="form-label">{{__('Name of Fuel Station')}}</label>
                                 </div>
+                                @error('name')
+                                        <label class="error" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </label>
+                                @enderror
                             </div> 
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="seller_address" class="form-control" name="seller_address" value="{{ $seller->address }}">
-                                        <label class="form-label">{{__('Seller Address')}}</label>
-                                    </div>
-                                    @error('seller_address')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div> 
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="nic_no" class="form-control" name="nic_no" value="{{ $seller->nic_no }}">
-                                        <label class="form-label">{{__('NIC No')}}</label>
-                                    </div>
-                                    @error('nic_no')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>   
                         </div>
-                    
-                        
-                        <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
-                        <a class="btn bg-grey btn-xs waves-effect" style="margin-right:10px" href="{{route('sellers.index', app()->getLocale())}}">
-                            <i class="material-icons">keyboard_backspace</i>
-                            <span>{{__('BACK')}}</span>
-                        </a>
-                        
-                        <button type="submit" class="btn btn-primary btn-xs waves-effect" style="margin-right:10px">
-                            <i class="material-icons">note_add</i>
-                            <span>{{__('CHANGE')}}</span>
-                        </button>
-                        
-                    </form>
-                    <br />
-                    <form method="POST" action="{{ route('sellers.destroy', [app()->getLocale(), $seller->id]) }}">
-                        {{ csrf_field() }}
-                        {{ method_field('DELETE') }}
+                        <div class="col-md-4">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input type="text" id="address" class="address form-control" name="address" value="{{ old('address') }}" required>
+                                    <label class="form-label">{{__('Address')}}</label>
+                                </div>
+                                @error('address')
+                                        <label class="error" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </label>
+                                @enderror
+                            </div> 
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input type="number" id="no_of_pumbs" class="no_of_pumbs form-control" name="no_of_pumbs" min="1" max="5" onKeyDown="return false" value="{{ old('no_of_pumbs') }}" required>
+                                    <label class="form-label">{{__('No. of Pumbs')}}</label>
+                                </div>
+                                @error('no_of_pumbs')
+                                        <label class="error" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </label>
+                                @enderror
+                            </div> 
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <select class="station_type form-control " style="width:100%;" id="station_type" name="station_type" required>
+                                        <option value="" @if(old('station_type')=="") selected disabled @endif>{{__('Select Station Type')}}</option>
+                                        <option value="LIOC" @if(old('station_type')=="LIOC") selected @endif>{{__('LIOC')}}</option>
+                                        <option value="CYPETCO" @if(old('station_type')=="CYPETCO") selected @endif>{{__('CYPETCO')}}</option>
+                                    </select>
+                                </div>
+                                @error('station_type')
+                                <label class="error" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </label>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-4">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input type="text" id="contact_no" class="contact_no form-control" name="contact_no" value="{{ old('contact_no') }}" required>
+                                    <label class="form-label">{{__('Contact No.')}}</label>
+                                </div>
+                                @error('contact_no')
+                                        <label class="error" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </label>
+                                @enderror
+                            </div> 
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <input type="text" id="owner_name" class="owner_name form-control" name="owner_name" value="{{ old('owner_name') }}" required>
+                                    <label class="form-label">{{__('Owner Name with Initials')}}</label>
+                                </div>
+                                @error('owner_name')
+                                        <label class="error" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </label>
+                                @enderror
+                            </div> 
+                        </div>
+                    </div>
+                    <a class="btn bg-blue-grey waves-effect" style="margin-right:10px" href="{{route('fuelstations.index', app()->getLocale())}}">
+                        <i class="material-icons">keyboard_backspace</i>
+                        <span>{{__('BACK')}}</span>
+                    </a>
 
-                        <button type="submit" class="btn btn-danger btn-xs waves-effect" onclick="return confirm('{{__('Are you sure? You cannot revert this action.')}}')">
-                            <i class="material-icons">delete</i>
-                                <span>{{__('DELETE SELLER')}}</span>
-                        </button>
-                    </form> 
-                    
-                </div>
+                    <button type="submit" class="btn bg-teal waves-effect" style="margin-right:10px" name="subbutton" value="save">
+                        <i class="material-icons">save</i>
+                        <span>{{__('SAVE')}}</span>
+                    </button>
+
+                    <button type="submit" class="btn btn-primary waves-effect" style="margin-right:10px" name="subbutton" value="submit">
+                        <i class="material-icons">send</i>
+                        <span>{{__('SUBMIT')}}</span>
+                    </button>
+                </form>
             </div>
         </div>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
-        <script >
-        @if(session()->has('message'))
-            $.notify({
-                title: '<strong>Heads up!</strong>',
-                message: '{{ session()->get('message') }}'
-            },{
-                type: '{{session()->get('alert-type')}}',
-                delay: 5000,
-                offset: {x: 50, y:100}
-            },
-            );
-        @endif
-        </script>
-
+    </div>
 </section>
-
-
 @endsection
 
+@section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.contact_no').inputmask('9999999999');
+    });
+    $('.station_type').select2({
+        placeholder: '{{__('Select Station Type')}}',
+        width: 'resolve'
+    });
+</script>
+@endsection

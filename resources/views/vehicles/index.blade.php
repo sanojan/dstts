@@ -157,10 +157,10 @@
                                             <a href="{{route('vehicles.index', app()->getLocale())}}">Vehicles List</a>
                                         </li>
                                         <li >
-                                            <a href="#">Fuel Sheds List</a>
+                                            <a href="{{route('fuelstations.index', app()->getLocale())}}">Fuel Stations List</a>
                                         </li>
                                         <li >
-                                            <a href="#">Duty List</a>
+                                            <a href="#">Duty Schedule</a>
                                         </li>
                                 
                                     </ul>
@@ -219,29 +219,20 @@
             <div class="block-header">
                 <h2>{{__('VEHICLES LIST')}}</h2>
             </div>
-            
             <div class="card">
                 <div class="body">
-                    
                     <table id="vehicles_table_id" class="display">
                         <thead>
                             <tr>
                                 <th>{{__('Ref.No')}}</th>
                                 <th>{{__('Vehicle No.')}}</th>
-                                <th>{{__('Vehicle Type')}}</th>
                                 <th>{{__('Fuel Type')}}</th>
                                 <th>{{__('Owner\'s Name')}}</th>
-                                <th>{{__('Owner\'s Gender')}}</th>
-                                <th>{{__('Owner\'s NIC')}}</th>
-                                <th>{{__('Owner\'s Job')}}</th>
-                                <th>{{__('Owner\'s Workplace')}}</th>
+                                <th>{{__('Owner\'s ID')}}</th>
                                 <th>{{__('Permanant Address')}}</th>
-                                <th>{{__('Permanant District')}}</th>
-                                <th>{{__('Temporary Address')}}</th>
-                                <th>{{__('QR Code')}}</th>
                                 <th>{{__('Consumer Type')}}</th>
-                                <th>{{__('Status')}}</th>
                                 <th>{{__('Print Lock')}}</th>
+                                <th>{{__('Status')}}</th>
                                 <th>{{__('Action')}}</th>
                             </tr>
                         </thead>
@@ -251,11 +242,14 @@
             </div>
             <div class="card">
                 <div class="body">
-                    <a type="button" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" href="{{route('vehicles.create', app()->getLocale())}}">
+                    <a type="button" style="margin-right:10px" class="btn bg-green waves-effect" href="{{route('vehicles.create', app()->getLocale())}}">
                         <i class="material-icons">add</i>
-                        <span>{{__('Add New')}}</span>
+                        <span>{{__('ADD NEW')}}</span>
                     </a> 
-                    
+                    <a type="button" style="margin-right:10px" class="btn bg-deep-purple waves-effect disabled" href="{{route('vehicle.qrcard', [app()->getLocale(), Auth::user()->workplace->id])}}">
+                        <i class="material-icons">file_download</i>
+                        <span>{{__('DOWNLOAD ID CARDS')}}</span>
+                    </a> 
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li >
+                    <li>
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
                             <span>{{__('Dashboard')}}</span>
@@ -15,13 +15,13 @@
                     @if(count(Auth::user()->subjects) > 0)
                         @foreach(Auth::user()->subjects as $subject)
                             @if($subject->subject_code == "letters")
-                                <li >
+                                <li>
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">email</i>
                                         <span>{{__('Letters')}}</span>
                                     </a>
                                     <ul class="ml-menu">
-                                                <li >
+                                                <li>
                                                     <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                                 </li>
                                                 @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
@@ -46,7 +46,6 @@
                                                 <li>
                                                     <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
                                                 </li>
-                                            
                                                 @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head'))
                                                 <li >
                                                     <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
@@ -96,7 +95,7 @@
                             @endif
 
                             @if($subject->subject_code == "travelpass")
-                                <li class="active">
+                                <li>
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">transfer_within_a_station</i>
                                         <span>{{__('Travel Pass')}}</span>
@@ -119,12 +118,13 @@
                                             <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
                                         </li>    
 
-                                        <li class="active">
+                                        <li>
                                             <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
                                         </li>
                                     </ul>
                                 </li>
                             @endif
+
                             @if($subject->subject_code == "users")
                                 <li class="">
                                     <a href="javascript:void(0);" class="menu-toggle">
@@ -145,8 +145,9 @@
                                     </ul>
                                 </li>
                             @endif
+
                             @if($subject->subject_code == "fuel")
-                                <li class="">
+                                <li class="active">
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">local_gas_station</i>
                                         <span>{{__('Fuel Supply')}}</span>
@@ -156,7 +157,7 @@
                                             <li>
                                                 <a href="{{route('vehicles.index', app()->getLocale())}}">Vehicles List</a>
                                             </li>
-                                            <li>
+                                            <li class="active">
                                                 <a href="{{route('fuelstations.index', app()->getLocale())}}">Fuel Sheds List</a>
                                             </li>
                                         @endif
@@ -167,9 +168,11 @@
                                     </ul>
                                 </li>
                             @endif
-                    @endforeach 
+
+                        @endforeach 
                     @endif
-                   
+
+                    
                    
                     @if(Gate::allows('sys_admin'))
                     <li>
@@ -213,107 +216,81 @@
                 </ul>
             </div>
 @endsection
-
 @section('content')
-<section class="content">
-        <div class="container-fluid">
-            <div class="block-header">
-                <h2>{{__('EDIT WHOLESALE SELLER')}}</h2>
-            </div>
-            <div class="card">
-                
-                <div class="body">
-                    <form action="{{ route('sellers.update', [app()->getLocale(), $seller->id]) }}" method="POST" enctype="multipart/form-data" id="sellers_edit_form">
-                    {{ csrf_field() }}
-                    {{ method_field('PATCH') }} 
-                        <div class="row clearfix">
-                            
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="applicant_name" class="form-control" name="seller_name" value="{{ $seller->name }}">
-                                        <label class="form-label">{{__('Seller Name')}}</label>
-                                    </div>
-                                    @error('seller_name')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div> 
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="seller_address" class="form-control" name="seller_address" value="{{ $seller->address }}">
-                                        <label class="form-label">{{__('Seller Address')}}</label>
-                                    </div>
-                                    @error('seller_address')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div> 
-                            <div class="col-md-4">
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="text" id="nic_no" class="form-control" name="nic_no" value="{{ $seller->nic_no }}">
-                                        <label class="form-label">{{__('NIC No')}}</label>
-                                    </div>
-                                    @error('nic_no')
-                                            <label class="error" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </label>
-                                    @enderror
-                                </div>
-                            </div>   
-                        </div>
-                    
-                        
-                        <!-- <button type="submit" class="btn btn-primary m-t-15 waves-effect" style="margin-right:10px">Create</button> -->
-                        <a class="btn bg-grey btn-xs waves-effect" style="margin-right:10px" href="{{route('sellers.index', app()->getLocale())}}">
-                            <i class="material-icons">keyboard_backspace</i>
-                            <span>{{__('BACK')}}</span>
-                        </a>
-                        
-                        <button type="submit" class="btn btn-primary btn-xs waves-effect" style="margin-right:10px">
-                            <i class="material-icons">note_add</i>
-                            <span>{{__('CHANGE')}}</span>
-                        </button>
-                        
-                    </form>
-                    <br />
-                    <form method="POST" action="{{ route('sellers.destroy', [app()->getLocale(), $seller->id]) }}">
-                        {{ csrf_field() }}
-                        {{ method_field('DELETE') }}
 
-                        <button type="submit" class="btn btn-danger btn-xs waves-effect" onclick="return confirm('{{__('Are you sure? You cannot revert this action.')}}')">
-                            <i class="material-icons">delete</i>
-                                <span>{{__('DELETE SELLER')}}</span>
-                        </button>
-                    </form> 
-                    
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>{{__('FUEL STATION DETAILS')}}</h2>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-6">
+                <div class="card">
+                <div class="header">
+                    <h2><i class="material-icons" style="vertical-align:middle">directions_car</i><span> {{__('Fuel Station Details')}}</span></h2>
+                    <ul class="header-dropdown m-r-0">
+                        @if($fuelstation->status == "SAVED")
+                            <li>
+                                <a href="{{route('fuelstations.edit', [app()->getLocale(), $fuelstation->id])}}">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
+                    <div class="body">
+                        <table class="table-condensed">
+                            <tbody>
+                                <tr> 
+                                    <th scope="row">Name of Fuel Station:</th>
+                                    <td>{{ $fuelstation->name }}</td>
+                                </tr>
+                                <tr> 
+                                    <th scope="row">Address of Fuel Station:</th>
+                                    <td>{{ $fuelstation->address }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Type of Fuel Station:</th>
+                                    <td>{{ $fuelstation->station_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">No. of Pumbs:</th>
+                                    <td>{{ $fuelstation->no_of_pumbs }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">DS Division:</th>
+                                    <td>{{ substr($fuelstation->workplace->name, 0, strpos($fuelstation->workplace->name, "-")) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+            
+            
+            
         </div>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
-        <script >
-        @if(session()->has('message'))
-            $.notify({
-                title: '<strong>Heads up!</strong>',
-                message: '{{ session()->get('message') }}'
-            },{
-                type: '{{session()->get('alert-type')}}',
-                delay: 5000,
-                offset: {x: 50, y:100}
-            },
-            );
-        @endif
-        </script>
-
+        <div class="block-header">
+            <h2>{{__('FUEL PUMPING RECORDS')}}</h2>
+        </div>
+        <!-- Add fuel supplies table -->
+        
+    </div>
 </section>
-
-
 @endsection
 
+@section('scripts')
+<script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+<script >
+    @if(session()->has('message'))
+        $.notify({
+            message: '{{ session()->get('message') }}'
+        },{
+            type: '{{session()->get('alert-type')}}',
+            delay: 5000,
+            offset: {x: 50, y:100}
+        },
+        );
+    @endif
+    </script>
+@endsection

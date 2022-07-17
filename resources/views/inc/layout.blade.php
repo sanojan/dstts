@@ -1245,25 +1245,18 @@ if(locale == "en"){
         autoWidth: false,
         processing : true,
         serverSide : true,
-        ajax: "#",
+        ajax: "{{ route('vehicles.index', app()->getLocale()) }}",
 
         columns: [
-        {data: 'refno'},
+        {data: 'ref_no'},
         {data: 'vehicle_no'},
-        {data: 'vehicle_type'},
         {data: 'fuel_type'},
         {data: 'owner_name'},
-        {data: 'owner_gender'},
-        {data: 'owner_nic'},
-        {data: 'owner_job'},
-        {data: 'owner_workplace'},
+        {data: 'owner_id'},
         {data: 'perm_address'},
-        {data: 'perm_district'},
-        {data: 'temp_address'},
-        {data: 'qrcode'},
         {data: 'consumer_type'},
-        {data: 'status'},
         {data: 'print_lock'},
+        {data: 'status'},
 
         {data: 'action', name: 'action', orderable: false, searchable: false}],
 
@@ -1273,41 +1266,71 @@ if(locale == "en"){
 
         "order": [],
 
-        "columnDefs": [
-        {
-            "targets": [ 2 ],
-            "visible": false,
+        "createdRow": function (row, data, index) {
+            if(data.consumer_type == "O"){
+                $('td', row).eq(6).text("Government/Private Employees");
+            }
+            if(data.consumer_type == "P"){
+                $('td', row).eq(6).text("General Public");
+            }
+            if(data.consumer_type == "E"){
+                $('td', row).eq(6).text("Essential Service");
+            }
+            if(data.consumer_type == "T"){
+                $('td', row).eq(6).text("Foreign Tourists");
+            }
+            if(data.print_lock == "0"){
+                $('td', row).eq(7).text("");
+                $('td', row).eq(7).append("<i class='material-icons'>lock_open</i>");
+                $('td', row).eq(7).css("textAlign", "center");
+            }
+            if(data.print_lock == "1"){
+                $('td', row).eq(7).text("");
+                $('td', row).eq(7).append("<i class='material-icons'>lock</i>");
+                $('td', row).eq(7).css("textAlign", "center");
+            }
+            if(data.status == "SAVED"){
+                $('td', row).eq(8).addClass("font-bold col-blue");
+            }
+            if(data.status == "SUBMITTED"){
+                $('td', row).eq(8).addClass("font-bold col-pink");
+            }
         },
-        {
-            "targets": [ 5 ],
-            "visible": false,
-        },
-        {
-            "targets": [ 7 ],
-            "visible": false,
-        },
-        {
-            "targets": [ 8 ],
-            "visible": false,
-        },
-        {
-            "targets": [ 10 ],
-            "visible": false,
-        },
-        {
-            "targets": [ 11 ],
-            "visible": false,
-        },
-        {
-            "targets": [ 12 ],
-            "visible": false,
-        },
-        {
-            "targets": [ 14 ],
-            "visible": false,
-        }],
+            
+    } );
 
-        
+    $('#fuelstations_table_id').DataTable({
+        retrieve: true,
+        dom: 'Blfrtip',
+        autoWidth: false,
+        processing : true,
+        serverSide : true,
+        ajax: "{{ route('fuelstations.index', app()->getLocale()) }}",
+
+        columns: [
+        {data: 'name'},
+        {data: 'address'},
+        {data: 'station_type'},
+        {data: 'contact_no'},
+        {data: 'owner_name'},
+        {data: 'status'},
+
+        {data: 'action', name: 'action', orderable: false, searchable: false}],
+
+        buttons: [
+            'colvis'
+        ],
+
+        "order": [],
+
+        "createdRow": function (row, data, index) {
+            if(data.status == "SAVED"){
+                $('td', row).eq(5).addClass("font-bold col-blue");
+            }
+            if(data.status == "SUBMITTED"){
+                $('td', row).eq(5).addClass("font-bold col-pink");
+            }
+        },
             
     } );
 

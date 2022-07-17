@@ -917,7 +917,7 @@ class TravelPassController extends Controller
     public function newPDF($lang, $id)
     {
 
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin') || Gate::allows('dist_admin')) {
 
             $travelpass = TravelPass::find($id);
 
@@ -1306,7 +1306,7 @@ class TravelPassController extends Controller
     public function previewPDF($lang, $id)
     {
 
-        if (Gate::allows('sys_admin') || Gate::allows('admin')) {
+        if (Gate::allows('sys_admin') || Gate::allows('dist_admin')) {
 
             $travelpass = TravelPass::find($id);
 

@@ -6,7 +6,7 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">{{__('MAIN NAVIGATION')}}</li>
-                    <li >
+                    <li>
                         <a href="{{route('home', app()->getLocale())}}">
                             <i class="material-icons">dashboard</i>
                             <span>{{__('Dashboard')}}</span>
@@ -15,13 +15,13 @@
                     @if(count(Auth::user()->subjects) > 0)
                         @foreach(Auth::user()->subjects as $subject)
                             @if($subject->subject_code == "letters")
-                                <li >
+                                <li>
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">email</i>
                                         <span>{{__('Letters')}}</span>
                                     </a>
                                     <ul class="ml-menu">
-                                                <li >
+                                                <li>
                                                     <a href="{{route('letters.index', app()->getLocale())}}">{{__('View Letter')}}</a>
                                                 </li>
                                                 @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
@@ -46,7 +46,6 @@
                                                 <li>
                                                     <a href="{{route('files.index', app()->getLocale())}}">{{__('View File(s)')}}</a>
                                                 </li>
-                                            
                                                 @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('branch_head'))
                                                 <li >
                                                     <a href="{{route('files.create', app()->getLocale())}}">{{__('Create File')}}</a>
@@ -96,7 +95,7 @@
                             @endif
 
                             @if($subject->subject_code == "travelpass")
-                                <li class="active">
+                                <li>
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">transfer_within_a_station</i>
                                         <span>{{__('Travel Pass')}}</span>
@@ -119,12 +118,13 @@
                                             <a href="{{route('travelpasses.create', app()->getLocale())}}">{{__('Add New Request')}}</a>
                                         </li>    
 
-                                        <li class="active">
+                                        <li>
                                             <a href="{{route('sellers.index', app()->getLocale())}}">{{__('View Wholesale Sellers List')}}</a>
                                         </li>
                                     </ul>
                                 </li>
                             @endif
+
                             @if($subject->subject_code == "users")
                                 <li class="">
                                     <a href="javascript:void(0);" class="menu-toggle">
@@ -145,15 +145,16 @@
                                     </ul>
                                 </li>
                             @endif
+
                             @if($subject->subject_code == "fuel")
-                                <li class="">
+                                <li class="active">
                                     <a href="javascript:void(0);" class="menu-toggle">
                                         <i class="material-icons">local_gas_station</i>
                                         <span>{{__('Fuel Supply')}}</span>
                                     </a>
                                     <ul class="ml-menu">
                                         @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin'))
-                                            <li>
+                                            <li class="active">
                                                 <a href="{{route('vehicles.index', app()->getLocale())}}">Vehicles List</a>
                                             </li>
                                             <li>
@@ -161,15 +162,17 @@
                                             </li>
                                         @endif
                                             <li>
-                                                <a href="#">Duty Schedule</a>
+                                                <a href="#">Duty List</a>
                                             </li>
                                 
                                     </ul>
                                 </li>
                             @endif
-                    @endforeach 
+
+                        @endforeach 
                     @endif
-                   
+
+                    
                    
                     @if(Gate::allows('sys_admin'))
                     <li>
@@ -213,115 +216,255 @@
                 </ul>
             </div>
 @endsection
-
 @section('content')
+
 <section class="content">
     <div class="container-fluid">
         <div class="block-header">
-            @if(Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head'))
-                <h2>{{__('VIEW WHOLESALE SELLERS')}}</h2>
-            @elseif(Gate::allows('dist_admin') || Gate::allows('sys_admin'))
-                <h2>{{__('SELECT DIVISION TO VIEW WHOLESALE SELLERS')}}</h2>
-            @endif
+            <h2>{{__('VEHICLE DETAILS')}}</h2>
         </div>
-        
-        @if(Gate::allows('divi_admin') || Gate::allows('user') || Gate::allows('branch_head'))
-        <div class="card">
-            <div class="body">
-                
-                <table id="sellers_table" class="display">
-                    <thead>
-                        <tr>
-                            <th>{{__('Seller Name')}}</th>
-                            <th>{{__('Seller Address')}}</th>
-                            <th>{{__('Seller NIC No.')}}</th>
-                            <th>{{__('Action')}}</th>
-                            
-                        </tr>
-                    </thead>
-                        
-                </table>
-                <br />
-                <b>Wholesale Sellers List Status: </b> 
-                @if(Auth::user()->workplace->sellers_list)
-                    @if(Auth::user()->workplace->sellers_list == "SUBMITTED")
-                        <p class="font-bold col-blue" style="display:inline">{{Auth::user()->workplace->sellers_list}}</p>
-                        <br />
-                        <br /> 
-                    @elseif(Auth::user()->workplace->sellers_list == "APPROVED")  
-                        <p class="font-bold col-green" style="display:inline">{{Auth::user()->workplace->sellers_list}}</p>
-                        <br />
-                        <br /> 
-                    @elseif(Auth::user()->workplace->sellers_list == "REJECTED")
-                        <p class="font-bold col-red" style="display:inline">{{Auth::user()->workplace->sellers_list}} (Reason: {{Auth::user()->workplace->rejection_reason}})</p>
-                        <br />
-                        <br />
-                    @elseif(Auth::user()->workplace->sellers_list == "CHANGE REQUESTED")
-                    <p class="font-bold col-teal" style="display:inline">{{Auth::user()->workplace->sellers_list}}</p>
-                    <br />
-                    <br />
-                    @endif 
-                @else
-                    <p class="font-bold col-orange" style="display:inline">NOT SUBMITTED</p>
-                    <br />
-                    <br />   
-                @endif
-
-                <form action="{{ route('workplaces.update', [app()->getLocale(), Auth::user()->workplace->id] )}}" method="POST" enctype="multipart/form-data" id="sellers_submit_form">
-                        {{ method_field('PUT') }}
-                        {{ csrf_field() }}
-                @if(Auth::user()->workplace->sellers_list == "REJECTED" || !Auth::user()->workplace->sellers_list)
-                        <a class="btn bg-deep-purple btn-xs waves-effect" style="margin-right:10px" href="{{route('sellers.create', app()->getLocale())}}">
-                            <i class="material-icons">playlist_add</i>
-                            <span>{{__('ADD NEW SELLER')}}</span>
-                        </a>
-                @if(count(Auth::user()->workplace->sellers) > 0)
-                        <button type="submit" style="margin-right:10px" class="btn bg-green btn-xs waves-effect" name="sellers_list" value="submit">
-                            <i class="material-icons">check</i>
-                            <span>{{__('SUBMIT LIST')}}</span>
-                        </button>
-                @endif
-                @endif
-                @if(Auth::user()->workplace->sellers_list == "APPROVED")
-                        <button type="submit" style="margin-right:10px" class="btn bg-teal btn-xs waves-effect" name="sellers_list" value="edit_req">
-                            <i class="material-icons">edit</i>
-                            <span>{{__('REQUEST CHANGES')}}</span>
-                        </button>
-                    </form> 
-                @endif
-            </div>
-        </div>
-        @endif
-
-        @if(Gate::allows('dist_admin') || Gate::allows('sys_admin'))
-            <div class="card">
-                <div class="body">
-                    
-                    <table id="workplaces_table" class="display">
-                        <thead>
-                            <tr>
-                                <th>{{__('Division Name')}}</th>
-                                <th>{{__('Contact No.')}}</th>
-                                <th>{{__('Wholesale Sellers List')}}</th>
-                                <th>{{__('Action')}}</th>
-                                
-                            </tr>
-                        </thead>
-                            
-                    </table>
-                    <br />
+        <div class="row clearfix">
+            <div class="col-md-3">
+                <div class="card">
+                <div class="header">
+                    <h2><i class="material-icons" style="vertical-align:middle">directions_car</i><span> {{__('Vehicle Details')}}</span></h2><small class="m-l-30">{{ $vehicle->ref_no }}</small>
+                    <ul class="header-dropdown m-r-0">
+                        @if($vehicle->status == "SAVED")
+                            <li>
+                                <a href="{{route('vehicles.edit', [app()->getLocale(), $vehicle->id])}}">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                            </li>
+                        @endif
+                        @if(Gate::allows('dist_admin'))
+                        <li>
+                            <a href="#">
+                                <i class="material-icons">lock</i>
+                            </a>
+                        </li>
+                        @endif
+                        @if($vehicle->print_lock == false)
+                        <li>
+                            <a href="#">
+                                <i class="material-icons">print</i>
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+                </div>
+                    <div class="body">
+                        <table class="table-condensed">
+                            <tbody>
+                                <tr> 
+                                    <th scope="row">Vehicle No:</th>
+                                    <td>{{ $vehicle->vehicle_no }}</td>
+                                </tr>
+                                <tr> 
+                                    <th scope="row">Vehicle Type:</th>
+                                    <td>{{ $vehicle->vehicle_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Fuel Type:</th>
+                                    <td>{{ $vehicle->fuel_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Reference No:</th>
+                                    <td>{{ $vehicle->ref_no }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">DS Division:</th>
+                                    <td>{{ substr($vehicle->workplace->name, 0, strpos($vehicle->workplace->name, "-")) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-
-
-        @endif
-
-
-
+            <div class="col-md-3">
+                <div class="card">
+                <div class="header">
+                    <h2><i class="material-icons" style="vertical-align:middle">person</i><span> {{__('Owner Details')}}</span></h2><small class="m-l-30">{{ $vehicle->ref_no }}</small>
+                    <ul class="header-dropdown m-r-0">
+                        @if($vehicle->status == "SAVED")
+                            <li>
+                                <a href="{{route('vehicles.edit', [app()->getLocale(), $vehicle->id])}}">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                            </li>
+                        @endif
+                        @if(Gate::allows('dist_admin'))
+                        <li>
+                            <a href="#">
+                                <i class="material-icons">lock</i>
+                            </a>
+                        </li>
+                        @endif
+                        @if($vehicle->print_lock == false)
+                        <li>
+                            <a href="#">
+                                <i class="material-icons">print</i>
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+                </div>
+                    <div class="body">
+                        <table class="table-condensed">
+                            <tbody>
+                                <tr> 
+                                    <th scope="row">Owner Name:</th>
+                                    <td>{{ $vehicle->owner_name }}</td>
+                                </tr>
+                                <tr> 
+                                    <th scope="row">Owner Gender:</th>
+                                    <td>{{ $vehicle->owner_gender }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Owner ID:</th>
+                                    <td>{{ $vehicle->owner_id }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Owner Work:</th>
+                                    <td>{{ $vehicle->owner_job }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Owner Workplace:</th>
+                                    <td>{{ $vehicle->owner_workplace }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                <div class="header">
+                    <h2><i class="material-icons" style="vertical-align:middle">home</i><span> {{__('Residential Details')}}</span></h2><small class="m-l-30">{{ $vehicle->ref_no }}</small>
+                    <ul class="header-dropdown m-r-0">
+                        @if($vehicle->status == "SAVED")
+                            <li>
+                                <a href="{{route('vehicles.edit', [app()->getLocale(), $vehicle->id])}}">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                            </li>
+                        @endif
+                        @if(Gate::allows('dist_admin'))
+                        <li>
+                            <a href="#">
+                                <i class="material-icons">lock</i>
+                            </a>
+                        </li>
+                        @endif
+                        @if($vehicle->print_lock == false)
+                        <li>
+                            <a href="#">
+                                <i class="material-icons">print</i>
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+                </div>
+                    <div class="body">
+                        <table class="table-condensed">
+                            <tbody>
+                                <tr> 
+                                    <th scope="row">Permanant Address:</th>
+                                    <td>{{ $vehicle->perm_address }}</td>
+                                </tr>
+                                <tr> 
+                                    <th scope="row">Permanant District:</th>
+                                    <td>{{ $vehicle->perm_district }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Temporary Address:</th>
+                                    <td>{{ $vehicle->temp_address }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                <div class="header">
+                    <h2><i class="material-icons" style="vertical-align:middle">local_gas_station</i><span> {{__('Fuel Supply Details')}}</span></h2><small class="m-l-30">{{ $vehicle->ref_no }}</small>
+                    <ul class="header-dropdown m-r-0">
+                        @if($vehicle->status == "SAVED")
+                            <li>
+                                <a href="{{route('vehicles.edit', [app()->getLocale(), $vehicle->id])}}">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                            </li>
+                        @endif
+                        @if(Gate::allows('dist_admin'))
+                        <li>
+                            <a href="#">
+                                <i class="material-icons">lock</i>
+                            </a>
+                        </li>
+                        @endif
+                        @if($vehicle->print_lock == false)
+                        <li>
+                            <a href="#">
+                                <i class="material-icons">print</i>
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+                </div>
+                    <div class="body">
+                        <table class="table-condensed">
+                            <tbody>
+                                <tr> 
+                                    <th scope="row">Consumer Type:</th>
+                                    @if($vehicle->consumer_type == "O")
+                                        <td>Government/Private Employees</td>
+                                    @elseif($vehicle->consumer_type == "P")
+                                        <td>General Public</td>
+                                    @elseif($vehicle->consumer_type == "E")
+                                        <td>Essential Service</td>
+                                    @elseif($vehicle->consumer_type == "T")
+                                        <td>Foreign Tourists</td>
+                                    @endif
+                                </tr>
+                                <tr> 
+                                    <th scope="row">Allowed Period:</th>
+                                    <td>Once Per {{ $vehicle->allowed_days }} Days</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Created On:</th>
+                                    <td>{{ $vehicle->created_at }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Print Lock:</th>
+                                    @if($vehicle->print_lock == true)
+                                        <td>LOCKED</td>
+                                    @elseif($vehicle->print_lock == false)
+                                        <td>UNLOCKED</td>
+                                    @endif
+                                </tr>
+                                <tr>
+                                    <th scope="row">Status:</th>
+                                    <td>{{ $vehicle->status }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block-header">
+            <h2>{{__('FUEL CONSUMPTIONS RECORDS')}}</h2>
+        </div>
+        <!-- Add fuel supplies table -->
+        
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
-    <script >
+</section>
+@endsection
+
+@section('scripts')
+<script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
+<script >
     @if(session()->has('message'))
         $.notify({
             message: '{{ session()->get('message') }}'
@@ -333,7 +476,4 @@
         );
     @endif
     </script>
-
-
-</section>
 @endsection

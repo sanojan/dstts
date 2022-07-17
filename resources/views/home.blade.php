@@ -153,15 +153,17 @@
                                         <span>{{__('Fuel Supply')}}</span>
                                     </a>
                                     <ul class="ml-menu">
-                                        <li>
-                                            <a href="{{route('vehicles.index', app()->getLocale())}}">Vehicles List</a>
-                                        </li>
-                                        <li >
-                                            <a href="#">Fuel Sheds List</a>
-                                        </li>
-                                        <li >
-                                            <a href="#">Duty List</a>
-                                        </li>
+                                        @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin'))
+                                            <li>
+                                                <a href="{{route('vehicles.index', app()->getLocale())}}">Vehicles List</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('fuelstations.index', app()->getLocale())}}">Fuel Sheds List</a>
+                                            </li>
+                                        @endif
+                                            <li>
+                                                <a href="#">Duty Schedule</a>
+                                            </li>
                                 
                                     </ul>
                                 </li>

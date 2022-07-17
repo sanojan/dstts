@@ -5,16 +5,17 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Vehicle extends Model
+class FuelStations extends Model
 {
+    //Model
     use SoftDeletes;
 
     protected $fillable = [
-        'workplace_id', 'ref_no', 'vehicle_no', 'vehicle_type', 'fuel_type', 'owner_name', 'owner_gender', 'owner_id', 'owner_job', 'owner_workplace', 'perm_address', 'perm_district', 'temp_address', 'qrcode' , 'consumer_type', 'allowed_days', 'status', 'print_lock'
+        'workplace_id', 'name', 'address', 'no_of_pumbs', 'station_type', 'contact_no', 'owner_name', 'status'
     ];
 
     //Table name
-    protected $table = 'vehicles';
+    protected $table = 'fuelstations';
 
     //Primarykey
     public $primaryKey = 'id';
@@ -27,5 +28,4 @@ class Vehicle extends Model
    {
       return $this->belongsTo('App\Workplace');
    }   
-    
 }
