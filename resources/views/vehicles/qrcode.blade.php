@@ -6,8 +6,8 @@
 
         .heading {
             margin-top: 5px;
-            margin-left: 5px;
-            margin-right: 15px;
+            margin-left: 8px;
+            margin-right: 25px;
             margin-bottom: 0;
             float: left;
             
@@ -15,8 +15,8 @@
 
         h4 {
             margin-top: 0;
-            margin-left: 45px;
-            margin-bottom: 0;
+            margin-left: 8px;
+            margin-bottom: 5px;
         }
         .type {
             margin-top: 5px;
@@ -48,6 +48,7 @@
         .content {
             
             margin-left: 0;
+            margin-top: 10px;
         }
         .content p {
             margin: 2px;
@@ -63,7 +64,7 @@
             font-size: 10px;
         }
         .sign {
-            margin-top: 30px;
+            margin-top: 20px;
             margin-bottom: 0;
             margin-left: 280px;
             font-size: 10px;
@@ -83,7 +84,7 @@
     @foreach(Auth::user()->workplace->vehicles as $vehicle)
         @if($vehicle->print_lock == false)
             <div class="container">
-                <img class="emblem" src="{{asset('images/emblem.png')}}" >
+                
                 <h2 class="heading">Vehicle Fuel Supply Card</h2>
                 <p class ="type">@if($vehicle->fuel_type == "Petrol") P @elseif($vehicle->fuel_type == "Diesel") D @elseif($vehicle->fuel_type == "Kerosene") K @endif/ {{ $vehicle->consumer_type }}</p>
                 <h4>District Secretariat - Ampara</h4>
@@ -97,7 +98,7 @@
                     <p><b>DS Division:</b> {{ substr($vehicle->workplace->name, 0, strpos($vehicle->workplace->name, "-")) }}</p>
                     <small>* Eligible once per {{ $vehicle->allowed_days }}  days.</small>
                 </div>
-                <p class="code">Code:</p>
+                <p class="code">Code: {{ $vehicle->qrcode }}</p>
                 <p class="ref">Ref No: {{ $vehicle->ref_no }}</p>
                 <p class="sign">...................................<br />Divisional Secretary</p>
             </div>

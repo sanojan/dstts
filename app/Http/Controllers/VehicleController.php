@@ -756,6 +756,7 @@ class VehicleController extends Controller
                                 $pdf = PDF::loadView('vehicles.qrcode')->setPaper('a7', 'landscape');
 
                                 return $pdf->download(Auth::user()->workplace->short_code .'_' . date('mdhis') . ".pdf");
+                                //return $pdf->stream('result.pdf', array('Attachment' => 0));
                             }
                             else{
                                 $notification = array(

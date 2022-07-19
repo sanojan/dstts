@@ -246,7 +246,7 @@
                         <i class="material-icons">add</i>
                         <span>{{__('ADD NEW')}}</span>
                     </a> 
-                    <a type="button" style="margin-right:10px" class="btn bg-deep-purple waves-effect disabled" href="{{route('vehicle.qrcard', [app()->getLocale(), Auth::user()->workplace->id])}}">
+                    <a type="button" style="margin-right:10px" class="btn bg-deep-purple waves-effect" href="{{route('vehicle.qrcard', [app()->getLocale(), Auth::user()->workplace->id])}}">
                         <i class="material-icons">file_download</i>
                         <span>{{__('DOWNLOAD ID CARDS')}}</span>
                     </a> 
