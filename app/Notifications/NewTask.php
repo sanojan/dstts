@@ -44,7 +44,7 @@ class NewTask extends Notification
     {
         return (new MailMessage)
                     ->greeting('Hello ' . $this->task->user->name . '!')
-                    ->line('New Task has been assigned to you. Letter No. for the Task ' . $this->task->letter->letter_no)
+                    ->line('New Task has been assigned to you. Letter Number for the Task ' . $this->task->letter->letter_no)
                     ->action('View Task', url('/' . app()->getLocale() . '/tasks/' . $this->task->id))
                     ->line('Please do not reply to this mail, Thank you for using our application!');
     }

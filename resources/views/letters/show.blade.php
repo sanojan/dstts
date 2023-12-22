@@ -427,13 +427,15 @@
                                                     <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_{{$task->id}}" aria-expanded="true" aria-controls="collapseOne_{{$task->id}}" class="">
                                                         New Task Assigned To {{$task->user->name}} - {{$task->user->designation}} ({{$task->user->workplace->name}}) On {{$task->created_at}} 
                                                     </a>
+                                                    
                                                 </h4>
                                             </div>
                                             <div id="collapseOne_{{$task->id}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_{{$task->id}}" aria-expanded="true" style="">
                                                 <div class="panel-body">
                                                 <ul>
+                                                    <li>Task remarks: {{$task->remarks}} </li>
                                                     @foreach($task->histories as $history)
-                                                    <li>This Task was {{$history->status}} by {{$history->task->user->name}} on {{$history->created_at}}</li>
+                                                    <li>This Task was {{$history->status}} by {{$history->task->user->name}} on {{$history->created_at}} | Remarks: {{$task->remarks}}</li>
                                                     @if($history->remarks)
                                                         <ul><li>Remarks: {{$history->remarks}}</li></ul>
                                                         @if($history->status == "Completed")
@@ -441,6 +443,7 @@
                                                                 <ul><li>Task Report: <a href="{{ Storage::url('task_reports/' . $task->task_report) }}" target="_blank">Click Here to View</a> </li></ul>
                                                             @endif
                                                         @endif
+                                                        
 
                                                     @endif
                                                     @endforeach

@@ -216,6 +216,7 @@
                                         <option value="email" @if(old('letter_type')=="email") selected disabled @endif>Email</option>
                                         <option value="from_ga" @if(old('letter_type')=="from_ga") selected disabled @endif>From GA</option>
                                         <option value="from_ds" @if(old('letter_type')=="from_ds") selected disabled @endif>From DS</option>
+                                        <option value="rti" @if(old('letter_type')=="rti") selected disabled @endif>RTI Letter</option>
                                         </select>
                                     </div>
                                         

@@ -530,7 +530,7 @@
         if(workplaceid){
             $.ajax({
             type:"GET",
-            url:"{{url('app()->getLocale()/get-workplaces-list')}}?workplace_type_id="+workplaceid,
+            url:"{{url('en/get-workplaces-list')}}?workplace_type_id="+workplaceid,
             success:function(res){        
             if(res){
                 $("#workplace").empty();

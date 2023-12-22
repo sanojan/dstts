@@ -216,8 +216,7 @@
                                 <th>{{__('Letter Title')}}</th>
                                 <th>{{__('Letter Date')}}</th>
                                 <th>{{__('Letter From')}}</th>
-                                <th>{{__('Created On')}}</th>
-                                <th>Signature</th>
+                                <th>{{__('Received On')}}</th>
                                 <th>{{__('Action')}}</th>
                             </tr>
                         </thead>
@@ -230,8 +229,8 @@
                                             <td>{{$letter->letter_title}}</td>
                                             <td>{{$letter->letter_date}}</td>
                                             <td>{{$letter->letter_from}}</td>
-                                            <td>{{$letter->created_at}}</td>
-                                            <td></td>
+                                            <td>{{$letter->letter_received_on}}</td>
+                            
                                             <td>
                                             @if(Gate::allows('sys_admin') || Gate::allows('dist_admin') || Gate::allows('divi_admin') || Gate::allows('user'))
                                                 <a class="btn bg-green btn-block btn-xs waves-effect" href="{{ route('letters.show', [app()->getLocale(), $letter->id]) }}">
